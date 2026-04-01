@@ -1,1080 +1,674 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Unidos – Rescue & Adopt</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --orange:#F07020;--orange-pale:#FFF4ED;--orange-border:#FDDCC4;
-  --green:#2E9E6B;--green-pale:#E8F5EF;--green-border:#B2DFCC;
-  --red:#E53935;--red-pale:#FDECEA;--blue:#1976D2;--blue-pale:#E3F0FB;
-  --white:#fff;--bg:#F4F1EE;--gray:#9A9A9A;--gray-mid:#666;
-  --gray-light:#EFEFEF;--text:#1A1A1A;
-  --sh:0 2px 14px rgba(0,0,0,.08);--sh-lg:0 8px 30px rgba(0,0,0,.13);
-  --sh-o:0 4px 16px rgba(240,112,32,.28);--sh-g:0 4px 16px rgba(46,158,107,.28);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Nunito',sans-serif;background:#CDC4BA;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
-.phone{width:390px;height:780px;background:var(--bg);border-radius:44px;box-shadow:0 30px 80px rgba(0,0,0,.25),0 0 0 8px #1A1A1A,0 0 0 10px #333;overflow:hidden;position:relative}
-.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;display:none;flex-direction:column;background:var(--bg)}
-.screen.active{display:flex}
-.screen::-webkit-scrollbar{display:none}
-.role-switch{display:flex;background:var(--gray-light);border-radius:50px;padding:3px;gap:2px;margin:0 18px 12px}
-.role-pill{flex:1;padding:8px 0;border-radius:50px;font-size:12px;font-weight:800;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--gray);transition:all .25s;font-family:'Nunito',sans-serif}
-.role-pill.ao{background:var(--orange);color:white;box-shadow:var(--sh-o)}
-.role-pill.as{background:var(--green);color:white;box-shadow:var(--sh-g)}
-.bnav{position:sticky;bottom:0;left:0;right:0;display:grid;background:var(--white);border-top:1px solid #E8E8E8;z-index:100;margin-top:auto}
-.bnav.o3{grid-template-columns:1fr 1fr 1fr}
-.bnav.s4{grid-template-columns:1fr 1fr 1fr 1fr}
-.ni{display:flex;flex-direction:column;align-items:center;padding:9px 4px 13px;cursor:pointer;font-size:10px;font-weight:800;color:var(--gray);border:none;background:none;position:relative;transition:color .2s;font-family:'Nunito',sans-serif}
-.ni svg{margin-bottom:3px}
-.ni::after{content:'';position:absolute;top:0;left:20%;right:20%;height:3px;border-radius:0 0 4px 4px;transform:scaleX(0);transition:transform .2s}
-.ni.no{color:var(--orange)}.ni.no::after{background:var(--orange);transform:scaleX(1)}
-.ni.ns{color:var(--green)}.ni.ns::after{background:var(--green);transform:scaleX(1)}
-.card{background:var(--white);border-radius:18px;padding:16px 18px;margin:0 18px;box-shadow:var(--sh)}
-.search-box{display:flex;align-items:center;gap:9px;background:var(--white);border:2px solid var(--orange-border);border-radius:50px;padding:10px 16px;box-shadow:var(--sh);transition:border-color .2s}
-.search-box:focus-within{border-color:var(--orange)}
-.search-box input{border:none;outline:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);flex:1;background:transparent}
-.search-box input::placeholder{color:#C5BDB5}
-.cta-p{width:100%;padding:16px;border-radius:50px;background:var(--orange);color:white;font-size:15px;font-weight:900;border:none;cursor:pointer;font-family:'Nunito',sans-serif;box-shadow:var(--sh-o);transition:opacity .2s,transform .15s}
-.cta-p:hover{opacity:.9;transform:translateY(-1px)}
-.cta-p.green{background:var(--green);box-shadow:var(--sh-g)}
-.cta-s{width:100%;padding:13px;border-radius:50px;background:transparent;color:var(--gray);font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:'Nunito',sans-serif}
-.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:50px;font-size:10px;font-weight:800}
-.pill.g{background:var(--green-pale);color:var(--green)}
-.pill.o{background:var(--orange-pale);color:var(--orange)}
-.pill.b{background:var(--blue-pale);color:var(--blue)}
-.back-btn{width:36px;height:36px;border-radius:50%;background:var(--white);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--gray-mid);box-shadow:var(--sh);flex-shrink:0}
-.fl{font-size:11px;font-weight:800;color:var(--gray-mid);margin-bottom:7px;margin-top:16px}
-.fl:first-child{margin-top:0}
-.fi{width:100%;background:var(--white);border:2px solid var(--orange-border);border-radius:12px;padding:11px 14px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;color:var(--text);transition:border-color .2s;box-shadow:var(--sh)}
-.fi:focus{border-color:var(--orange)}
-.chip{padding:7px 14px;border-radius:50px;background:var(--white);border:2px solid var(--orange-border);font-size:12px;font-weight:700;cursor:pointer;color:var(--gray-mid);transition:all .2s;box-shadow:var(--sh)}
-.chip.sel{background:var(--orange);color:white;border-color:var(--orange)}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <title>Unidos – Rescue & Adopt</title>
 
-/* ── PET PHOTOS: real images, cover-fit ── */
-.pet-photo{width:100%;aspect-ratio:1;overflow:hidden;position:relative;background:#e8e4df}
-.pet-photo img{width:100%;height:100%;object-fit:cover;display:block}
-.detail-photo{width:calc(100% - 36px);margin:0 18px;border-radius:20px;overflow:hidden;aspect-ratio:4/3;box-shadow:var(--sh)}
-.detail-photo img{width:100%;height:100%;object-fit:cover;display:block}
-.adopt-photo{height:230px;overflow:hidden;position:relative;background:#f5f0eb}
-.adopt-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .3s}
-.rthumb{width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--orange-pale)}
-.rthumb img{width:100%;height:100%;object-fit:cover;display:block}
-.ac-thumb{width:52px;height:52px;border-radius:12px;overflow:hidden;background:var(--orange-pale);flex-shrink:0}
-.ac-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.found-thumb{width:66px;height:66px;border-radius:12px;overflow:hidden;flex-shrink:0;background:var(--orange-pale)}
-.found-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#F07020">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Unidos">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
 
-/* ── GRID ── */
-.pets-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:6px 18px 12px}
-.pet-card{border-radius:14px;overflow:hidden;cursor:pointer;background:var(--white);box-shadow:var(--sh);transition:transform .15s,box-shadow .15s}
-.pet-card:hover{transform:translateY(-3px);box-shadow:var(--sh-lg)}
-.pet-info{padding:9px 11px 11px}
-.ptr{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
-.pt{font-size:13px;font-weight:800;color:var(--text)}
-.sp{font-size:10px;font-weight:800;background:var(--orange-pale);color:var(--orange);padding:2px 7px;border-radius:50px;border:1px solid var(--orange-border)}
-.ploc{font-size:11px;font-weight:600;color:var(--gray)}
-
-/* ── DETAIL GRID ── */
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}
-.dl{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
-.dv{font-size:14px;font-weight:800;color:var(--text)}
-.df{grid-column:1/-1;padding-top:4px;border-top:1px solid var(--gray-light)}
-
-/* ── MODAL ── */
-.modal-overlay{position:absolute;inset:0;background:rgba(20,12,4,.38);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:200;padding:36px 20px}
-.modal-box{background:white;border-radius:26px;padding:32px 26px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.22);width:100%;position:relative}
-.modal-close{position:absolute;top:16px;right:16px;width:28px;height:28px;border-radius:50%;background:var(--gray-light);border:none;cursor:pointer;font-size:13px;font-weight:800;color:var(--gray-mid);display:flex;align-items:center;justify-content:center}
-
-/* ── PROGRESS ── */
-.prog-labels{display:flex;justify-content:space-between;margin:14px 0 7px}
-.prog-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.4px;transition:color .3s}
-.prog-label.active{color:white}
-.prog-track{height:5px;background:rgba(255,255,255,.22);border-radius:50px;overflow:hidden}
-.prog-fill{height:100%;background:white;border-radius:50px;transition:width .4s ease}
-.rstep{display:none}.rstep.active{display:block}
-.sstep{display:none}.sstep.active{display:block}
-.upload-area{border:2.5px dashed var(--orange-border);border-radius:16px;padding:34px 14px;text-align:center;cursor:pointer;background:white;transition:all .2s;box-shadow:var(--sh)}
-.upload-area:hover{border-color:var(--orange);background:var(--orange-pale)}
-.notify-btn{flex:1;padding:11px;border-radius:50px;border:2px solid var(--orange-border);background:white;color:var(--gray-mid);font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:var(--sh)}
-.notify-btn.sel{background:var(--orange);color:white;border-color:var(--orange)}
-.rnav{display:flex;gap:10px;padding:10px 18px 18px;background:var(--bg)}
-.rnav-btn{flex:1;padding:13px;border-radius:50px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s}
-.rnav-btn.filled{background:var(--orange);color:white;border:none;box-shadow:var(--sh-o)}
-.rnav-btn.hollow{background:white;color:var(--gray);border:2px solid #E8E8E8}
-.rnav-btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
-
-/* ── ADOPT ── */
-.adopt-card{border-radius:22px;overflow:hidden;box-shadow:var(--sh-lg);background:white}
-.approved-stamp{position:absolute;top:13px;right:13px;background:white;border:2.5px solid var(--red);color:var(--red);border-radius:7px;padding:3px 9px;font-size:12px;font-weight:900;transform:rotate(-8deg);line-height:1.3;z-index:2}
-.adopt-dot{height:6px;border-radius:50px;background:var(--orange-border);transition:all .3s;width:6px}
-.adopt-dot.active{background:var(--orange);width:18px}
-.aa{border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;transition:transform .15s;flex-shrink:0}
-.aa:hover{transform:scale(1.1)}
-.aa.pass{width:56px;height:56px;font-size:20px;background:#FCE4E4;box-shadow:0 4px 14px rgba(229,57,53,.18)}
-.aa.inf{width:40px;height:40px;font-size:15px;background:var(--gray-light)}
-.aa.int{width:48px;height:48px;font-size:18px;background:#FFF3E0;box-shadow:0 4px 12px rgba(240,112,32,.2)}
-.aa.sup{width:56px;height:56px;font-size:20px;background:#E8F4FD;box-shadow:0 4px 14px rgba(3,169,244,.18)}
-
-/* ── SHELTER ── */
-.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 18px 6px}
-.mc{background:var(--white);border-radius:16px;padding:14px 16px;box-shadow:var(--sh);cursor:pointer;transition:transform .15s}
-.mc:hover{transform:translateY(-2px)}
-.recent-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-light)}
-.recent-row:last-child{border-bottom:none}
-.filter-tabs{display:flex;gap:7px;padding:12px 18px 4px;overflow-x:auto}
-.filter-tabs::-webkit-scrollbar{display:none}
-.ftab{padding:7px 14px;border-radius:50px;font-size:12px;font-weight:800;cursor:pointer;border:none;white-space:nowrap;font-family:'Nunito',sans-serif;transition:all .2s}
-.ftab.active{background:var(--green);color:white;box-shadow:var(--sh-g)}
-.ftab:not(.active){background:var(--white);color:var(--gray-mid);box-shadow:var(--sh)}
-.animal-card{display:flex;align-items:center;gap:13px;padding:11px 14px;background:var(--white);border-radius:14px;margin:6px 18px 0;box-shadow:var(--sh);cursor:pointer;transition:transform .15s}
-.animal-card:hover{transform:translateY(-2px)}
-.health-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.hi{display:flex;align-items:center;justify-content:space-between;background:white;border-radius:12px;padding:11px 13px;box-shadow:var(--sh)}
-.hi label{font-size:12px;font-weight:800;color:var(--text)}
-.ts{width:36px;height:20px;border-radius:50px;background:var(--gray-light);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
-.ts.on{background:var(--green)}
-.ts::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:white;transition:left .2s}
-.ts.on::after{left:19px}
-.tb{flex:1;padding:10px;border-radius:50px;border:2px solid var(--green-border);background:white;color:var(--gray-mid);font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:var(--sh)}
-.tb.sel{background:var(--green);color:white;border-color:var(--green)}
-.req-card{background:var(--white);border-radius:16px;margin:8px 18px 0;padding:14px 16px;box-shadow:var(--sh)}
-.req-btn{flex:1;padding:10px;border-radius:50px;font-size:12px;font-weight:800;cursor:pointer;border:none;font-family:'Nunito',sans-serif;transition:all .2s}
-.req-btn.app{background:var(--green);color:white;box-shadow:var(--sh-g)}
-.req-btn.dec{background:var(--red-pale);color:var(--red)}
-.req-btn.inf{background:var(--gray-light);color:var(--gray-mid)}
-.notif-item{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:var(--white);border-radius:14px;margin:8px 18px 0;box-shadow:var(--sh);cursor:pointer;position:relative}
-.notif-item.unread::before{content:'';position:absolute;top:16px;right:14px;width:8px;height:8px;border-radius:50%;background:var(--green)}
-.sov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:300;text-align:center;padding:40px}
-.sov.ob{background:var(--orange)}.sov.gb{background:var(--green)}
-.sov-btn{background:white;border:none;border-radius:50px;padding:15px 36px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.14)}
-.sov-btn.ot{color:var(--orange)}.sov-btn.gt{color:var(--green)}
-
-/* SPLASH */
-#splash{background:white;justify-content:center;align-items:center;gap:40px;padding:40px 32px}
-.rc{border-radius:18px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .15s,box-shadow .15s;border:none;text-align:left;font-family:'Nunito',sans-serif;width:100%}
-.rc.filled{background:var(--orange);box-shadow:var(--sh-o)}.rc.filled:hover{transform:translateY(-2px)}
-.rc.greenf{background:var(--green);box-shadow:var(--sh-g)}.rc.greenf:hover{transform:translateY(-2px)}
-.rc h3{font-size:16px;font-weight:800;color:white;margin-bottom:2px}
-.rc p{font-size:12px;color:rgba(255,255,255,.8);font-weight:600}
-
-/* ══════════════════════════════
-   WELLNESS SYSTEM
-══════════════════════════════ */
-
-/* ── Wellness overlay (full screen, gentle) ── */
-.wov {
-  position:absolute;inset:0;z-index:400;
-  display:flex;flex-direction:column;
-  background:linear-gradient(160deg,#1A1040 0%,#2D1B6E 50%,#1A3040 100%);
-  overflow-y:auto;
-  animation:wFadeIn .5s ease;
-}
-.wov::-webkit-scrollbar{display:none}
-@keyframes wFadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
-/* stars bg */
-.wov-stars{
-  position:absolute;inset:0;pointer-events:none;overflow:hidden;
-}
-.wov-stars::before,.wov-stars::after{
-  content:'';position:absolute;
-  background:radial-gradient(circle,rgba(255,255,255,.9) 1px,transparent 1px);
-  background-size:40px 40px;
-  width:200%;height:200%;
-  animation:wStarDrift 60s linear infinite;
-  opacity:.15;
-}
-.wov-stars::after{background-size:60px 60px;animation-duration:90s;animation-direction:reverse;opacity:.08}
-@keyframes wStarDrift{from{transform:translateX(0) translateY(0)}to{transform:translateX(-50%) translateY(-50%)}}
-
-.wov-close{
-  position:absolute;top:16px;right:16px;z-index:10;
-  width:32px;height:32px;border-radius:50%;
-  background:rgba(255,255,255,.12);border:none;cursor:pointer;
-  color:rgba(255,255,255,.7);font-size:16px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Nunito',sans-serif;font-weight:800;
-  transition:background .2s;
-}
-.wov-close:hover{background:rgba(255,255,255,.22)}
-
-.wov-body{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:60px 28px 32px;
-  position:relative;z-index:2;text-align:center;
-}
-
-.wov-moon{font-size:52px;margin-bottom:16px;animation:wPulse 3s ease-in-out infinite}
-@keyframes wPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-
-.wov-eyebrow{
-  font-size:10px;font-weight:800;color:rgba(255,255,255,.5);
-  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;
-}
-.wov-title{
-  font-size:22px;font-weight:900;color:white;
-  line-height:1.25;margin-bottom:12px;
-}
-.wov-body-text{
-  font-size:14px;font-weight:600;color:rgba(255,255,255,.7);
-  line-height:1.7;margin-bottom:32px;max-width:300px;
-}
-
-/* ── Affirmation pill ── */
-.wov-affirmation{
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:16px;padding:16px 20px;
-  margin-bottom:28px;width:100%;
-  font-size:15px;font-weight:700;
-  color:rgba(255,255,255,.9);
-  font-style:italic;line-height:1.5;
-  position:relative;
-}
-.wov-affirmation::before{content:'"';font-size:36px;color:rgba(255,255,255,.2);position:absolute;top:-8px;left:12px;font-family:Georgia,serif}
-
-/* ── Breathing circle ── */
-.wov-breath-wrap{margin-bottom:28px}
-.breath-circle-outer{
-  width:140px;height:140px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 16px;
-  border:2px solid rgba(255,255,255,.15);
-  position:relative;
-}
-.breath-ring{
-  position:absolute;inset:0;border-radius:50%;
-  border:3px solid rgba(180,160,255,.5);
-  animation:none;
-}
-.breath-ring.breathing{
-  animation:breathExpand 4s ease-in-out infinite;
-}
-@keyframes breathExpand{
-  0%,100%{transform:scale(1);opacity:.5}
-  50%{transform:scale(1.18);opacity:1}
-}
-.breath-inner{
-  width:96px;height:96px;border-radius:50%;
-  background:radial-gradient(circle,rgba(160,130,255,.35) 0%,rgba(100,80,200,.2) 100%);
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;
-  border:1px solid rgba(255,255,255,.2);
-  animation:none;
-  transition:transform .3s;
-}
-.breath-inner.breathing{animation:breathInner 4s ease-in-out infinite}
-@keyframes breathInner{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.breath-label{
-  font-size:13px;font-weight:800;color:rgba(255,255,255,.7);
-  letter-spacing:.5px;height:20px;
-}
-.breath-phase{
-  font-size:18px;font-weight:900;color:white;
-  margin-top:4px;height:24px;
-  animation:fadePhase .4s ease;
-}
-@keyframes fadePhase{from{opacity:0}to{opacity:1}}
-.breath-count{
-  font-size:12px;font-weight:700;color:rgba(255,255,255,.4);margin-top:6px;
-}
-
-/* ── Wellness action buttons ── */
-.wov-actions{display:flex;flex-direction:column;gap:10px;width:100%}
-.wov-btn-primary{
-  background:rgba(255,255,255,.15);
-  border:1.5px solid rgba(255,255,255,.25);
-  border-radius:50px;padding:14px;
-  font-size:14px;font-weight:800;color:white;
-  cursor:pointer;font-family:'Nunito',sans-serif;
-  transition:background .2s;
-  backdrop-filter:blur(8px);
-}
-.wov-btn-primary:hover{background:rgba(255,255,255,.22)}
-.wov-btn-secondary{
-  background:transparent;border:none;
-  font-size:13px;font-weight:700;
-  color:rgba(255,255,255,.45);
-  cursor:pointer;font-family:'Nunito',sans-serif;
-  padding:8px;
-}
-
-/* ── Gentle toast (non-intrusive reminder) ── */
-.wellness-toast{
-  position:absolute;bottom:80px;left:12px;right:12px;
-  background:linear-gradient(135deg,#1A1040,#2D1B6E);
-  border:1px solid rgba(160,130,255,.3);
-  border-radius:18px;padding:14px 16px;
-  display:flex;align-items:center;gap:12px;
-  box-shadow:0 8px 32px rgba(0,0,0,.25);
-  z-index:350;
-  animation:toastIn .4s cubic-bezier(.34,1.56,.64,1) both;
-  cursor:pointer;
-}
-.wellness-toast.hiding{animation:toastOut .3s ease forwards}
-@keyframes toastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(16px)}}
-.toast-icon{font-size:24px;flex-shrink:0}
-.toast-content{flex:1}
-.toast-title{font-size:13px;font-weight:800;color:white;margin-bottom:2px}
-.toast-sub{font-size:11px;font-weight:600;color:rgba(255,255,255,.6);line-height:1.4}
-.toast-action{
-  font-size:11px;font-weight:800;color:rgba(160,130,255,.9);
-  white-space:nowrap;flex-shrink:0;
-}
-.toast-dismiss{
-  font-size:14px;color:rgba(255,255,255,.35);
-  flex-shrink:0;font-weight:800;
-}
-
-/* ── Gentle banner inside screens (hope / relief moments) ── */
-.wellness-banner{
-  margin:0 18px 14px;
-  background:linear-gradient(135deg,rgba(26,16,64,.08),rgba(45,27,110,.06));
-  border:1px solid rgba(100,80,200,.15);
-  border-radius:16px;padding:14px 16px;
-  display:flex;align-items:flex-start;gap:12px;
-  cursor:pointer;
-  transition:background .2s;
-}
-.wellness-banner:hover{background:linear-gradient(135deg,rgba(26,16,64,.13),rgba(45,27,110,.1))}
-.wb-icon{font-size:22px;flex-shrink:0;margin-top:1px}
-.wb-text strong{font-size:13px;font-weight:800;color:#2D1B6E;display:block;margin-bottom:2px}
-.wb-text span{font-size:12px;font-weight:600;color:#5A4A8A;line-height:1.45}
-.wb-cta{font-size:11px;font-weight:800;color:rgba(100,80,200,.8);margin-top:6px;display:block}
-</style>
+  <!-- Fonts & styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<div class="phone">
+<!-- <div class="app">
 
-<!-- SPLASH -->
-<div class="screen active" id="splash">
-  <div style="text-align:center"><div style="font-size:50px">🐾❤️</div><div style="font-size:52px;font-weight:900;color:var(--orange);letter-spacing:-2px;line-height:1;margin-top:6px">unidos</div><p style="font-size:13px;color:var(--gray);font-weight:600;margin-top:6px">Reuniting pets with their families</p></div>
-  <div style="display:flex;flex-direction:column;gap:12px;width:100%">
-    <button class="rc filled" onclick="switchRole('owner');goTo('ownerSearch')"><span style="font-size:32px">🐶</span><div><h3>I'm a pet owner</h3><p>Search for your rescued pet or register a lost pet.</p></div></button>
-    <button class="rc greenf" onclick="switchRole('shelter');goTo('shelterDash')"><span style="font-size:32px">🏠</span><div><h3>I am a shelter/rescuer</h3><p>Register rescued animals and manage adoptions.</p></div></button>
+  <!-- ══════════════════════════════
+       SPLASH
+  ══════════════════════════════ -->
+  <div class="screen active" id="splash">
+    <div style="text-align:center">
+      <div style="font-size:50px">🐾❤️</div>
+      <div style="font-size:52px;font-weight:900;color:var(--orange);letter-spacing:-2px;line-height:1;margin-top:6px">unidos</div>
+      <p style="font-size:13px;color:var(--gray);font-weight:600;margin-top:6px">Reuniting pets with their families</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;width:100%">
+      <button class="rc filled" onclick="switchRole('owner');goTo('ownerSearch')">
+        <span style="font-size:32px">🐶</span>
+        <div><h3>I'm a pet owner</h3><p>Search for your rescued pet or register a lost pet.</p></div>
+      </button>
+      <button class="rc greenf" onclick="switchRole('shelter');goTo('shelterDash')">
+        <span style="font-size:32px">🏠</span>
+        <div><h3>I am a shelter/rescuer</h3><p>Register rescued animals and manage adoptions.</p></div>
+      </button>
+    </div>
   </div>
-</div>
 
-<!-- OWNER SEARCH -->
-<div class="screen" id="ownerSearch">
-  <div style="padding:18px 18px 8px">
-    <div class="search-box">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input id="searchInput" placeholder="Search by type, color, location…" oninput="filterPets()"/>
-      <svg id="clearSearch" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5" style="cursor:pointer;display:none" onclick="clearSearch()"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </div>
-    <div class="role-switch" style="margin-top:10px">
-      <button class="role-pill ao" id="op1" onclick="switchRole('owner');goTo('ownerSearch')">🐶 Pet owner</button>
-      <button class="role-pill" id="sp1" onclick="switchRole('shelter');goTo('shelterDash')">🏠 Shelter</button>
-    </div>
-  </div>
-  <div id="sectionTitle" style="font-size:17px;font-weight:900;color:var(--text);padding:8px 18px 4px">Recently rescued</div>
-  <div class="pets-grid" id="petsGrid">
-    <div class="pet-card" onclick="showDetail(0)" data-tags="dog male san pelayo córdoba brown labrador">
-      <div class="pet-photo"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=400&fit=crop&auto=format" alt="Dog"/></div>
-      <div class="pet-info"><div class="ptr"><span class="pt">Dog</span><span class="sp">Male</span></div><div class="ploc">San Pelayo, Córdoba</div></div>
-    </div>
-    <div class="pet-card" onclick="showDetail(1)" data-tags="cat female lorica córdoba white">
-      <div class="pet-photo"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop&auto=format" alt="Cat"/></div>
-      <div class="pet-info"><div class="ptr"><span class="pt">Cat</span><span class="sp">Female</span></div><div class="ploc">Lorica, Córdoba</div></div>
-    </div>
-    <div class="pet-card" onclick="showDetail(2)" data-tags="dog female tierra alta córdoba black">
-      <div class="pet-photo"><img src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=400&h=400&fit=crop&auto=format" alt="Dog"/></div>
-      <div class="pet-info"><div class="ptr"><span class="pt">Dog</span><span class="sp">Female</span></div><div class="ploc">Tierra alta, Córdoba</div></div>
-    </div>
-    <div class="pet-card" onclick="showDetail(3)" data-tags="cat male lorica córdoba black">
-      <div class="pet-photo"><img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400&h=400&fit=crop&auto=format" alt="Cat"/></div>
-      <div class="pet-info"><div class="ptr"><span class="pt">Cat</span><span class="sp">Male</span></div><div class="ploc">Lorica, Córdoba</div></div>
-    </div>
-    <div class="pet-card" onclick="showDetail(4)" data-tags="dog male san pelayo poodle white small">
-      <div class="pet-photo"><img src="https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=400&h=400&fit=crop&auto=format" alt="Dog"/></div>
-      <div class="pet-info"><div class="ptr"><span class="pt">Dog</span><span class="sp">Male</span></div><div class="ploc">San Pelayo, Córdoba</div></div>
-    </div>
-    <div class="pet-card" onclick="showDetail(5)" data-tags="dog female montería córdoba golden retriever">
-      <div class="pet-photo"><img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop&auto=format" alt="Dog"/></div>
-      <div class="pet-info"><div class="ptr"><span class="pt">Dog</span><span class="sp">Female</span></div><div class="ploc">Montería, Córdoba</div></div>
-    </div>
-  </div>
-  <div class="empty-state" id="emptyState" style="display:none;flex-direction:column;align-items:center;padding:40px 28px;text-align:center">
-    <div style="font-size:48px;opacity:.35;margin-bottom:12px">&#x1F50D;</div>
-    <div style="font-size:16px;font-weight:800;color:var(--gray-mid);margin-bottom:6px">No pets found</div>
-    <div style="font-size:13px;font-weight:600;color:var(--gray);line-height:1.5;margin-bottom:16px">Try a different search — type, color, or location.</div>
-    <button style="background:var(--orange);color:white;border:none;border-radius:50px;padding:11px 26px;font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o);margin-bottom:20px" onclick="clearSearch()">Clear search</button>
-    <div class="wellness-banner" onclick="showWellness('no-results')" style="width:100%;margin:0">
-      <div class="wb-icon">&#x1F319;</div>
-      <div class="wb-text">
-        <strong>The search can be exhausting</strong>
-        <span>Taking a moment to breathe is not giving up. It is taking care of yourself so you can keep searching.</span>
-        <span class="wb-cta">Breathing exercise &#x2192;</span>
+  <!-- ══════════════════════════════
+       OWNER – SEARCH
+  ══════════════════════════════ -->
+  <div class="screen" id="ownerSearch">
+    <div style="padding:18px 18px 8px">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="searchInput" placeholder="Search by type, color, location…" oninput="filterPets()"/>
+        <svg id="clearSearch" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5" style="cursor:pointer;display:none" onclick="clearSearch()"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <div class="role-switch" style="margin-top:10px">
+        <button class="role-pill ao" id="op1" onclick="switchRole('owner');goTo('ownerSearch')">🐶 Pet owner</button>
+        <button class="role-pill"    id="sp1" onclick="switchRole('shelter');goTo('shelterDash')">🏠 Shelter</button>
       </div>
     </div>
-  </div>
-  <div class="bnav o3">
-    <button class="ni no" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
-    <button class="ni" onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
-    <button class="ni" onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
-  </div>
-</div>
 
-<!-- OWNER DETAIL -->
-<div class="screen" id="ownerDetail">
-  <div style="display:flex;align-items:center;gap:10px;padding:14px 18px 8px">
-    <button class="back-btn" onclick="goTo('ownerSearch')">←</button>
-    <div class="search-box" style="flex:1"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="Search…" style="font-size:13px"/></div>
-  </div>
-  <div class="detail-photo"><img id="detailImg" src="" alt=""/></div>
-  <div class="card" style="margin-top:12px">
-    <div class="detail-grid">
-      <div><div class="dl">Pet type</div><div class="dv" id="dType">Dog</div></div>
-      <div><div class="dl">Sex</div><div class="dv" id="dSex">Male</div></div>
-      <div><div class="dl">Size</div><div class="dv" id="dSize">Medium</div></div>
-      <div><div class="dl">Color</div><div class="dv" id="dColor">Brown</div></div>
-      <div class="df"><div class="dl">Distinguishing marks</div><div class="dv" id="dMarks" style="font-size:13px">—</div></div>
-      <div class="df"><div class="dl">Rescued in</div><div class="dv" id="dLoc" style="font-size:13px">—</div></div>
-      <div><div class="dl">Date</div><div class="dv" id="dDate" style="font-size:13px">—</div></div>
+    <div id="sectionTitle" style="font-size:17px;font-weight:900;color:var(--text);padding:8px 18px 4px">Recently rescued</div>
+
+    <div class="pets-grid" id="petsGrid">
+      <!-- Populated by renderPetsGrid() in app.js -->
     </div>
-  </div>
-  <!-- HOPE moment wellness banner -->
-  <div class="wellness-banner" onclick="showWellness('this-is-my-pet')" style="margin-top:4px">
-    <div class="wb-icon">&#x2728;</div>
-    <div class="wb-text">
-      <strong>Something inside you recognizes your pet</strong>
-      <span>That instinct deserves to be heard. Breathe and trust what you feel.</span>
-      <span class="wb-cta">A moment before continuing &#x2192;</span>
-    </div>
-  </div>
-  <div style="padding:12px 18px 18px;display:flex;flex-direction:column;gap:8px">
-    <button class="cta-p" onclick="document.getElementById('petModal').style.display='flex'">🐾 This is my pet</button>
-    <button class="cta-s" onclick="goTo('ownerSearch')">Keep searching</button>
-  </div>
-  <div class="modal-overlay" id="petModal" style="display:none">
-    <div class="modal-box">
-      <button class="modal-close" onclick="document.getElementById('petModal').style.display='none'">✕</button>
-      <div style="font-size:44px;margin-bottom:14px">🧡</div>
-      <div style="font-size:19px;font-weight:900;margin-bottom:10px">The moment you've been waiting for</div>
-      <div style="font-size:13px;font-weight:600;color:var(--gray);line-height:1.65;margin-bottom:22px">Your pet is not just part of your home, they are part of your strength. Being back together is the first big step toward a new beginning.</div>
-      <button style="width:100%;background:var(--orange);color:white;border:none;border-radius:50px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)" onclick="goTo('ownerFound');document.getElementById('petModal').style.display='none'">Find out where my pet is →</button>
-    </div>
-  </div>
-</div>
 
-<!-- OWNER FOUND -->
-<div class="screen" id="ownerFound">
-  <div style="padding:14px 18px 0;display:flex;align-items:center;gap:10px">
-    <button class="back-btn" onclick="goTo('ownerDetail')">←</button>
-    <div style="flex:1;background:white;border:2px solid var(--orange-border);border-radius:50px;padding:9px 15px;display:flex;align-items:center;gap:8px;box-shadow:var(--sh)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span style="font-size:12px;font-weight:600;color:#C5BDB5">Search…</span></div>
-  </div>
-  <div style="height:12px"></div>
-  <div style="background:var(--orange);color:white;text-align:center;padding:16px 18px;border-radius:20px;margin:0 18px 12px;box-shadow:var(--sh-o)"><div style="font-size:24px">🤍</div><h2 style="font-size:17px;font-weight:900;margin:4px 0 2px">Your pet has been found</h2><p style="font-size:12px;opacity:.85;font-weight:600">Waiting for you at a shelter</p></div>
-  <!-- RELIEF moment: reunification wellness -->
-  <div class="wellness-banner" onclick="showWellness('reunion')" style="margin-top:0">
-    <div class="wb-icon">&#x1F9E1;</div>
-    <div class="wb-text">
-      <strong>You did it. Your love found the way.</strong>
-      <span>Before you go — close your eyes for a second. Let this moment truly reach you.</span>
-      <span class="wb-cta">You deserve this moment &#x2192;</span>
-    </div>
-  </div>
-  <div style="display:flex;align-items:center;gap:12px;margin:0 18px 12px;background:var(--white);border-radius:16px;padding:12px;box-shadow:var(--sh)">
-    <div class="found-thumb"><img id="foundThumb" src="" alt=""/></div>
-    <div><strong style="font-size:14px;font-weight:900;color:var(--orange);display:block;margin-bottom:2px" id="foundLabel">Male dog · small</strong><span style="font-size:11px;font-weight:600;color:var(--gray)">Rescued on February 14</span></div>
-  </div>
-  <div style="font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;padding:0 18px;margin-bottom:8px">Current shelter</div>
-  <div class="card"><div style="font-size:15px;font-weight:900;margin-bottom:2px">Montería Central Shelter</div><div style="font-size:12px;color:var(--gray);font-weight:600;margin-bottom:8px">Cra. 2 #32-45, Montería, Córdoba</div><div style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">🕐 Today: 7:00 am – 6:00 pm</div><div style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">💬 +57 310 432 1100</div></div>
-  <div style="padding:8px 18px 10px"><div style="display:inline-flex;align-items:center;gap:6px;background:var(--orange-pale);color:var(--orange);border:1px solid var(--orange-border);font-size:12px;font-weight:800;padding:5px 13px;border-radius:50px">📍 28 km from your location</div></div>
-  <div style="font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;padding:0 18px;margin-bottom:8px">What to bring</div>
-  <div class="card" style="margin-bottom:14px"><ul style="padding-left:16px"><li style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">Identification (ID)</li><li style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">A photo of you with your pet</li><li style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">Vaccination records (if available)</li></ul></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 18px 22px">
-    <button style="padding:13px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;background:var(--orange);color:white;border:none;box-shadow:var(--sh-o);font-family:Nunito,sans-serif">💬 WhatsApp</button>
-    <button style="padding:13px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;background:white;color:var(--orange);border:2px solid var(--orange-border);font-family:Nunito,sans-serif">🗺 View map</button>
-  </div>
-  <div class="bnav o3">
-    <button class="ni no" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
-    <button class="ni" onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
-    <button class="ni" onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
-  </div>
-</div>
-
-<!-- OWNER REPORT -->
-<div class="screen" id="ownerReport">
-  <div style="background:var(--orange);padding:20px 18px 18px;border-radius:0 0 26px 26px">
-    <h2 style="font-size:20px;font-weight:900;color:white">Report a rescued pet</h2>
-    <p style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:3px">Help reunite animals with their families</p>
-    <div class="prog-labels"><span class="prog-label active" id="rpl1">Photo</span><span class="prog-label" id="rpl2">Details</span><span class="prog-label" id="rpl3">Location</span><span class="prog-label" id="rpl4">Contact</span></div>
-    <div class="prog-track"><div class="prog-fill" id="rpf" style="width:25%"></div></div>
-  </div>
-  <div style="padding:18px;flex:1">
-    <div class="rstep active" id="rs1"><div class="fl">Upload a photo of the animal</div><div class="upload-area" onclick="document.getElementById('rpi').click()"><div style="font-size:42px;margin-bottom:8px" id="rup">📷</div><p style="font-size:13px;font-weight:700;color:var(--gray)" id="rut">Tap to <span style="color:var(--orange)">take or upload</span> a photo</p><input type="file" id="rpi" accept="image/*" style="display:none" onchange="prevPhoto(event,'rup','rut')"></div></div>
-    <div class="rstep" id="rs2">
-      <div class="fl">Animal type</div><div style="display:flex;flex-wrap:wrap;gap:7px" id="rtc"><span class="chip" onclick="sc(this,'rtc')">🐶 Dog</span><span class="chip" onclick="sc(this,'rtc')">🐱 Cat</span><span class="chip" onclick="sc(this,'rtc')">🐇 Rabbit</span><span class="chip" onclick="sc(this,'rtc')">Other</span></div>
-      <div class="fl">Sex</div><div style="display:flex;flex-wrap:wrap;gap:7px" id="rsc"><span class="chip" onclick="sc(this,'rsc')">Male</span><span class="chip" onclick="sc(this,'rsc')">Female</span><span class="chip" onclick="sc(this,'rsc')">Unknown</span></div>
-      <div class="fl">Size</div><div style="display:flex;flex-wrap:wrap;gap:7px" id="rsz"><span class="chip" onclick="sc(this,'rsz')">Small</span><span class="chip" onclick="sc(this,'rsz')">Medium</span><span class="chip" onclick="sc(this,'rsz')">Large</span></div>
-      <div class="fl">Color</div><input class="fi" placeholder="e.g. Brown and white"/>
-    </div>
-    <div class="rstep" id="rs3">
-      <div class="fl">Where was the animal rescued?</div><input class="fi" placeholder="City, neighborhood"/>
-      <div class="fl">Street address</div><input class="fi" placeholder="e.g. Boulevard Libertadores"/>
-      <div class="fl">Date rescued</div><input class="fi" type="date"/>
-      <div class="fl">Distinguishing marks?</div><input class="fi" placeholder="Scars, collar, chip…"/>
-    </div>
-    <div class="rstep" id="rs4">
-      <div style="background:var(--orange);border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:9px;margin-bottom:14px;box-shadow:var(--sh-o)"><span>🔒</span><span style="font-size:13px;font-weight:800;color:white;flex:1">Private contact details</span><span style="font-size:10px;font-weight:700;color:rgba(255,255,255,.75)">Just for you</span></div>
-      <p style="font-size:12px;font-weight:600;color:var(--gray);margin-bottom:14px;text-align:center;line-height:1.5">No one else will see this. We only use it to notify you if someone finds your pet.</p>
-      <div class="fl">Phone number</div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">📞</span><input class="fi" style="flex:1" type="tel" placeholder="+57 …"/></div>
-      <div class="fl">Name</div><input class="fi" placeholder="Your name"/>
-      <div class="fl">Notify me via</div>
-      <div style="display:flex;gap:9px" id="rnb"><button class="notify-btn" onclick="sn(this,'rnb')">📱 WhatsApp</button><button class="notify-btn" onclick="sn(this,'rnb')">📞 Call</button></div>
-    </div>
-  </div>
-  <div class="rnav">
-    <button class="rnav-btn hollow" id="rBack" onclick="rPrev()" disabled>← Back</button>
-    <button class="rnav-btn filled" id="rNext" onclick="rNext()">Next →</button>
-  </div>
-  <div class="bnav o3">
-    <button class="ni" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
-    <button class="ni no"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
-    <button class="ni" onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
-  </div>
-</div>
-
-<!-- OWNER ADOPT -->
-<div class="screen" id="ownerAdopt">
-  <div style="background:var(--orange);padding:14px 18px;display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:19px;font-weight:900;color:white">unidos</h2><span style="background:rgba(255,255,255,.22);color:white;font-size:11px;font-weight:800;padding:5px 13px;border-radius:50px;border:1.5px solid rgba(255,255,255,.35)">Adopt</span></div>
-  <div style="margin:11px 18px;background:#E8F5E9;border-radius:13px;padding:10px 13px;display:flex;align-items:flex-start;gap:9px"><span>✅</span><span style="font-size:12px;font-weight:600;color:#2E7D32;line-height:1.4"><strong>Shelter-approved only.</strong> These animals have no owner after 30+ days.</span></div>
-  <div style="padding:0 18px">
-    <div class="adopt-card">
-      <div class="adopt-photo" id="adoptPhotoWrap">
-        <img id="adoptImg" src="" alt="" style="width:100%;height:100%;object-fit:cover"/>
-        <div class="approved-stamp" id="adoptStamp">✓ Approved<br>PASS</div>
-      </div>
-      <div style="padding:14px 16px">
-        <div style="display:flex;align-items:baseline;gap:7px;margin-bottom:2px"><span id="adoptName" style="font-size:21px;font-weight:900">Toby</span><span id="adoptAge" style="font-size:14px;font-weight:600;color:var(--gray)">· 2 yrs</span></div>
-        <div id="adoptSub" style="font-size:12px;color:var(--gray);font-weight:600;margin-bottom:9px">Mixed dog · Male · Medium</div>
-        <div id="adoptTags" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px"></div>
-        <div id="adoptShelter" style="font-size:11px;color:var(--gray);font-weight:600">🏠 Albergue Montería 2 · 2.3 km</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:5px;justify-content:center;margin:9px 0 3px" id="adoptDots"></div>
-  </div>
-  <div style="display:flex;gap:10px;justify-content:center;align-items:center;padding:8px 18px 2px">
-    <button class="aa pass" onclick="swipe('pass')">✕</button>
-    <button class="aa inf" onclick="alert('Vaccinated: Yes\nSterilized: Yes\nHealth: Good\nTemperament: Calm, friendly')">ℹ</button>
-    <button class="aa int" onclick="swipe('interested')">🐾</button>
-    <button class="aa sup" onclick="swipe('super')">⭐</button>
-  </div>
-  <div style="display:flex;justify-content:center;gap:6px;padding-bottom:6px;font-size:10px;font-weight:700;color:var(--gray)">
-    <span style="min-width:56px;text-align:center">✕ Pass</span><span style="min-width:40px;text-align:center">Info</span><span style="min-width:48px;text-align:center">🐾 Like</span><span style="min-width:56px;text-align:center">⭐ Super</span>
-  </div>
-  <div class="bnav o3">
-    <button class="ni" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
-    <button class="ni" onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
-    <button class="ni no"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
-  </div>
-</div>
-
-<!-- SHELTER DASH -->
-<div class="screen" id="shelterDash">
-  <div style="background:var(--green);padding:20px 18px 16px;border-radius:0 0 26px 26px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><h2 style="font-size:20px;font-weight:900;color:white">Dashboard</h2><button style="position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);border:none;cursor:pointer;font-size:18px" onclick="goTo('shelterNotifs')">🔔<div style="position:absolute;top:4px;right:4px;width:10px;height:10px;border-radius:50%;background:var(--red);border:2px solid var(--green)"></div></button></div>
-    <div style="display:flex;align-items:center;gap:10px"><div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:20px">🏠</div><div><div style="font-size:14px;font-weight:900;color:white">Montería Central Shelter</div><div style="font-size:11px;color:rgba(255,255,255,.75);font-weight:600">📍 Montería, Córdoba</div></div></div>
-  </div>
-  <div class="role-switch">
-    <button class="role-pill" id="op2" onclick="switchRole('owner');goTo('ownerSearch')">🐶 Pet owner</button>
-    <button class="role-pill as" id="sp2" onclick="switchRole('shelter');goTo('shelterDash')">🏠 Shelter</button>
-  </div>
-  <div class="metrics-grid">
-    <div class="mc" onclick="goTo('shelterAnimals')"><div style="font-size:28px;font-weight:900;color:var(--green);line-height:1;margin-bottom:4px">12</div><div style="font-size:12px;font-weight:700;color:var(--gray)">In custody</div><div style="font-size:11px;font-weight:700;color:var(--green);margin-top:4px">↑ 3 this week</div></div>
-    <div class="mc" onclick="goTo('shelterRequests')"><div style="font-size:28px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:4px">5</div><div style="font-size:12px;font-weight:700;color:var(--gray)">Adopt requests</div><div style="font-size:11px;font-weight:700;color:var(--orange);margin-top:4px">● 2 pending</div></div>
-    <div class="mc" onclick="goTo('shelterNotifs')"><div style="font-size:28px;font-weight:900;color:var(--blue);line-height:1;margin-bottom:4px">3</div><div style="font-size:12px;font-weight:700;color:var(--gray)">Owner matches</div><div style="font-size:11px;font-weight:700;color:var(--green);margin-top:4px">↑ New today</div></div>
-    <div class="mc"><div style="font-size:28px;font-weight:900;color:var(--gray-mid);line-height:1;margin-bottom:4px">8</div><div style="font-size:12px;font-weight:700;color:var(--gray)">Reunited</div><div style="font-size:11px;font-weight:700;color:var(--gray);margin-top:4px">This month</div></div>
-  </div>
-  <div style="padding:12px 18px 6px">
-    <div style="font-size:14px;font-weight:900;color:var(--text);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">Recent arrivals <a style="font-size:12px;font-weight:700;color:var(--green);cursor:pointer" onclick="goTo('shelterAnimals')">See all →</a></div>
-    <div class="card" style="padding:10px 14px">
-      <div class="recent-row"><div class="rthumb"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=100&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:800;color:var(--text)">Dog · Male · Medium</div><div style="font-size:11px;font-weight:600;color:var(--gray)">San Pelayo · Feb 19</div></div><span class="pill o">New</span></div>
-      <div class="recent-row"><div class="rthumb"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=100&h=100&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:800;color:var(--text)">Cat · Female · Small</div><div style="font-size:11px;font-weight:600;color:var(--gray)">Lorica · Feb 18</div></div><span class="pill b">Match</span></div>
-      <div class="recent-row"><div class="rthumb"><img src="https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=100&h=100&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:800;color:var(--text)">Dog · Male · Small</div><div style="font-size:11px;font-weight:600;color:var(--gray)">Montería · Feb 17</div></div><span class="pill g">Adopt</span></div>
-    </div>
-  </div>
-  <button style="margin:10px 18px 20px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--green);color:white;border:none;border-radius:50px;padding:15px;font-size:14px;font-weight:900;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-g);width:calc(100% - 36px)" onclick="goTo('shelterRegister')">＋ Register new rescued animal</button>
-  <div class="bnav s4">
-    <button class="ni ns" onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
-    <button class="ni" onclick="goTo('shelterAnimals')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
-    <button class="ni" onclick="goTo('shelterRequests')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
-    <button class="ni" onclick="goTo('shelterNotifs')" style="position:relative"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts<div style="position:absolute;top:7px;right:20px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid white"></div></button>
-  </div>
-</div>
-
-<!-- SHELTER ANIMALS -->
-<div class="screen" id="shelterAnimals">
-  <div style="background:var(--green);padding:18px 18px 14px;border-radius:0 0 24px 24px"><h2 style="font-size:19px;font-weight:900;color:white">Animals in custody</h2><div style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:2px">12 animals total</div></div>
-  <div class="filter-tabs">
-    <button class="ftab active" onclick="fa('all',this)">All (12)</button>
-    <button class="ftab" onclick="fa('available',this)">Available (7)</button>
-    <button class="ftab" onclick="fa('match',this)">Matches (3)</button>
-    <button class="ftab" onclick="fa('adopt',this)">Adopting (2)</button>
-  </div>
-  <div id="animalsList" style="padding-bottom:16px">
-    <div class="animal-card" data-status="available"><div class="ac-thumb"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=120&h=120&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">Dog · Male · Medium</div><div style="font-size:11px;font-weight:600;color:var(--gray)">Brown · San Pelayo · Feb 19</div></div><span class="pill o" style="flex-shrink:0">Available</span></div>
-    <div class="animal-card" data-status="match"><div class="ac-thumb"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=120&h=120&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">Cat · Female · Small</div><div style="font-size:11px;font-weight:600;color:var(--gray)">White & brown · Lorica · Feb 18</div></div><span class="pill b" style="flex-shrink:0">Match</span></div>
-    <div class="animal-card" data-status="adopt"><div class="ac-thumb"><img src="https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=120&h=120&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">Dog · Male · Small</div><div style="font-size:11px;font-weight:600;color:var(--gray)">White · Montería · Feb 17</div></div><span class="pill g" style="flex-shrink:0">Adopting</span></div>
-    <div class="animal-card" data-status="available"><div class="ac-thumb"><img src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=120&h=120&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">Dog · Female · Large</div><div style="font-size:11px;font-weight:600;color:var(--gray)">Black · Tierra Alta · Feb 15</div></div><span class="pill o" style="flex-shrink:0">Available</span></div>
-    <div class="animal-card" data-status="match"><div class="ac-thumb"><img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=120&h=120&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">Cat · Male · Small</div><div style="font-size:11px;font-weight:600;color:var(--gray)">Black · Lorica · Feb 14</div></div><span class="pill b" style="flex-shrink:0">Match</span></div>
-    <div class="animal-card" data-status="available"><div class="ac-thumb"><img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=120&h=120&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">Dog · Female · Medium</div><div style="font-size:11px;font-weight:600;color:var(--gray)">Golden · Tierra Alta · Feb 12</div></div><span class="pill o" style="flex-shrink:0">Available</span></div>
-    <div class="animal-card" data-status="adopt"><div class="ac-thumb"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=120&h=120&fit=crop&auto=format" alt=""/></div><div style="flex:1"><div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">Dog · Male · Large</div><div style="font-size:11px;font-weight:600;color:var(--gray)">Brown · Montería · Feb 10</div></div><span class="pill g" style="flex-shrink:0">Adopting</span></div>
-  </div>
-  <div style="padding:0 18px 6px"><button class="cta-p green" onclick="goTo('shelterRegister')">＋ Register new animal</button></div>
-  <div style="height:16px"></div>
-  <div class="bnav s4">
-    <button class="ni" onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
-    <button class="ni ns"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
-    <button class="ni" onclick="goTo('shelterRequests')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
-    <button class="ni" onclick="goTo('shelterNotifs')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts</button>
-  </div>
-</div>
-
-<!-- SHELTER REGISTER -->
-<div class="screen" id="shelterRegister">
-  <div style="background:var(--green);padding:20px 18px 18px;border-radius:0 0 26px 26px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><button class="back-btn" style="background:rgba(255,255,255,.2);color:white" onclick="goTo('shelterAnimals')">←</button><div><h2 style="font-size:19px;font-weight:900;color:white;margin:0">Register animal</h2><p style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin:0">New rescue intake form</p></div></div>
-    <div class="prog-labels"><span class="prog-label active" id="spl1">Photo</span><span class="prog-label" id="spl2">Details</span><span class="prog-label" id="spl3">Health</span><span class="prog-label" id="spl4">Publish</span></div>
-    <div class="prog-track"><div class="prog-fill" id="spf" style="width:25%"></div></div>
-  </div>
-  <div style="padding:18px;flex:1">
-    <div class="sstep active" id="ss1"><div class="fl">Animal photo</div><div class="upload-area" onclick="document.getElementById('spi').click()"><div style="font-size:42px;margin-bottom:8px" id="sup">📷</div><p style="font-size:13px;font-weight:700;color:var(--gray)" id="sut">Tap to <span style="color:var(--green)">take or upload</span> a photo</p><input type="file" id="spi" accept="image/*" style="display:none" onchange="prevPhoto(event,'sup','sut')"></div></div>
-    <div class="sstep" id="ss2">
-      <div class="fl">Animal type</div><div style="display:flex;flex-wrap:wrap;gap:7px" id="stc"><span class="chip" onclick="sc(this,'stc')">🐶 Dog</span><span class="chip" onclick="sc(this,'stc')">🐱 Cat</span><span class="chip" onclick="sc(this,'stc')">🐇 Rabbit</span><span class="chip" onclick="sc(this,'stc')">Other</span></div>
-      <div class="fl">Sex</div><div style="display:flex;flex-wrap:wrap;gap:7px" id="ssc"><span class="chip" onclick="sc(this,'ssc')">Male</span><span class="chip" onclick="sc(this,'ssc')">Female</span><span class="chip" onclick="sc(this,'ssc')">Unknown</span></div>
-      <div class="fl">Size</div><div style="display:flex;flex-wrap:wrap;gap:7px" id="ssz"><span class="chip" onclick="sc(this,'ssz')">Small</span><span class="chip" onclick="sc(this,'ssz')">Medium</span><span class="chip" onclick="sc(this,'ssz')">Large</span></div>
-      <div class="fl">Color</div><input class="fi" style="border-color:var(--green-border)" placeholder="e.g. Brown and white"/>
-      <div class="fl">Distinguishing marks</div><input class="fi" style="border-color:var(--green-border)" placeholder="Collar, scars, chip…"/>
-    </div>
-    <div class="sstep" id="ss3">
-      <div class="fl">Health status</div>
-      <div class="health-grid"><div class="hi"><label>Vaccinated</label><div class="ts" onclick="this.classList.toggle('on')"></div></div><div class="hi"><label>Sterilized</label><div class="ts" onclick="this.classList.toggle('on')"></div></div><div class="hi"><label>Microchipped</label><div class="ts" onclick="this.classList.toggle('on')"></div></div><div class="hi"><label>Dewormed</label><div class="ts" onclick="this.classList.toggle('on')"></div></div></div>
-      <div class="fl" style="margin-top:14px">Vet notes (optional)</div><input class="fi" style="border-color:var(--green-border)" placeholder="Injuries, conditions, treatment…"/>
-      <div class="fl">Estimated age</div><div style="display:flex;gap:8px" id="sac"><button class="tb" onclick="st(this,'sac')">Puppy</button><button class="tb" onclick="st(this,'sac')">Young</button><button class="tb" onclick="st(this,'sac')">Adult</button><button class="tb" onclick="st(this,'sac')">Senior</button></div>
-    </div>
-    <div class="sstep" id="ss4">
-      <div class="fl">Rescue location</div><input class="fi" style="border-color:var(--green-border)" placeholder="City, neighborhood"/>
-      <div class="fl">Date rescued</div><input class="fi" type="date"/>
-      <div class="fl">Available for adoption?</div><div style="display:flex;gap:8px" id="sad"><button class="tb sel" onclick="st(this,'sad')">Yes</button><button class="tb" onclick="st(this,'sad')">Not yet</button></div>
-      <div class="fl">Internal notes</div><input class="fi" style="border-color:var(--green-border)" placeholder="Staff notes, feeding, enclosure…"/>
-    </div>
-  </div>
-  <div style="display:flex;gap:10px;padding:10px 18px 18px;background:var(--bg)">
-    <button class="rnav-btn hollow" id="sBack" onclick="sPrev()" disabled>← Back</button>
-    <button class="rnav-btn filled" id="sNext" style="background:var(--green);box-shadow:var(--sh-g)" onclick="sNext()">Next →</button>
-  </div>
-  <div class="bnav s4">
-    <button class="ni" onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
-    <button class="ni ns"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
-    <button class="ni" onclick="goTo('shelterRequests')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
-    <button class="ni" onclick="goTo('shelterNotifs')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts</button>
-  </div>
-</div>
-
-<!-- SHELTER REQUESTS -->
-<div class="screen" id="shelterRequests">
-  <div style="background:var(--green);padding:18px 18px 14px;border-radius:0 0 24px 24px"><h2 style="font-size:19px;font-weight:900;color:white">Adoption requests</h2><div style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:2px">5 total · 2 pending review</div></div>
-  <div style="padding:10px 18px 4px;font-size:13px;font-weight:800;color:var(--orange)">● Pending review</div>
-  <div class="req-card"><div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👩</div><div><div style="font-size:14px;font-weight:900;color:var(--text)">María Camila Reyes</div><div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:1px">⭐ Super interested · 2 hrs ago</div></div></div><div style="display:flex;align-items:center;gap:9px;background:var(--bg);border-radius:12px;padding:9px 11px;margin-bottom:10px"><span style="font-size:22px">🐩</span><div><div style="font-size:12px;font-weight:700;color:var(--text)">Toby · Male dog · Small</div><div style="font-size:11px;font-weight:600;color:var(--gray)">In custody since Feb 17</div></div></div><p style="font-size:12px;font-weight:600;color:var(--gray-mid);line-height:1.5;margin-bottom:10px;font-style:italic">"I've been looking for a small dog for months. I have a house with a yard and two kids who would love him."</p><div style="display:flex;gap:8px"><button class="req-btn app" onclick="approveReq(this)">✓ Approve</button><button class="req-btn dec" onclick="declineReq(this)">✕ Decline</button><button class="req-btn inf">ℹ Profile</button></div></div>
-  <div class="req-card" style="margin-top:8px"><div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👨</div><div><div style="font-size:14px;font-weight:900;color:var(--text)">Carlos Suárez</div><div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:1px">🐾 Interested · 5 hrs ago</div></div></div><div style="display:flex;align-items:center;gap:9px;background:var(--bg);border-radius:12px;padding:9px 11px;margin-bottom:10px"><span style="font-size:22px">🐈</span><div><div style="font-size:12px;font-weight:700;color:var(--text)">Luna · Female cat · Small</div><div style="font-size:11px;font-weight:600;color:var(--gray)">In custody since Feb 18</div></div></div><p style="font-size:12px;font-weight:600;color:var(--gray-mid);line-height:1.5;margin-bottom:10px;font-style:italic">"I live alone and work from home. I'd love a calm indoor cat."</p><div style="display:flex;gap:8px"><button class="req-btn app" onclick="approveReq(this)">✓ Approve</button><button class="req-btn dec" onclick="declineReq(this)">✕ Decline</button><button class="req-btn inf">ℹ Profile</button></div></div>
-  <div style="height:18px"></div>
-  <div class="bnav s4">
-    <button class="ni" onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
-    <button class="ni" onclick="goTo('shelterAnimals')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
-    <button class="ni ns"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
-    <button class="ni" onclick="goTo('shelterNotifs')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts</button>
-  </div>
-</div>
-
-<!-- SHELTER NOTIFS -->
-<div class="screen" id="shelterNotifs">
-  <div style="background:var(--green);padding:18px 18px 14px;border-radius:0 0 24px 24px"><h2 style="font-size:19px;font-weight:900;color:white">Alerts & matches</h2><p style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:2px">3 new notifications today</p></div>
-  <div style="padding:10px 18px 4px;font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">Today</div>
-  <div class="notif-item unread" onclick="this.classList.remove('unread')"><div style="width:42px;height:42px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎯</div><div><div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">Possible owner match</div><div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">White cat (Feb 18) matches Daniela R.'s search in Lorica. 87% similarity.</div><div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">2 hours ago</div></div></div>
-  <div class="notif-item unread" onclick="this.classList.remove('unread')"><div style="width:42px;height:42px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">❤️</div><div><div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">New adoption request</div><div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">Carlos Suárez expressed interest in Luna (female cat).</div><div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">5 hours ago</div></div></div>
-  <div class="notif-item unread" onclick="this.classList.remove('unread')"><div style="width:42px;height:42px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎯</div><div><div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">Possible owner match</div><div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">Black cat (Feb 14) matches Jorge M.'s search. 73% similarity.</div><div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">6 hours ago</div></div></div>
-  <div style="padding:12px 18px 4px;font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">Yesterday</div>
-  <div class="notif-item"><div style="width:42px;height:42px;border-radius:50%;background:var(--blue-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">ℹ️</div><div><div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">Meeting confirmed</div><div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">Luisa Torres confirmed her visit for Rex on Feb 22 at 10:00 am.</div><div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">Yesterday, 3:14 pm</div></div></div>
-  <div class="notif-item"><div style="width:42px;height:42px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">❤️</div><div><div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">Adoption completed</div><div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">Biscuit was successfully adopted by Ana Gómez. 🎉</div><div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">Yesterday, 11:30 am</div></div></div>
-  <div style="height:16px"></div>
-  <div class="bnav s4">
-    <button class="ni" onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
-    <button class="ni" onclick="goTo('shelterAnimals')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
-    <button class="ni" onclick="goTo('shelterRequests')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
-    <button class="ni ns"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts</button>
-  </div>
-</div>
-
-</div><!-- /phone -->
-<script>
-// ── NAV ──
-function goTo(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.getElementById(id).scrollTop=0;}
-function switchRole(r){['op1','op2'].forEach(id=>{const e=document.getElementById(id);if(e)e.className='role-pill'+(r==='owner'?' ao':'')});['sp1','sp2'].forEach(id=>{const e=document.getElementById(id);if(e)e.className='role-pill'+(r==='shelter'?' as':'')});}
-
-// ── PET DATA ──
-const petData=[
-  {img:'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=450&fit=crop&auto=format',type:'Dog',sex:'Male',size:'Medium',color:'Brown and white',marks:'Friendly, responds to "Rufus"',loc:'San Pelayo, Córdoba<br>Boulevard Libertadores',date:'Feb 14',label:'Male dog · medium'},
-  {img:'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&h=450&fit=crop&auto=format',type:'Cat',sex:'Female',size:'Small',color:'White with brown spots',marks:'Blue eyes, very calm',loc:'Lorica, Córdoba<br>Parque Central',date:'Feb 11',label:'Female cat · small'},
-  {img:'https://images.unsplash.com/photo-1568572933382-74d440642117?w=600&h=450&fit=crop&auto=format',type:'Dog',sex:'Female',size:'Medium',color:'Black',marks:'No collar, slight limp left leg',loc:'Tierra alta, Córdoba',date:'Feb 9',label:'Female dog · medium'},
-  {img:'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=600&h=450&fit=crop&auto=format',type:'Cat',sex:'Male',size:'Small',color:'Black',marks:'Young kitten, approx. 2 months',loc:'Lorica, Córdoba',date:'Feb 12',label:'Male cat · small'},
-  {img:'https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=600&h=450&fit=crop&auto=format',type:'Dog',sex:'Male',size:'Small',color:'White',marks:'Long hair, scar on right paw',loc:'San Pelayo, Córdoba<br>Boulevard Libertadores',date:'Feb 14',label:'Male dog · small'},
-  {img:'https://images.unsplash.com/photo-1552053831-71594a27632d?w=600&h=450&fit=crop&auto=format',type:'Dog',sex:'Female',size:'Medium',color:'Golden',marks:'Very friendly, no collar',loc:'Montería, Córdoba',date:'Feb 16',label:'Female dog · medium'},
-];
-
-function showDetail(i){
-  const p=petData[i];
-  document.getElementById('detailImg').src=p.img;
-  document.getElementById('dType').textContent=p.type;
-  document.getElementById('dSex').textContent=p.sex;
-  document.getElementById('dSize').textContent=p.size;
-  document.getElementById('dColor').textContent=p.color;
-  document.getElementById('dMarks').textContent=p.marks;
-  document.getElementById('dLoc').innerHTML=p.loc;
-  document.getElementById('dDate').textContent=p.date;
-  document.getElementById('foundThumb').src=p.img;
-  document.getElementById('foundLabel').textContent=p.label;
-  goTo('ownerDetail');
-}
-
-// ── ADOPT ──
-const adoptPets=[
-  {img:'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=500&h=350&fit=crop&auto=format',name:'Toby',age:'2 yrs',sub:'Mixed dog · Male · Medium',tags:['Friendly','Good with kids','Vaccinated','Healthy'],shelter:'Albergue Montería 2 · 2.3 km',stamp:'approved'},
-  {img:'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&h=350&fit=crop&auto=format',name:'Luna',age:'1 yr',sub:'Domestic cat · Female · Small',tags:['Playful','Indoor','Sterilized'],shelter:'Albergue Central · 5.1 km',stamp:'approved'},
-  {img:'https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=500&h=350&fit=crop&auto=format',name:'Biscuit',age:'4 yrs',sub:'Poodle mix · Male · Small',tags:['Trained','Good with kids','Healthy'],shelter:'Albergue Sur · 8.4 km',stamp:'pass'},
-  {img:'https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&h=350&fit=crop&auto=format',name:'Goldie',age:'3 yrs',sub:'Golden mix · Female · Large',tags:['Active','Vaccinated','Trained'],shelter:'Albergue Norte · 3.7 km',stamp:'approved'},
-  {img:'https://images.unsplash.com/photo-1568572933382-74d440642117?w=500&h=350&fit=crop&auto=format',name:'Rex',age:'5 yrs',sub:'Lab mix · Male · Large',tags:['Calm','Vaccinated'],shelter:'Albergue Montería 1 · 1.8 km',stamp:'approved'},
-];
-let adoptIdx=0;
-function loadAdopt(){
-  const p=adoptPets[adoptIdx];
-  document.getElementById('adoptImg').src=p.img;
-  document.getElementById('adoptName').textContent=p.name;
-  document.getElementById('adoptAge').textContent='· '+p.age;
-  document.getElementById('adoptSub').textContent=p.sub;
-  document.getElementById('adoptShelter').textContent='🏠 '+p.shelter;
-  document.getElementById('adoptTags').innerHTML=p.tags.map((t,i)=>`<span style="padding:4px 11px;border-radius:50px;font-size:11px;font-weight:700;background:${i%2===0?'var(--orange-pale)':'var(--gray-light)'};color:${i%2===0?'var(--orange)':'var(--gray-mid)'}">${t}</span>`).join('');
-  const s=document.getElementById('adoptStamp');
-  s.style.borderColor=p.stamp==='approved'?'var(--red)':'#43A047';
-  s.style.color=p.stamp==='approved'?'var(--red)':'#43A047';
-  s.innerHTML=p.stamp==='approved'?'✓ Approved<br>PASS':'✓ PASS';
-  document.getElementById('adoptDots').innerHTML=adoptPets.map((_,i)=>`<div class="adopt-dot ${i===adoptIdx?'active':''}"></div>`).join('');
-}
-function swipe(action){
-  const w=document.getElementById('adoptPhotoWrap');
-  const dir=action==='pass'?-1:1;
-  w.style.transition='transform .35s ease,opacity .35s';
-  w.style.transform=`translateX(${dir*320}px) rotate(${dir*10}deg)`;
-  w.style.opacity='0';
-  setTimeout(()=>{
-    adoptIdx=(adoptIdx+1)%adoptPets.length;
-    loadAdopt();
-    w.style.transition='none';w.style.transform='translateX(0) rotate(0)';w.style.opacity='1';
-    setTimeout(()=>{w.style.transition='transform .35s ease,opacity .35s';},20);
-    if(action==='super')showSuccess('ownerAdopt','ob','ot',"⭐🐾","It's a match!","The shelter has been notified. They'll contact you within 24 hours.",()=>{});
-  },350);
-}
-loadAdopt();
-
-// ── REPORT STEPS ──
-let rStep=1;
-function rNext(){if(rStep<4){rStep++;updateR();}else{showWellnessSuccess('ownerReport');}}
-function rPrev(){if(rStep>1){rStep--;updateR();}}
-function updateR(){for(let i=1;i<=4;i++){document.getElementById('rs'+i).classList.toggle('active',i===rStep);document.getElementById('rpl'+i).classList.toggle('active',i<=rStep);}document.getElementById('rpf').style.width=(rStep*25)+'%';document.getElementById('rBack').disabled=rStep===1;document.getElementById('rNext').textContent=rStep===4?'Post report ✓':'Next →';}
-
-// ── SHELTER REGISTER STEPS ──
-let sStep=1;
-function sNext(){if(sStep<4){sStep++;updateS();}else{showSuccess('shelterRegister','gb','gt','🐾','Animal registered!','The animal is now in the system.',()=>{sStep=1;updateS();goTo('shelterAnimals');});}}
-function sPrev(){if(sStep>1){sStep--;updateS();}}
-function updateS(){for(let i=1;i<=4;i++){document.getElementById('ss'+i).classList.toggle('active',i===sStep);document.getElementById('spl'+i).classList.toggle('active',i<=sStep);}document.getElementById('spf').style.width=(sStep*25)+'%';document.getElementById('sBack').disabled=sStep===1;document.getElementById('sNext').textContent=sStep===4?'Publish animal ✓':'Next →';}
-
-// ── SEARCH ──
-function filterPets(){const q=document.getElementById('searchInput').value.toLowerCase().trim();document.getElementById('clearSearch').style.display=q?'block':'none';let v=0;document.querySelectorAll('#petsGrid .pet-card').forEach(c=>{const m=!q||c.dataset.tags.includes(q);c.style.display=m?'':'none';if(m)v++;});document.getElementById('emptyState').style.display=v===0?'flex':'none';document.getElementById('sectionTitle').textContent=q?`Results for "${q}"`:'Recently rescued';}
-function clearSearch(){document.getElementById('searchInput').value='';filterPets();}
-
-// ── HELPERS ──
-function sc(el,g){document.querySelectorAll('#'+g+' .chip').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
-function st(el,g){document.querySelectorAll('#'+g+' .tb').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');}
-function sn(el,g){document.querySelectorAll('#'+g+' .notify-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');}
-function prevPhoto(e,pi,ti){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{document.getElementById(pi).innerHTML=`<img src="${ev.target.result}" style="width:100%;height:120px;object-fit:cover;border-radius:10px">`;document.getElementById(ti).textContent='Photo uploaded ✓';};r.readAsDataURL(f);}
-function showSuccess(sid,bgc,tc,icon,title,sub,cb){const s=document.getElementById(sid);const ov=document.createElement('div');ov.className=`sov ${bgc}`;ov.innerHTML=`<div style="font-size:72px;margin-bottom:18px">${icon}</div><div style="font-size:24px;font-weight:900;color:white;margin-bottom:10px">${title}</div><div style="font-size:14px;font-weight:600;color:rgba(255,255,255,.85);line-height:1.65;margin-bottom:28px">${sub}</div><button class="sov-btn ${tc}" onclick="this.closest('.sov').remove();(${cb.toString()})()">Done</button>`;s.appendChild(ov);}
-function approveReq(btn){const c=btn.closest('.req-card');c.style.opacity='.5';c.style.pointerEvents='none';btn.textContent='✓ Approved';btn.style.background='var(--green)';}
-function declineReq(btn){const c=btn.closest('.req-card');c.style.transition='opacity .3s';c.style.opacity='0';setTimeout(()=>c.remove(),300);}
-function fa(status,tab){document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');document.querySelectorAll('#animalsList .animal-card').forEach(c=>{c.style.display=(status==='all'||c.dataset.status===status)?'flex':'none';});}
-
-// ══════════════════════════════
-// WELLNESS SYSTEM
-// ══════════════════════════════
-
-// ── Session timer: fires after 1 hour of active use (demo: 60 seconds) ──
-let sessionStart = Date.now();
-let toastShown = {};
-let wellnessActive = false;
-
-function checkSessionTime() {
-  const mins = (Date.now() - sessionStart) / 1000 / 60;
-  // In production: 60 mins. Demo uses 1 min for testing.
-  if (mins >= 1 && !toastShown['1hr']) {
-    toastShown['1hr'] = true;
-    showWellnessToast(
-      '☁️',
-      'You\'ve been searching for a while',
-      'Your dedication is pure love. Take a breath?',
-      () => showWellness('long-search')
-    );
-  }
-}
-setInterval(checkSessionTime, 15000);
-
-// ── Wellness content library ──
-const wellnessContent = {
-  'long-search': {
-    moon: '☁️',
-    eyebrow: 'You\'ve been searching for a while',
-    title: 'Your love has no limits. Your body needs rest.',
-    body: 'Searching for someone we love activates our mind intensely. It\'s normal to feel anxiety, exhaustion, or hopelessness. All of that is valid.',
-    affirmation: 'Every time you search, you tell your pet they matter. That is never wasted time.',
-    tool: 'breath',
-    breathLabel: '4-7-8 Breathing',
-    breathPhases: [
-      {label:'Inhale',duration:4000},
-      {label:'Hold',duration:7000},
-      {label:'Exhale',duration:8000}
-    ],
-    cycles: 3,
-    closeCta: 'Continue searching',
-    closeNote: 'Skip for now'
-  },
-  'no-results': {
-    moon: '🌙',
-    eyebrow: 'No matches right now',
-    title: 'Not finding today does not mean\nnot finding tomorrow.',
-    body: 'Records are updated constantly. Many owners find their pets days or even weeks after starting their search.',
-    affirmation: 'Hope is not naivety — it is the fuel that keeps you searching.',
-    tool: 'breath',
-    breathLabel: 'Box Breathing',
-    breathPhases: [
-      {label:'Inhale',duration:4000},
-      {label:'Hold',duration:4000},
-      {label:'Exhale',duration:4000},
-      {label:'Hold',duration:4000}
-    ],
-    cycles: 4,
-    closeCta: 'Keep searching',
-    closeNote: 'Go back'
-  },
-  'this-is-my-pet': {
-    moon: '✨',
-    eyebrow: 'An important moment',
-    title: 'Trust what your\nheart recognizes.',
-    body: 'A pet owner\'s instinct is powerful. If something inside you says "that\'s them", breathe first. Let stillness be with you in this moment.',
-    affirmation: 'No matter how much time has passed — the bond between you and your pet does not disappear.',
-    tool: 'breath',
-    breathLabel: 'Breathe before continuing',
-    breathPhases: [
-      {label:'Inhale',duration:4000},
-      {label:'Hold',duration:4000},
-      {label:'Exhale',duration:6000}
-    ],
-    cycles: 2,
-    closeCta: 'I am ready',
-    closeNote: 'Continue without breathing'
-  },
-  'report-published': {
-    moon: '🕯️',
-    eyebrow: 'Report published',
-    title: 'You did everything\nyou could today.',
-    body: 'The uncertainty of waiting is one of the hardest kinds of waiting. It is okay for it to hurt. Let that pain exist without judging it.',
-    affirmation: 'Your pet now has thousands of eyes looking for them. You are not alone in this.',
-    tool: 'affirmations',
-    affirmations: [
-      'I did everything I could today.',
-      'The waiting is also part of love.',
-      'I am not alone — people are searching alongside me.',
-      'I allow myself to rest without guilt.'
-    ],
-    closeCta: 'Go to home',
-    closeNote: 'Close'
-  },
-  'reunion': {
-    moon: '🌅',
-    eyebrow: 'The moment you\'ve been waiting for',
-    title: 'You did it.\nYou deserve this relief.',
-    body: 'After so much worry, the body needs time to process relief. You might feel like crying, laughing, or both — all of it is valid.',
-    affirmation: 'The love you poured into this search is a gift. For your pet and for yourself.',
-    tool: 'affirmations',
-    affirmations: [
-      'I allow myself to feel everything that comes now.',
-      'The waiting is over. I deserve to rest.',
-      'My love was stronger than the distance.',
-      'This too shall pass — into joy.'
-    ],
-    closeCta: 'Go pick up my pet',
-    closeNote: 'Cerrar'
-  }
-};
-
-// ── Show wellness overlay ──
-function showWellness(type) {
-  const c = wellnessContent[type];
-  if (!c) return;
-  wellnessActive = true;
-
-  // Find the active screen to attach the overlay
-  const activeScreen = document.querySelector('.screen.active');
-  if (!activeScreen) return;
-
-  const ov = document.createElement('div');
-  ov.className = 'wov';
-  ov.id = 'wellnessOverlay';
-
-  const isBreath = c.tool === 'breath';
-  const isAffirm = c.tool === 'affirmations';
-
-  let toolHTML = '';
-  if (isBreath) {
-    toolHTML = `
-      <div class="wov-breath-wrap">
-        <div class="breath-circle-outer">
-          <div class="breath-ring" id="breathRing"></div>
-          <div class="breath-inner" id="breathInner">🫁</div>
+    <div class="empty-state" id="emptyState" style="display:none;flex-direction:column;align-items:center;padding:40px 28px;text-align:center">
+      <div style="font-size:48px;opacity:.35;margin-bottom:12px">🔍</div>
+      <div style="font-size:16px;font-weight:800;color:var(--gray-mid);margin-bottom:6px">No pets found</div>
+      <div style="font-size:13px;font-weight:600;color:var(--gray);line-height:1.5;margin-bottom:16px">Try a different search — type, color, or location.</div>
+      <button style="background:var(--orange);color:white;border:none;border-radius:50px;padding:11px 26px;font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o);margin-bottom:20px" onclick="clearSearch()">Clear search</button>
+      <div class="wellness-banner" onclick="showWellness('no-results')" style="width:100%;margin:0">
+        <div class="wb-icon">🌙</div>
+        <div class="wb-text">
+          <strong>The search can be exhausting</strong>
+          <span>Taking a moment to breathe is not giving up. It is taking care of yourself so you can keep searching.</span>
+          <span class="wb-cta">Breathing exercise →</span>
         </div>
-        <div class="breath-label">${c.breathLabel}</div>
-        <div class="breath-phase" id="breathPhase">Get ready…</div>
-        <div class="breath-count" id="breathCount"></div>
-      </div>`;
-  } else if (isAffirm) {
-    const affirmItems = c.affirmations.map((a,i) =>
-      `<div style="padding:12px 16px;background:rgba(255,255,255,${i===0?'.12':'.06'});border-radius:14px;margin-bottom:8px;font-size:14px;font-weight:700;color:rgba(255,255,255,${i===0?'.95':'.65'});text-align:left;border:1px solid rgba(255,255,255,${i===0?'.2':'.08'})">${i===0?'🌟 ':''}${a}</div>`
-    ).join('');
-    toolHTML = `<div style="width:100%;margin-bottom:20px">${affirmItems}</div>`;
-  }
-
-  ov.innerHTML = `
-    <div class="wov-stars"></div>
-    <button class="wov-close" onclick="closeWellness()">✕</button>
-    <div class="wov-body">
-      <div class="wov-moon">${c.moon}</div>
-      <div class="wov-eyebrow">${c.eyebrow}</div>
-      <div class="wov-title">${c.title.split('\\n').join('<br>')}</div>
-      <div class="wov-body-text">${c.body}</div>
-      ${c.affirmation ? `<div class="wov-affirmation">${c.affirmation}</div>` : ''}
-      ${toolHTML}
-      <div class="wov-actions">
-        <button class="wov-btn-primary" id="wovMainCta" onclick="closeWellness()">${c.closeCta}</button>
-        ${c.closeNote ? `<button class="wov-btn-secondary" onclick="closeWellness()">${c.closeNote}</button>` : ''}
       </div>
-    </div>`;
-
-  activeScreen.appendChild(ov);
-
-  if (isBreath) startBreathing(c.breathPhases, c.cycles);
-}
-
-// ── Breathing engine ──
-let breathTimer = null;
-function startBreathing(phases, totalCycles) {
-  let cycle = 0;
-  let phaseIdx = 0;
-  const ring = document.getElementById('breathRing');
-  const inner = document.getElementById('breathInner');
-  const phaseEl = document.getElementById('breathPhase');
-  const countEl = document.getElementById('breathCount');
-  if (!ring) return;
-
-  // Small delay before starting
-  setTimeout(() => {
-    ring.classList.add('breathing');
-    inner.classList.add('breathing');
-    runPhase();
-  }, 800);
-
-  function runPhase() {
-    if (!document.getElementById('breathRing')) return; // overlay closed
-    const p = phases[phaseIdx];
-    if (phaseEl) { phaseEl.style.animation='none'; phaseEl.offsetHeight; phaseEl.style.animation='fadePhase .4s ease'; phaseEl.textContent = p.label; }
-    if (countEl) countEl.textContent = `Ciclo ${cycle + 1} de ${totalCycles}`;
-
-    breathTimer = setTimeout(() => {
-      phaseIdx++;
-      if (phaseIdx >= phases.length) {
-        phaseIdx = 0;
-        cycle++;
-        if (cycle >= totalCycles) {
-          if (phaseEl) phaseEl.textContent = '✓ Done';
-          if (countEl) countEl.textContent = '';
-          const cta = document.getElementById('wovMainCta');
-          if (cta) { cta.textContent = 'I feel better'; cta.style.background = 'rgba(100,255,180,.2)'; cta.style.borderColor = 'rgba(100,255,180,.4)'; }
-          if (ring) ring.classList.remove('breathing');
-          if (inner) inner.classList.remove('breathing');
-          return;
-        }
-      }
-      runPhase();
-    }, p.duration);
-  }
-}
-
-function closeWellness() {
-  if (breathTimer) clearTimeout(breathTimer);
-  wellnessActive = false;
-  const ov = document.getElementById('wellnessOverlay');
-  if (ov) { ov.style.animation = 'wFadeIn .3s ease reverse'; setTimeout(() => ov.remove(), 280); }
-}
-
-// ── Gentle toast ──
-function showWellnessToast(icon, title, sub, onTap) {
-  const activeScreen = document.querySelector('.screen.active');
-  if (!activeScreen) return;
-
-  const t = document.createElement('div');
-  t.className = 'wellness-toast';
-  t.innerHTML = `
-    <div class="toast-icon">${icon}</div>
-    <div class="toast-content">
-      <div class="toast-title">${title}</div>
-      <div class="toast-sub">${sub}</div>
     </div>
-    <div class="toast-action">Respirar</div>
-    <div class="toast-dismiss" onclick="dismissToast(event,this.closest('.wellness-toast'))">✕</div>`;
-  t.addEventListener('click', (e) => {
-    if (e.target.classList.contains('toast-dismiss')) return;
-    dismissToast(e, t);
-    if (onTap) onTap();
-  });
-  activeScreen.appendChild(t);
-  setTimeout(() => { if (t.parentNode) dismissToast(null, t); }, 8000);
-}
 
-function dismissToast(e, el) {
-  if (e) e.stopPropagation();
-  el.classList.add('hiding');
-  setTimeout(() => el.remove(), 300);
-}
+    <div class="bnav o3">
+      <button class="ni no" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni"    onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni"    onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
 
-// ── Wellness success (after report published) ──
-function showWellnessSuccess(screenId) {
-  // First show the success screen, then the wellness overlay on top
-  const s = document.getElementById(screenId);
-  const ov = document.createElement('div');
-  ov.className = 'sov ob';
-  ov.innerHTML = `
-    <div style="font-size:72px;margin-bottom:18px">🎉</div>
-    <div style="font-size:24px;font-weight:900;color:white;margin-bottom:10px">Report published</div>
-    <div style="font-size:14px;font-weight:600;color:rgba(255,255,255,.85);line-height:1.65;margin-bottom:28px">Your pet is now visible to thousands of people. You did everything you could today.</div>
-    <button class="sov-btn ot" style="margin-bottom:14px" onclick="this.closest('.sov').remove();rStep=1;updateR();goTo('ownerSearch');setTimeout(()=>showWellness('report-published'),600)">Go home</button>`;
-  s.appendChild(ov);
-}
+  <!-- ══════════════════════════════
+       OWNER – DETAIL
+  ══════════════════════════════ -->
+  <div class="screen" id="ownerDetail">
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 18px 8px">
+      <button class="back-btn" onclick="goTo('ownerSearch')">←</button>
+      <div class="search-box" style="flex:1">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input placeholder="Search…" style="font-size:13px"/>
+      </div>
+    </div>
 
+    <div class="detail-photo"><img id="detailImg" src="" alt=""/></div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="detail-grid">
+        <div><div class="dl">Pet type</div><div class="dv" id="dType">Dog</div></div>
+        <div><div class="dl">Sex</div><div class="dv" id="dSex">Male</div></div>
+        <div><div class="dl">Size</div><div class="dv" id="dSize">Medium</div></div>
+        <div><div class="dl">Color</div><div class="dv" id="dColor">Brown</div></div>
+        <div class="df"><div class="dl">Distinguishing marks</div><div class="dv" id="dMarks" style="font-size:13px">—</div></div>
+        <div class="df"><div class="dl">Rescued in</div><div class="dv" id="dLoc" style="font-size:13px">—</div></div>
+        <div><div class="dl">Date</div><div class="dv" id="dDate" style="font-size:13px">—</div></div>
+      </div>
+    </div>
+
+    <div class="wellness-banner" onclick="showWellness('this-is-my-pet')" style="margin-top:4px">
+      <div class="wb-icon">✨</div>
+      <div class="wb-text">
+        <strong>Something inside you recognizes your pet</strong>
+        <span>That instinct deserves to be heard. Breathe and trust what you feel.</span>
+        <span class="wb-cta">A moment before continuing →</span>
+      </div>
+    </div>
+
+    <div style="padding:12px 18px 18px;display:flex;flex-direction:column;gap:8px">
+      <button class="cta-p" onclick="document.getElementById('petModal').style.display='flex'">🐾 This is my pet</button>
+      <button class="cta-s" onclick="goTo('ownerSearch')">Keep searching</button>
+    </div>
+
+    <div class="modal-overlay" id="petModal" style="display:none">
+      <div class="modal-box">
+        <button class="modal-close" onclick="document.getElementById('petModal').style.display='none'">✕</button>
+        <div style="font-size:44px;margin-bottom:14px">🧡</div>
+        <div style="font-size:19px;font-weight:900;margin-bottom:10px">The moment you've been waiting for</div>
+        <div style="font-size:13px;font-weight:600;color:var(--gray);line-height:1.65;margin-bottom:22px">Your pet is not just part of your home, they are part of your strength. Being back together is the first big step toward a new beginning.</div>
+        <button style="width:100%;background:var(--orange);color:white;border:none;border-radius:50px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)" onclick="goTo('ownerFound');document.getElementById('petModal').style.display='none'">Find out where my pet is →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       OWNER – FOUND
+  ══════════════════════════════ -->
+  <div class="screen" id="ownerFound">
+    <div style="padding:14px 18px 0;display:flex;align-items:center;gap:10px">
+      <button class="back-btn" onclick="goTo('ownerDetail')">←</button>
+      <div style="flex:1;background:white;border:2px solid var(--orange-border);border-radius:50px;padding:9px 15px;display:flex;align-items:center;gap:8px;box-shadow:var(--sh)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span style="font-size:12px;font-weight:600;color:#C5BDB5">Search…</span>
+      </div>
+    </div>
+    <div style="height:12px"></div>
+    <div style="background:var(--orange);color:white;text-align:center;padding:16px 18px;border-radius:20px;margin:0 18px 12px;box-shadow:var(--sh-o)">
+      <div style="font-size:24px">🤍</div>
+      <h2 style="font-size:17px;font-weight:900;margin:4px 0 2px">Your pet has been found</h2>
+      <p style="font-size:12px;opacity:.85;font-weight:600">Waiting for you at a shelter</p>
+    </div>
+    <div class="wellness-banner" onclick="showWellness('reunion')" style="margin-top:0">
+      <div class="wb-icon">🧡</div>
+      <div class="wb-text">
+        <strong>You did it. Your love found the way.</strong>
+        <span>Before you go — close your eyes for a second. Let this moment truly reach you.</span>
+        <span class="wb-cta">You deserve this moment →</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin:0 18px 12px;background:var(--white);border-radius:16px;padding:12px;box-shadow:var(--sh)">
+      <div class="found-thumb"><img id="foundThumb" src="" alt=""/></div>
+      <div>
+        <strong style="font-size:14px;font-weight:900;color:var(--orange);display:block;margin-bottom:2px" id="foundLabel">Male dog · small</strong>
+        <span style="font-size:11px;font-weight:600;color:var(--gray)">Rescued on February 14</span>
+      </div>
+    </div>
+    <div style="font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;padding:0 18px;margin-bottom:8px">Current shelter</div>
+    <div class="card">
+      <div style="font-size:15px;font-weight:900;margin-bottom:2px">Montería Central Shelter</div>
+      <div style="font-size:12px;color:var(--gray);font-weight:600;margin-bottom:8px">Cra. 2 #32-45, Montería, Córdoba</div>
+      <div style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">🕐 Today: 7:00 am – 6:00 pm</div>
+      <div style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">💬 +57 310 432 1100</div>
+    </div>
+    <div style="padding:8px 18px 10px">
+      <div style="display:inline-flex;align-items:center;gap:6px;background:var(--orange-pale);color:var(--orange);border:1px solid var(--orange-border);font-size:12px;font-weight:800;padding:5px 13px;border-radius:50px">📍 28 km from your location</div>
+    </div>
+    <div style="font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;padding:0 18px;margin-bottom:8px">What to bring</div>
+    <div class="card" style="margin-bottom:14px">
+      <ul style="padding-left:16px">
+        <li style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">Identification (ID)</li>
+        <li style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">A photo of you with your pet</li>
+        <li style="font-size:12px;font-weight:600;color:var(--gray-mid);margin:4px 0">Vaccination records (if available)</li>
+      </ul>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 18px 22px">
+      <button style="padding:13px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;background:var(--orange);color:white;border:none;box-shadow:var(--sh-o);font-family:Nunito,sans-serif">💬 WhatsApp</button>
+      <button style="padding:13px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;background:white;color:var(--orange);border:2px solid var(--orange-border);font-family:Nunito,sans-serif">🗺 View map</button>
+    </div>
+    <div class="bnav o3">
+      <button class="ni no" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni"    onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni"    onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       OWNER – REPORT
+  ══════════════════════════════ -->
+  <div class="screen" id="ownerReport">
+    <div style="background:var(--orange);padding:20px 18px 18px;border-radius:0 0 26px 26px">
+      <h2 style="font-size:20px;font-weight:900;color:white">Report a rescued pet</h2>
+      <p style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:3px">Help reunite animals with their families</p>
+      <div class="prog-labels">
+        <span class="prog-label active" id="rpl1">Photo</span>
+        <span class="prog-label"        id="rpl2">Details</span>
+        <span class="prog-label"        id="rpl3">Location</span>
+        <span class="prog-label"        id="rpl4">Contact</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="rpf" style="width:25%"></div></div>
+    </div>
+
+    <div style="padding:18px;flex:1">
+      <div class="rstep active" id="rs1">
+        <div class="fl">Upload a photo of the animal</div>
+        <div class="upload-area" onclick="document.getElementById('rpi').click()">
+          <div style="font-size:42px;margin-bottom:8px" id="rup">📷</div>
+          <p style="font-size:13px;font-weight:700;color:var(--gray)" id="rut">Tap to <span style="color:var(--orange)">take or upload</span> a photo</p>
+          <input type="file" id="rpi" accept="image/*" style="display:none" onchange="prevPhoto(event,'rup','rut')">
+        </div>
+      </div>
+      <div class="rstep" id="rs2">
+        <div class="fl">Animal type</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px" id="rtc">
+          <span class="chip" onclick="sc(this,'rtc')">🐶 Dog</span>
+          <span class="chip" onclick="sc(this,'rtc')">🐱 Cat</span>
+          <span class="chip" onclick="sc(this,'rtc')">🐇 Rabbit</span>
+          <span class="chip" onclick="sc(this,'rtc')">Other</span>
+        </div>
+        <div class="fl">Sex</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px" id="rsc">
+          <span class="chip" onclick="sc(this,'rsc')">Male</span>
+          <span class="chip" onclick="sc(this,'rsc')">Female</span>
+          <span class="chip" onclick="sc(this,'rsc')">Unknown</span>
+        </div>
+        <div class="fl">Size</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px" id="rsz">
+          <span class="chip" onclick="sc(this,'rsz')">Small</span>
+          <span class="chip" onclick="sc(this,'rsz')">Medium</span>
+          <span class="chip" onclick="sc(this,'rsz')">Large</span>
+        </div>
+        <div class="fl">Color</div>
+        <input class="fi" placeholder="e.g. Brown and white"/>
+      </div>
+      <div class="rstep" id="rs3">
+        <div class="fl">Where was the animal rescued?</div><input class="fi" placeholder="City, neighborhood"/>
+        <div class="fl">Street address</div><input class="fi" placeholder="e.g. Boulevard Libertadores"/>
+        <div class="fl">Date rescued</div><input class="fi" type="date"/>
+        <div class="fl">Distinguishing marks?</div><input class="fi" placeholder="Scars, collar, chip…"/>
+      </div>
+      <div class="rstep" id="rs4">
+        <div style="background:var(--orange);border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:9px;margin-bottom:14px;box-shadow:var(--sh-o)">
+          <span>🔒</span>
+          <span style="font-size:13px;font-weight:800;color:white;flex:1">Private contact details</span>
+          <span style="font-size:10px;font-weight:700;color:rgba(255,255,255,.75)">Just for you</span>
+        </div>
+        <p style="font-size:12px;font-weight:600;color:var(--gray);margin-bottom:14px;text-align:center;line-height:1.5">No one else will see this. We only use it to notify you if someone finds your pet.</p>
+        <div class="fl">Phone number</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">📞</span><input class="fi" style="flex:1" type="tel" placeholder="+57 …"/></div>
+        <div class="fl">Name</div><input class="fi" placeholder="Your name"/>
+        <div class="fl">Notify me via</div>
+        <div style="display:flex;gap:9px" id="rnb">
+          <button class="notify-btn" onclick="sn(this,'rnb')">📱 WhatsApp</button>
+          <button class="notify-btn" onclick="sn(this,'rnb')">📞 Call</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="rnav">
+      <button class="rnav-btn hollow" id="rBack" onclick="rPrev()" disabled>← Back</button>
+      <button class="rnav-btn filled" id="rNext" onclick="rNext()">Next →</button>
+    </div>
+
+    <div class="bnav o3">
+      <button class="ni"    onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni no"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni"    onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       OWNER – ADOPT
+  ══════════════════════════════ -->
+  <div class="screen" id="ownerAdopt">
+    <div style="background:var(--orange);padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
+      <h2 style="font-size:19px;font-weight:900;color:white">unidos</h2>
+      <span style="background:rgba(255,255,255,.22);color:white;font-size:11px;font-weight:800;padding:5px 13px;border-radius:50px;border:1.5px solid rgba(255,255,255,.35)">Adopt</span>
+    </div>
+    <div style="margin:11px 18px;background:#E8F5E9;border-radius:13px;padding:10px 13px;display:flex;align-items:flex-start;gap:9px">
+      <span>✅</span>
+      <span style="font-size:12px;font-weight:600;color:#2E7D32;line-height:1.4"><strong>Shelter-approved only.</strong> These animals have no owner after 30+ days.</span>
+    </div>
+
+    <div style="padding:0 18px">
+      <div class="adopt-card">
+        <div class="adopt-photo" id="adoptPhotoWrap">
+          <img id="adoptImg" src="" alt="" style="width:100%;height:100%;object-fit:cover"/>
+          <div class="approved-stamp" id="adoptStamp">✓ Approved<br>PASS</div>
+        </div>
+        <div style="padding:14px 16px">
+          <div style="display:flex;align-items:baseline;gap:7px;margin-bottom:2px">
+            <span id="adoptName" style="font-size:21px;font-weight:900">Toby</span>
+            <span id="adoptAge"  style="font-size:14px;font-weight:600;color:var(--gray)">· 2 yrs</span>
+          </div>
+          <div id="adoptSub"     style="font-size:12px;color:var(--gray);font-weight:600;margin-bottom:9px">Mixed dog · Male · Medium</div>
+          <div id="adoptTags"    style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px"></div>
+          <div id="adoptShelter" style="font-size:11px;color:var(--gray);font-weight:600">🏠 Albergue Montería 2 · 2.3 km</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:5px;justify-content:center;margin:9px 0 3px" id="adoptDots"></div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:center;align-items:center;padding:8px 18px 2px">
+      <button class="aa pass" onclick="swipe('pass')">✕</button>
+      <button class="aa inf"  onclick="alert('Vaccinated: Yes\nSterilized: Yes\nHealth: Good\nTemperament: Calm, friendly')">ℹ</button>
+      <button class="aa int"  onclick="swipe('interested')">🐾</button>
+      <button class="aa sup"  onclick="swipe('super')">⭐</button>
+    </div>
+    <div style="display:flex;justify-content:center;gap:6px;padding-bottom:6px;font-size:10px;font-weight:700;color:var(--gray)">
+      <span style="min-width:56px;text-align:center">✕ Pass</span>
+      <span style="min-width:40px;text-align:center">Info</span>
+      <span style="min-width:48px;text-align:center">🐾 Like</span>
+      <span style="min-width:56px;text-align:center">⭐ Super</span>
+    </div>
+
+    <div class="bnav o3">
+      <button class="ni"    onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni"    onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni no"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SHELTER – DASHBOARD
+  ══════════════════════════════ -->
+  <div class="screen" id="shelterDash">
+    <div style="background:var(--green);padding:20px 18px 16px;border-radius:0 0 26px 26px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <h2 style="font-size:20px;font-weight:900;color:white">Dashboard</h2>
+        <button style="position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);border:none;cursor:pointer;font-size:18px" onclick="goTo('shelterNotifs')">
+          🔔<div style="position:absolute;top:4px;right:4px;width:10px;height:10px;border-radius:50%;background:var(--red);border:2px solid var(--green)"></div>
+        </button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:20px">🏠</div>
+        <div>
+          <div style="font-size:14px;font-weight:900;color:white">Montería Central Shelter</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.75);font-weight:600">📍 Montería, Córdoba</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-switch">
+      <button class="role-pill"    id="op2" onclick="switchRole('owner');goTo('ownerSearch')">🐶 Pet owner</button>
+      <button class="role-pill as" id="sp2" onclick="switchRole('shelter');goTo('shelterDash')">🏠 Shelter</button>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="mc" onclick="goTo('shelterAnimals')">
+        <div id="metricCustody" style="font-size:28px;font-weight:900;color:var(--green);line-height:1;margin-bottom:4px">—</div>
+        <div style="font-size:12px;font-weight:700;color:var(--gray)">In custody</div>
+        <div style="font-size:11px;font-weight:700;color:var(--green);margin-top:4px">↑ 3 this week</div>
+      </div>
+      <div class="mc" onclick="goTo('shelterRequests')">
+        <div style="font-size:28px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:4px">5</div>
+        <div style="font-size:12px;font-weight:700;color:var(--gray)">Adopt requests</div>
+        <div style="font-size:11px;font-weight:700;color:var(--orange);margin-top:4px">● 2 pending</div>
+      </div>
+      <div class="mc" onclick="goTo('shelterNotifs')">
+        <div id="metricMatches" style="font-size:28px;font-weight:900;color:var(--blue);line-height:1;margin-bottom:4px">—</div>
+        <div style="font-size:12px;font-weight:700;color:var(--gray)">Owner matches</div>
+        <div style="font-size:11px;font-weight:700;color:var(--green);margin-top:4px">↑ New today</div>
+      </div>
+      <div class="mc">
+        <div style="font-size:28px;font-weight:900;color:var(--gray-mid);line-height:1;margin-bottom:4px">8</div>
+        <div style="font-size:12px;font-weight:700;color:var(--gray)">Reunited</div>
+        <div style="font-size:11px;font-weight:700;color:var(--gray);margin-top:4px">This month</div>
+      </div>
+    </div>
+
+    <div style="padding:12px 18px 6px">
+      <div style="font-size:14px;font-weight:900;color:var(--text);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+        Recent arrivals
+        <a style="font-size:12px;font-weight:700;color:var(--green);cursor:pointer" onclick="goTo('shelterAnimals')">See all →</a>
+      </div>
+      <div class="card" id="recentArrivals" style="padding:10px 14px">
+        <!-- Populated by renderRecentArrivals() in app.js -->
+      </div>
+    </div>
+
+    <button style="margin:10px 18px 20px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--green);color:white;border:none;border-radius:50px;padding:15px;font-size:14px;font-weight:900;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-g);width:calc(100% - 36px)" onclick="goTo('shelterRegister')">＋ Register new rescued animal</button>
+
+    <div class="bnav s4">
+      <button class="ni ns" onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
+      <button class="ni"    onclick="goTo('shelterAnimals')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
+      <button class="ni"    onclick="goTo('shelterRequests')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
+      <button class="ni"    onclick="goTo('shelterNotifs')" style="position:relative"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts<div style="position:absolute;top:7px;right:20px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid white"></div></button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SHELTER – ANIMALS
+  ══════════════════════════════ -->
+  <div class="screen" id="shelterAnimals">
+    <div style="background:var(--green);padding:18px 18px 14px;border-radius:0 0 24px 24px">
+      <h2 style="font-size:19px;font-weight:900;color:white">Animals in custody</h2>
+      <div style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:2px">12 animals total</div>
+    </div>
+
+    <div class="filter-tabs">
+      <button id="ftabAll"       class="ftab active" onclick="fa('all',this)">All</button>
+      <button id="ftabAvailable" class="ftab"        onclick="fa('available',this)">Available</button>
+      <button id="ftabMatch"     class="ftab"        onclick="fa('match',this)">Matches</button>
+      <button id="ftabAdopt"     class="ftab"        onclick="fa('adopt',this)">Adopting</button>
+    </div>
+
+    <div id="animalsList" style="padding-bottom:16px">
+      <!-- Populated by renderShelterAnimals() in app.js -->
+    </div>
+
+    <div style="padding:0 18px 6px"><button class="cta-p green" onclick="goTo('shelterRegister')">＋ Register new animal</button></div>
+    <div style="height:16px"></div>
+
+    <div class="bnav s4">
+      <button class="ni"    onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
+      <button class="ni ns"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
+      <button class="ni"    onclick="goTo('shelterRequests')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
+      <button class="ni"    onclick="goTo('shelterNotifs')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SHELTER – REGISTER
+  ══════════════════════════════ -->
+  <div class="screen" id="shelterRegister">
+    <div style="background:var(--green);padding:20px 18px 18px;border-radius:0 0 26px 26px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <button class="back-btn" style="background:rgba(255,255,255,.2);color:white" onclick="goTo('shelterAnimals')">←</button>
+        <div>
+          <h2 style="font-size:19px;font-weight:900;color:white;margin:0">Register animal</h2>
+          <p style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin:0">New rescue intake form</p>
+        </div>
+      </div>
+      <div class="prog-labels">
+        <span class="prog-label active" id="spl1">Photo</span>
+        <span class="prog-label"        id="spl2">Details</span>
+        <span class="prog-label"        id="spl3">Health</span>
+        <span class="prog-label"        id="spl4">Publish</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="spf" style="width:25%"></div></div>
+    </div>
+
+    <div style="padding:18px;flex:1">
+      <div class="sstep active" id="ss1">
+        <div class="fl">Animal photo</div>
+        <div class="upload-area" onclick="document.getElementById('spi').click()">
+          <div style="font-size:42px;margin-bottom:8px" id="sup">📷</div>
+          <p style="font-size:13px;font-weight:700;color:var(--gray)" id="sut">Tap to <span style="color:var(--green)">take or upload</span> a photo</p>
+          <input type="file" id="spi" accept="image/*" style="display:none" onchange="prevPhoto(event,'sup','sut')">
+        </div>
+      </div>
+      <div class="sstep" id="ss2">
+        <div class="fl">Animal type</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px" id="stc">
+          <span class="chip" onclick="sc(this,'stc')">🐶 Dog</span>
+          <span class="chip" onclick="sc(this,'stc')">🐱 Cat</span>
+          <span class="chip" onclick="sc(this,'stc')">🐇 Rabbit</span>
+          <span class="chip" onclick="sc(this,'stc')">Other</span>
+        </div>
+        <div class="fl">Sex</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px" id="ssc">
+          <span class="chip" onclick="sc(this,'ssc')">Male</span>
+          <span class="chip" onclick="sc(this,'ssc')">Female</span>
+          <span class="chip" onclick="sc(this,'ssc')">Unknown</span>
+        </div>
+        <div class="fl">Size</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px" id="ssz">
+          <span class="chip" onclick="sc(this,'ssz')">Small</span>
+          <span class="chip" onclick="sc(this,'ssz')">Medium</span>
+          <span class="chip" onclick="sc(this,'ssz')">Large</span>
+        </div>
+        <div class="fl">Color</div><input class="fi" style="border-color:var(--green-border)" placeholder="e.g. Brown and white"/>
+        <div class="fl">Distinguishing marks</div><input class="fi" style="border-color:var(--green-border)" placeholder="Collar, scars, chip…"/>
+      </div>
+      <div class="sstep" id="ss3">
+        <div class="fl">Health status</div>
+        <div class="health-grid">
+          <div class="hi"><label>Vaccinated</label><div class="ts" onclick="this.classList.toggle('on')"></div></div>
+          <div class="hi"><label>Sterilized</label><div class="ts" onclick="this.classList.toggle('on')"></div></div>
+          <div class="hi"><label>Microchipped</label><div class="ts" onclick="this.classList.toggle('on')"></div></div>
+          <div class="hi"><label>Dewormed</label><div class="ts" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+        <div class="fl" style="margin-top:14px">Vet notes (optional)</div>
+        <input class="fi" style="border-color:var(--green-border)" placeholder="Injuries, conditions, treatment…"/>
+        <div class="fl">Estimated age</div>
+        <div style="display:flex;gap:8px" id="sac">
+          <button class="tb" onclick="st(this,'sac')">Puppy</button>
+          <button class="tb" onclick="st(this,'sac')">Young</button>
+          <button class="tb" onclick="st(this,'sac')">Adult</button>
+          <button class="tb" onclick="st(this,'sac')">Senior</button>
+        </div>
+      </div>
+      <div class="sstep" id="ss4">
+        <div class="fl">Rescue location</div><input class="fi" style="border-color:var(--green-border)" placeholder="City, neighborhood"/>
+        <div class="fl">Date rescued</div><input class="fi" type="date"/>
+        <div class="fl">Available for adoption?</div>
+        <div style="display:flex;gap:8px" id="sad">
+          <button class="tb sel" onclick="st(this,'sad')">Yes</button>
+          <button class="tb"     onclick="st(this,'sad')">Not yet</button>
+        </div>
+        <div class="fl">Internal notes</div>
+        <input class="fi" style="border-color:var(--green-border)" placeholder="Staff notes, feeding, enclosure…"/>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:10px 18px 18px;background:var(--bg)">
+      <button class="rnav-btn hollow" id="sBack" onclick="sPrev()" disabled>← Back</button>
+      <button class="rnav-btn filled" id="sNext" style="background:var(--green);box-shadow:var(--sh-g)" onclick="sNext()">Next →</button>
+    </div>
+
+    <div class="bnav s4">
+      <button class="ni"    onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
+      <button class="ni ns"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
+      <button class="ni"    onclick="goTo('shelterRequests')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
+      <button class="ni"    onclick="goTo('shelterNotifs')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SHELTER – REQUESTS
+  ══════════════════════════════ -->
+  <div class="screen" id="shelterRequests">
+    <div style="background:var(--green);padding:18px 18px 14px;border-radius:0 0 24px 24px">
+      <h2 style="font-size:19px;font-weight:900;color:white">Adoption requests</h2>
+      <div style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:2px">5 total · 2 pending review</div>
+    </div>
+
+    <div style="padding:10px 18px 4px;font-size:13px;font-weight:800;color:var(--orange)">● Pending review</div>
+
+    <div class="req-card">
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
+        <div style="width:44px;height:44px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👩</div>
+        <div>
+          <div style="font-size:14px;font-weight:900;color:var(--text)">María Camila Reyes</div>
+          <div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:1px">⭐ Super interested · 2 hrs ago</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:var(--bg);border-radius:12px;padding:9px 11px;margin-bottom:10px">
+        <span style="font-size:22px">🐩</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text)">Toby · Male dog · Small</div>
+          <div style="font-size:11px;font-weight:600;color:var(--gray)">In custody since Feb 17</div>
+        </div>
+      </div>
+      <p style="font-size:12px;font-weight:600;color:var(--gray-mid);line-height:1.5;margin-bottom:10px;font-style:italic">"I've been looking for a small dog for months. I have a house with a yard and two kids who would love him."</p>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="req-btn app" onclick="approveReq(this)">✓ Approve</button>
+        <button class="req-btn dec" onclick="declineReq(this)">✕ Decline</button>
+        <button class="req-btn inf">ℹ Profile</button>
+      </div>
+    </div>
+
+    <div class="req-card" style="margin-top:8px">
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
+        <div style="width:44px;height:44px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👨</div>
+        <div>
+          <div style="font-size:14px;font-weight:900;color:var(--text)">Carlos Suárez</div>
+          <div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:1px">🐾 Interested · 5 hrs ago</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:var(--bg);border-radius:12px;padding:9px 11px;margin-bottom:10px">
+        <span style="font-size:22px">🐈</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text)">Luna · Female cat · Small</div>
+          <div style="font-size:11px;font-weight:600;color:var(--gray)">In custody since Feb 18</div>
+        </div>
+      </div>
+      <p style="font-size:12px;font-weight:600;color:var(--gray-mid);line-height:1.5;margin-bottom:10px;font-style:italic">"I live alone and work from home. I'd love a calm indoor cat."</p>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="req-btn app" onclick="approveReq(this)">✓ Approve</button>
+        <button class="req-btn dec" onclick="declineReq(this)">✕ Decline</button>
+        <button class="req-btn inf">ℹ Profile</button>
+      </div>
+    </div>
+
+    <div style="height:18px"></div>
+
+    <div class="bnav s4">
+      <button class="ni"    onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
+      <button class="ni"    onclick="goTo('shelterAnimals')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
+      <button class="ni ns"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
+      <button class="ni"    onclick="goTo('shelterNotifs')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SHELTER – NOTIFICATIONS
+  ══════════════════════════════ -->
+  <div class="screen" id="shelterNotifs">
+    <div style="background:var(--green);padding:18px 18px 14px;border-radius:0 0 24px 24px">
+      <h2 style="font-size:19px;font-weight:900;color:white">Alerts &amp; matches</h2>
+      <p style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:2px">3 new notifications today</p>
+    </div>
+
+    <div style="padding:10px 18px 4px;font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">Today</div>
+    <div class="notif-item unread" onclick="this.classList.remove('unread')">
+      <div style="width:42px;height:42px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎯</div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">Possible owner match</div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">White cat (Feb 18) matches Daniela R.'s search in Lorica. 87% similarity.</div>
+        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">2 hours ago</div>
+      </div>
+    </div>
+    <div class="notif-item unread" onclick="this.classList.remove('unread')">
+      <div style="width:42px;height:42px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">❤️</div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">New adoption request</div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">Carlos Suárez expressed interest in Luna (female cat).</div>
+        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">5 hours ago</div>
+      </div>
+    </div>
+    <div class="notif-item unread" onclick="this.classList.remove('unread')">
+      <div style="width:42px;height:42px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎯</div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">Possible owner match</div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">Black cat (Feb 14) matches Jorge M.'s search. 73% similarity.</div>
+        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">6 hours ago</div>
+      </div>
+    </div>
+
+    <div style="padding:12px 18px 4px;font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">Yesterday</div>
+    <div class="notif-item">
+      <div style="width:42px;height:42px;border-radius:50%;background:var(--blue-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">ℹ️</div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">Meeting confirmed</div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">Luisa Torres confirmed her visit for Rex on Feb 22 at 10:00 am.</div>
+        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">Yesterday, 3:14 pm</div>
+      </div>
+    </div>
+    <div class="notif-item">
+      <div style="width:42px;height:42px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">❤️</div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">Adoption completed</div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.45">Biscuit was successfully adopted by Ana Gómez. 🎉</div>
+        <div style="font-size:10px;font-weight:700;color:var(--gray);margin-top:4px">Yesterday, 11:30 am</div>
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <div class="bnav s4">
+      <button class="ni"    onclick="goTo('shelterDash')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dash</button>
+      <button class="ni"    onclick="goTo('shelterAnimals')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Animals</button>
+      <button class="ni"    onclick="goTo('shelterRequests')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Requests</button>
+      <button class="ni ns"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts</button>
+    </div>
+  </div>
+
+</div> -->
+<!-- /.app -->
+
+<script src="/js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
 </script>
 </body>
 </html>
-

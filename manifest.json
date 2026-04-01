@@ -1,0 +1,24 @@
+{
+  "name": "Unidos – Rescue & Adopt",
+  "short_name": "Unidos",
+  "description": "Reuniting pets with their families",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F1EE",
+  "theme_color": "#F07020",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
