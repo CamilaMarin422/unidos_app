@@ -7,13 +7,13 @@ const animals = [
   {
     id: 1,
     name: 'Toby',
-    img: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=450&fit=crop&auto=format',
-    imgThumb: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=120&h=120&fit=crop&auto=format',
-    type: 'Dog', sex: 'Male', size: 'Medium', color: 'Brown and white',
-    marks: 'Friendly, responds to "Toby"',
+    img: 'images/pets/6.png',
+    imgThumb: 'images/pets/6.png',
+    type: 'Dog', sex: 'Male', size: 'Small', color: 'Brown and white',
+    marks: 'Friendly and white snout markings',
     loc: 'San Pelayo, Córdoba', locStreet: 'Boulevard Libertadores',
     date: 'Feb 19',
-    searchTags: 'dog male san pelayo córdoba brown labrador',
+    searchTags: 'dog male san pelayo córdoba brown white jack russell terrier',
     age: '2 yrs',
     adoptTags: ['Friendly', 'Good with kids', 'Vaccinated', 'Healthy'],
     shelter: 'Albergue Montería 2 · 2.3 km',
@@ -23,13 +23,13 @@ const animals = [
   {
     id: 2,
     name: 'Luna',
-    img: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&h=450&fit=crop&auto=format',
-    imgThumb: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=120&h=120&fit=crop&auto=format',
-    type: 'Cat', sex: 'Female', size: 'Small', color: 'White with brown spots',
-    marks: 'Blue eyes, very calm',
+    img: 'images/pets/1.png',
+    imgThumb: 'images/pets/1.png',
+    type: 'Cat', sex: 'Female', size: 'Small', color: 'White with chocolate markings',
+    marks: 'Blue eyes, very calm, siamese-type coat',
     loc: 'Lorica, Córdoba', locStreet: 'Parque Central',
     date: 'Feb 18',
-    searchTags: 'cat female lorica córdoba white',
+    searchTags: 'cat female lorica córdoba white siamese chocolate',
     age: '1 yr',
     adoptTags: ['Playful', 'Indoor', 'Sterilized'],
     shelter: 'Albergue Central · 5.1 km',
@@ -39,13 +39,13 @@ const animals = [
   {
     id: 3,
     name: 'Biscuit',
-    img: 'https://hips.hearstapps.com/ghk.h-cdn.co/assets/17/40/labrador-retriever.jpg?crop=1.00xw:0.668xh;0,0.244xh',
-    imgThumb: 'https://hips.hearstapps.com/ghk.h-cdn.co/assets/17/40/labrador-retriever.jpg?crop=1.00xw:0.668xh;0,0.244xh',
-    type: 'Dog', sex: 'Male', size: 'Small', color: 'White',
-    marks: 'Long hair, scar on right paw',
+    img: 'images/pets/3.png',
+    imgThumb: 'images/pets/3.png',
+    type: 'Dog', sex: 'Male', size: 'Small', color: 'Beige and white',
+    marks: 'Fluffy coat, scruffy terrier mix',
     loc: 'San Pelayo, Córdoba', locStreet: 'Boulevard Libertadores',
     date: 'Feb 17',
-    searchTags: 'dog male san pelayo poodle white small',
+    searchTags: 'dog male san pelayo terrier beige white small fluffy',
     age: '4 yrs',
     adoptTags: ['Trained', 'Good with kids', 'Healthy'],
     shelter: 'Albergue Sur · 8.4 km',
@@ -55,13 +55,13 @@ const animals = [
   {
     id: 4,
     name: 'Sombra',
-    img: 'https://images.unsplash.com/photo-1568572933382-74d440642117?w=600&h=450&fit=crop&auto=format',
-    imgThumb: 'https://images.unsplash.com/photo-1568572933382-74d440642117?w=120&h=120&fit=crop&auto=format',
-    type: 'Dog', sex: 'Female', size: 'Large', color: 'Black',
-    marks: 'No collar, slight limp left leg',
+    img: 'images/pets/2.png',
+    imgThumb: 'images/pets/2.png',
+    type: 'Dog', sex: 'Female', size: 'Medium', color: 'Black',
+    marks: 'Worn collar, calm demeanor',
     loc: 'Tierra Alta, Córdoba', locStreet: '',
     date: 'Feb 15',
-    searchTags: 'dog female tierra alta córdoba black',
+    searchTags: 'dog female tierra alta córdoba black labrador mix',
     age: '3 yrs',
     adoptTags: ['Calm', 'Vaccinated'],
     shelter: 'Albergue Norte · 3.7 km',
@@ -71,13 +71,13 @@ const animals = [
   {
     id: 5,
     name: 'Tinto',
-    img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=600&h=450&fit=crop&auto=format',
-    imgThumb: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=120&h=120&fit=crop&auto=format',
+    img: 'images/pets/5.png',
+    imgThumb: 'images/pets/5.png',
     type: 'Cat', sex: 'Male', size: 'Small', color: 'Black',
-    marks: 'Young kitten, approx. 2 months',
+    marks: 'Young kitten, approx. 2 months, blue eyes',
     loc: 'Lorica, Córdoba', locStreet: '',
     date: 'Feb 14',
-    searchTags: 'cat male lorica córdoba black',
+    searchTags: 'cat male lorica córdoba black kitten',
     age: '2 mo',
     adoptTags: ['Playful', 'Indoor'],
     shelter: 'Albergue Central · 5.1 km',
@@ -86,16 +86,16 @@ const animals = [
   },
   {
     id: 6,
-    name: 'Goldie',
-    img: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=600&h=450&fit=crop&auto=format',
-    imgThumb: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=120&h=120&fit=crop&auto=format',
-    type: 'Dog', sex: 'Female', size: 'Medium', color: 'Golden',
-    marks: 'Very friendly, no collar',
+    name: 'Nieve',
+    img: 'images/pets/4.png',
+    imgThumb: 'images/pets/4.png',
+    type: 'Rabbit', sex: 'Female', size: 'Small', color: 'White',
+    marks: 'Red eyes, wearing a red harness',
     loc: 'Montería, Córdoba', locStreet: '',
     date: 'Feb 12',
-    searchTags: 'dog female montería córdoba golden retriever',
-    age: '3 yrs',
-    adoptTags: ['Active', 'Vaccinated', 'Trained'],
+    searchTags: 'rabbit female montería córdoba white albino',
+    age: '1 yr',
+    adoptTags: ['Calm', 'Gentle', 'Vaccinated'],
     shelter: 'Albergue Norte · 3.7 km',
     stamp: 'approved',
     status: 'available',
@@ -116,6 +116,48 @@ const animals = [
   //   stamp: 'approved',
   //   status: 'adopt',
   // },
+];
+
+/* ══════════════════════════════
+   REPORT PETS (lost pets shown on map)
+══════════════════════════════ */
+const reportPets = [
+  {
+    id: 'r1',
+    name: 'Nena',
+    img: 'images/pets_report/1.png',
+    type: 'Dog', sex: 'Female', size: 'Medium',
+    desc: 'Medium. Black coat with red collar, calm and gentle.',
+    address: 'Cra. 14 con calle 32',
+    loc: 'Tierra Alta, Córdoba',
+    lat: 8.176, lng: -76.058,
+    date: 'Mar 28',
+    comments: 3,
+  },
+  {
+    id: 'r2',
+    name: 'Peluso',
+    img: 'images/pets_report/2.png',
+    type: 'Dog', sex: 'Male', size: 'Medium',
+    desc: 'Medium. Long dark curly hair, very friendly.',
+    address: 'Parque Central',
+    loc: 'Lorica, Córdoba',
+    lat: 9.237, lng: -75.820,
+    date: 'Mar 29',
+    comments: 5,
+  },
+  {
+    id: 'r3',
+    name: 'Cacao',
+    img: 'images/pets_report/3.png',
+    type: 'Dog', sex: 'Female', size: 'Large',
+    desc: 'Large. Brown and white pointer mix, wears a floral bandana.',
+    address: 'Calle 12 # 5-40',
+    loc: 'Montería, Córdoba',
+    lat: 8.748, lng: -75.881,
+    date: 'Mar 30',
+    comments: 1,
+  },
 ];
 
 /* ── Helpers ─────────────────── */
@@ -218,6 +260,10 @@ function goTo(id) {
   const screen = document.getElementById(id);
   screen.classList.add('active');
   screen.scrollTop = 0;
+  if (id === 'ownerReport') {
+    setTimeout(initReportMap, 50);
+    renderReportPets();
+  }
 }
 
 function switchRole(r) {
@@ -295,13 +341,193 @@ function swipe(action) {
 }
 
 /* ══════════════════════════════
+   REPORT MAP & LIST
+══════════════════════════════ */
+let reportMap = null;
+let currentReportFilter = 'all';
+
+function initReportMap() {
+  if (reportMap) {
+    reportMap.invalidateSize();
+    return;
+  }
+  reportMap = L.map('reportMap', { zoomControl: false, attributionControl: false })
+    .setView([8.9, -75.95], 7);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+  }).addTo(reportMap);
+
+  reportPets.forEach((p, i) => {
+    L.circleMarker([p.lat, p.lng], {
+      radius: 13,
+      fillColor: '#F07020',
+      color: 'white',
+      weight: 2.5,
+      fillOpacity: 1,
+    }).addTo(reportMap).on('click', () => showReportDetail(i));
+  });
+}
+
+function renderReportPets(filter) {
+  if (filter !== undefined) currentReportFilter = filter;
+  const f = currentReportFilter;
+  const list = document.getElementById('reportPetsList');
+  if (!list) return;
+  const filtered = f === 'all' ? reportPets : reportPets.filter(p => p.type === f);
+  list.innerHTML = filtered.map(p => {
+    const idx = reportPets.indexOf(p);
+    const c = p.comments || 0;
+    return `
+    <div onclick="showReportDetail(${idx})" style="display:flex;align-items:center;gap:12px;background:white;border-radius:14px;padding:10px 12px;box-shadow:var(--sh);cursor:pointer">
+      <img src="${p.img}" style="width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0"/>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">${p.name} · ${p.type}</div>
+        <div style="font-size:12px;font-weight:600;color:var(--gray-mid)">${p.address}</div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray)">${p.loc} · ${p.date}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;color:${c > 0 ? 'var(--orange)' : 'var(--gray)'}">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style="font-size:12px;font-weight:800">${c}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterReport(el, type) {
+  document.querySelectorAll('.rpill').forEach(p => p.classList.remove('sel'));
+  el.classList.add('sel');
+  renderReportPets(type);
+}
+
+function showReportDetail(i) {
+  const p = reportPets[i];
+  document.getElementById('rdImg').src = p.img;
+  document.getElementById('rdAddress').textContent = p.address;
+  document.getElementById('rdSex').textContent = p.sex;
+  document.getElementById('rdDesc').textContent = p.desc;
+  const c = p.comments || 0;
+  document.getElementById('rdCommentCount').textContent = c;
+  document.getElementById('rdCommentSection').style.display = c > 0 ? 'flex' : 'none';
+  document.getElementById('rdNoComments').style.display = c === 0 ? 'block' : 'none';
+  goTo('reportDetail');
+}
+
+function startBreathAnim() {
+  const btn   = document.getElementById('rsBreathBtn');
+  const txt   = document.getElementById('rsBreathTxt');
+  const phase = document.getElementById('rsBreathPhase');
+  btn.onclick = null;
+
+  const steps = [
+    { label: 'Breath in',  phaseText: 'Breath in…',   scale: 1.35, duration: 4000 },
+    { label: 'Hold',       phaseText: 'Hold…',         scale: 1.35, duration: 4000 },
+    { label: 'Breath out', phaseText: 'Breath out…',   scale: 1,    duration: 6000 },
+  ];
+  let cycle = 0;
+  const totalCycles = 3;
+
+  function runStep(si) {
+    if (cycle >= totalCycles) {
+      txt.innerHTML = 'Done';
+      phase.textContent = 'Well done. Take your time.';
+      btn.style.transform = 'scale(1)';
+      btn.onclick = startBreathAnim;
+      return;
+    }
+    const s = steps[si];
+    txt.innerHTML = s.label;
+    phase.textContent = s.phaseText;
+    btn.style.transition = `transform ${s.duration}ms ease`;
+    btn.style.transform  = `scale(${s.scale})`;
+    setTimeout(() => {
+      const next = (si + 1) % steps.length;
+      if (next === 0) cycle++;
+      runStep(next);
+    }, s.duration);
+  }
+  runStep(0);
+}
+
+function postReportUpdate() {
+  alert('Thanks for your update! The pet owner will be notified.');
+}
+
+function loadDemoCatPhoto() {
+  const wrap = document.getElementById('rfPhotoWrap');
+  wrap.innerHTML = `<img src="images/pets_report/new_pet.png" style="width:100%;height:100%;object-fit:cover"/>`;
+  wrap.onclick = null;
+}
+
+function publishReport() {
+  const name    = document.getElementById('rfName').value.trim()    || 'Manchas';
+  const address = document.getElementById('rfAddress').value.trim() || 'Cra. 8 # 24-15';
+  const city    = document.getElementById('rfCity').value.trim()    || 'Montería, Córdoba';
+  const marks   = document.getElementById('rfMarks').value.trim()   || '';
+  const color   = document.getElementById('rfColor').value.trim()   || 'Black and white';
+  const typeEl  = document.querySelector('#rfType .chip.sel');
+  const sexEl   = document.querySelector('#rfSex .chip.sel');
+  const sizeEl  = document.querySelector('#rfSize .chip.sel');
+
+  const newPet = {
+    id:       'r' + (reportPets.length + 1),
+    name,
+    img:      'images/pets_report/new_pet.png',
+    type:     typeEl  ? typeEl.textContent  : 'Cat',
+    sex:      sexEl   ? sexEl.textContent   : 'Male',
+    size:     sizeEl  ? sizeEl.textContent  : 'Small',
+    desc:     `${sizeEl ? sizeEl.textContent : 'Small'}. ${marks || color + ' coat.'}`,
+    address,
+    loc:      city,
+    lat:      8.752 + (Math.random() - 0.5) * 0.02,
+    lng:     -75.876 + (Math.random() - 0.5) * 0.02,
+    date:    'Today',
+    comments: 0,
+  };
+
+  reportPets.push(newPet);
+
+  // Populate success screen
+  document.getElementById('rsImg').src  = newPet.img;
+  document.getElementById('rsName').textContent = newPet.name;
+  document.getElementById('rsType').textContent = newPet.type;
+  document.getElementById('rsSex').textContent  = newPet.sex;
+  document.getElementById('rsLoc').textContent  = newPet.address + ' · ' + newPet.loc;
+  document.getElementById('rsDate').textContent = newPet.date;
+  // Reset breath button
+  const btn = document.getElementById('rsBreathBtn');
+  btn.style.transform = 'scale(1)';
+  document.getElementById('rsBreathTxt').textContent = '';
+  document.getElementById('rsBreathTxt').innerHTML = 'Tap to<br>start';
+  document.getElementById('rsBreathPhase').textContent = 'Breath in · hold · breath out';
+
+  // Populate postcard screen
+  document.getElementById('pcImg').src  = newPet.img;
+  document.getElementById('pcName').textContent = newPet.name;
+  document.getElementById('pcType').textContent = newPet.type + ' · ' + newPet.sex;
+  document.getElementById('pcDesc').textContent = newPet.desc;
+  document.getElementById('pcLoc').textContent  = newPet.address + ', ' + newPet.loc;
+
+  goTo('reportSuccess');
+
+  // Add map marker after returning to report screen later
+  setTimeout(() => {
+    if (reportMap) {
+      const idx = reportPets.length - 1;
+      L.circleMarker([newPet.lat, newPet.lng], {
+        radius: 13, fillColor: '#F07020', color: 'white', weight: 2.5, fillOpacity: 1,
+      }).addTo(reportMap).on('click', () => showReportDetail(idx));
+    }
+  }, 300);
+}
+
+/* ══════════════════════════════
    REPORT STEPS
 ══════════════════════════════ */
 let rStep = 1;
 
 function rNext() {
   if (rStep < 4) { rStep++; updateR(); }
-  else           { showWellnessSuccess('ownerReport'); }
+  else           { showWellnessSuccess('ownerReportForm'); }
 }
 function rPrev() {
   if (rStep > 1) { rStep--; updateR(); }
@@ -343,24 +569,117 @@ function updateS() {
 }
 
 /* ══════════════════════════════
-   SEARCH
+   SEARCH + FILTER PILLS
 ══════════════════════════════ */
+const activeFilters = { type: 'all-type', size: 'all-size', loc: 'all-loc', date: 'all-date' };
+
+function showFilters() {
+  const fs = document.getElementById('filterSection');
+  fs.style.display = 'block';
+}
+
+function hideFilters() {
+  document.getElementById('filterSection').style.display = 'none';
+}
+
+function selectFilter(el, groupId, value) {
+  document.querySelectorAll('#' + groupId + ' .fpill').forEach(p => p.classList.remove('sel'));
+  el.classList.add('sel');
+  const key = groupId.replace('fg-', '');
+  activeFilters[key] = value;
+  filterPets();
+}
+
 function filterPets() {
   const q = document.getElementById('searchInput').value.toLowerCase().trim();
   document.getElementById('clearSearch').style.display = q ? 'block' : 'none';
+
   let visible = 0;
-  document.querySelectorAll('#petsGrid .pet-card').forEach(c => {
-    const match = !q || c.dataset.tags.includes(q);
-    c.style.display = match ? '' : 'none';
-    if (match) visible++;
+  document.querySelectorAll('#petsGrid .pet-card').forEach((c, i) => {
+    const a = animals[i];
+    const matchQ    = !q || c.dataset.tags.includes(q);
+    const matchType = activeFilters.type === 'all-type' || a.type === activeFilters.type;
+    const matchSize = activeFilters.size === 'all-size' || a.size === activeFilters.size;
+    const matchLoc  = activeFilters.loc  === 'all-loc'  || a.loc.toLowerCase().includes(activeFilters.loc.toLowerCase());
+    const matchDate = activeFilters.date === 'all-date' || true; // date is mock data
+    const show = matchQ && matchType && matchSize && matchLoc && matchDate;
+    c.style.display = show ? '' : 'none';
+    if (show) visible++;
   });
+
   document.getElementById('emptyState').style.display = visible === 0 ? 'flex' : 'none';
-  document.getElementById('sectionTitle').textContent = q ? `Results for "${q}"` : 'Recently rescued';
+  const countEl = document.getElementById('resultsCount');
+  if (countEl) countEl.textContent = visible + ' result' + (visible !== 1 ? 's' : '');
 }
 
 function clearSearch() {
   document.getElementById('searchInput').value = '';
+  // reset all pills
+  ['fg-type','fg-size','fg-loc','fg-date'].forEach(gid => {
+    const pills = document.querySelectorAll('#' + gid + ' .fpill');
+    pills.forEach((p, i) => p.classList.toggle('sel', i === 0));
+  });
+  activeFilters.type = 'all-type';
+  activeFilters.size = 'all-size';
+  activeFilters.loc  = 'all-loc';
+  activeFilters.date = 'all-date';
   filterPets();
+}
+
+/* ══════════════════════════════
+   PHOTO SEARCH
+══════════════════════════════ */
+function openPhotoSearch() {
+  document.getElementById('photoSearchModal').style.display = 'flex';
+  document.getElementById('photoUploadArea').style.display = 'flex';
+  document.getElementById('photoSearchStatus').style.display = 'none';
+  document.getElementById('photoProgressFill').style.width = '0%';
+  document.getElementById('photoProgressFill').style.background = 'var(--orange)';
+  document.getElementById('photoResults').style.display = 'none';
+}
+
+function closePhotoSearch(e) {
+  if (e && e.target !== document.getElementById('photoSearchModal')) return;
+  document.getElementById('photoSearchModal').style.display = 'none';
+}
+
+function startPhotoSearch() {
+  document.getElementById('photoUploadArea').style.display = 'none';
+  document.getElementById('photoSearchStatus').style.display = 'block';
+  document.getElementById('photoAnalyzing').style.display = 'block';
+  document.getElementById('photoResults').style.display = 'none';
+
+  const fill   = document.getElementById('photoProgressFill');
+  const label  = document.getElementById('photoProgressLabel');
+  const labels = [
+    'Analyzing coat color and markings…',
+    'Comparing with database…',
+    'Cross-referencing location data…',
+    'Match found!',
+  ];
+  let pct = 0;
+  let step = 0;
+  fill.style.width = '0%';
+
+  const interval = setInterval(() => {
+    pct += 2;
+    fill.style.width = pct + '%';
+    if (pct === 25)  { step = 1; label.textContent = labels[1]; }
+    if (pct === 55)  { step = 2; label.textContent = labels[2]; }
+    if (pct === 85)  { step = 3; label.textContent = labels[3]; fill.style.background = 'var(--green)'; }
+    if (pct >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        document.getElementById('photoAnalyzing').style.display = 'none';
+        document.getElementById('photoResults').style.display = 'block';
+      }, 300);
+    }
+  }, 40);
+}
+
+function closePhotoSearchAndShowDetail(idx) {
+  document.getElementById('photoSearchModal').style.display = 'none';
+  showDetail(idx);
 }
 
 /* ══════════════════════════════
@@ -703,7 +1022,9 @@ function showWellnessSuccess(screenId) {
    INIT — renderizar todo al cargar
 ══════════════════════════════ */
 renderPetsGrid();
+filterPets();
 renderShelterAnimals();
 renderRecentArrivals();
 renderMetrics();
 loadAdopt();
+renderReportPets();

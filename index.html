@@ -16,6 +16,9 @@
   <!-- Fonts & styles -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
 <!-- <div class="app">
@@ -23,19 +26,19 @@
   <!-- ══════════════════════════════
        SPLASH
   ══════════════════════════════ -->
-  <div class="screen active" id="splash">
-    <div style="text-align:center">
-      <div style="font-size:50px">🐾❤️</div>
-      <div style="font-size:52px;font-weight:900;color:var(--orange);letter-spacing:-2px;line-height:1;margin-top:6px">unidos</div>
-      <p style="font-size:13px;color:var(--gray);font-weight:600;margin-top:6px">Reuniting pets with their families</p>
+  <div class="screen active" id="splash" style="justify-content:flex-start;padding-top:20px">
+    <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:0">
+      <div style="width:380px;height:280px;overflow:hidden;display:flex;align-items:flex-end;justify-content:center">
+        <img src="images/logo.png" alt="Unidos" style="width:380px;height:380px;object-fit:contain;object-position:bottom;display:block">
+      </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;width:100%">
-      <button class="rc filled" onclick="switchRole('owner');goTo('ownerSearch')">
-        <span style="font-size:32px">🐶</span>
+      <button class="rc filled" onclick="requestFullscreen();switchRole('owner');goTo('ownerSearch')">
+        <img src="images/log_petowner.png" alt="" style="width:54px;height:54px;object-fit:contain">
         <div><h3>I'm a pet owner</h3><p>Search for your rescued pet or register a lost pet.</p></div>
       </button>
-      <button class="rc greenf" onclick="switchRole('shelter');goTo('shelterDash')">
-        <span style="font-size:32px">🏠</span>
+      <button class="rc greenf" onclick="requestFullscreen();switchRole('shelter');goTo('shelterDash')">
+        <img src="images/log_shelter.png" alt="" style="width:54px;height:54px;object-fit:contain">
         <div><h3>I am a shelter/rescuer</h3><p>Register rescued animals and manage adoptions.</p></div>
       </button>
     </div>
@@ -48,16 +51,51 @@
     <div style="padding:18px 18px 8px">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input id="searchInput" placeholder="Search by type, color, location…" oninput="filterPets()"/>
+        <input id="searchInput" placeholder="Search by type, color, location…" oninput="filterPets()" onfocus="showFilters()" onblur="hideFilters(event)"/>
         <svg id="clearSearch" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5" style="cursor:pointer;display:none" onclick="clearSearch()"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </div>
-      <div class="role-switch" style="margin-top:10px">
-        <button class="role-pill ao" id="op1" onclick="switchRole('owner');goTo('ownerSearch')">🐶 Pet owner</button>
-        <button class="role-pill"    id="sp1" onclick="switchRole('shelter');goTo('shelterDash')">🏠 Shelter</button>
       </div>
     </div>
 
-    <div id="sectionTitle" style="font-size:17px;font-weight:900;color:var(--text);padding:8px 18px 4px">Recently rescued</div>
+    <!-- Filter pills -->
+    <div class="filter-section" id="filterSection" style="display:none" onmousedown="event.preventDefault()">
+      <div class="filter-label">Pet type</div>
+      <div class="filter-row" id="fg-type">
+        <button class="fpill sel" onclick="selectFilter(this,'fg-type','all-type')">All</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-type','Cat')">Cat</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-type','Dog')">Dog</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-type','Rabbit')">Rabbit</button>
+      </div>
+      <div class="filter-label" style="margin-top:8px">Size</div>
+      <div class="filter-row" id="fg-size">
+        <button class="fpill sel" onclick="selectFilter(this,'fg-size','all-size')">All</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-size','Small')">Small</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-size','Medium')">Medium</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-size','Large')">Large</button>
+      </div>
+      <div class="filter-label" style="margin-top:8px">Place</div>
+      <div class="filter-row" id="fg-loc">
+        <button class="fpill sel" onclick="selectFilter(this,'fg-loc','all-loc')">All</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-loc','San Pelayo')">San Pelayo</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-loc','Tierra Alta')">Tierra Alta</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-loc','Lorica')">Lórica</button>
+      </div>
+      <div class="filter-label" style="margin-top:8px">Date</div>
+      <div class="filter-row" id="fg-date">
+        <button class="fpill sel" onclick="selectFilter(this,'fg-date','all-date')">Any date</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-date','7d')">Last 7 days</button>
+        <button class="fpill" onclick="selectFilter(this,'fg-date','30d')">Last month</button>
+      </div>
+      <!-- Search by photo -->
+      <div class="filter-label" style="margin-top:8px">Search by photo</div>
+      <button class="photo-search-btn" onclick="openPhotoSearch()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Upload my pet's photo
+      </button>
+    </div>
+
+    <div id="sectionTitle" style="font-size:13px;font-weight:800;color:var(--gray-mid);padding:6px 18px 4px">
+      <span id="resultsCount"></span>
+    </div>
 
     <div class="pets-grid" id="petsGrid">
       <!-- Populated by renderPetsGrid() in app.js -->
@@ -67,7 +105,7 @@
       <div style="font-size:48px;opacity:.35;margin-bottom:12px">🔍</div>
       <div style="font-size:16px;font-weight:800;color:var(--gray-mid);margin-bottom:6px">No pets found</div>
       <div style="font-size:13px;font-weight:600;color:var(--gray);line-height:1.5;margin-bottom:16px">Try a different search — type, color, or location.</div>
-      <button style="background:var(--orange);color:white;border:none;border-radius:50px;padding:11px 26px;font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o);margin-bottom:20px" onclick="clearSearch()">Clear search</button>
+      <button style="background:var(--orange);color:white;border:none;border-radius:50px;padding:11px 26px;font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o);margin-bottom:20px" onclick="clearSearch()">Clear filters</button>
       <div class="wellness-banner" onclick="showWellness('no-results')" style="width:100%;margin:0">
         <div class="wb-icon">🌙</div>
         <div class="wb-text">
@@ -82,6 +120,54 @@
       <button class="ni no" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
       <button class="ni"    onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
       <button class="ni"    onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       PHOTO SEARCH MODAL
+  ══════════════════════════════ -->
+  <div id="photoSearchModal" class="photo-modal-overlay" style="display:none" onclick="closePhotoSearch(event)">
+    <div class="photo-modal">
+      <div class="photo-modal-header">
+        <div style="font-size:15px;font-weight:900;color:var(--text)">Search by photo</div>
+        <button class="photo-modal-close" onclick="closePhotoSearch()">✕</button>
+      </div>
+      <div id="photoUploadArea" class="photo-upload-area" onclick="startPhotoSearch()">
+        <div id="photoUploadPlaceholder">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <div style="font-size:13px;font-weight:800;color:var(--orange);margin-top:8px">Tap to upload a photo</div>
+          <div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:4px">JPG, PNG accepted</div>
+        </div>
+      </div>
+      <div id="photoSearchStatus" style="display:none">
+        <div style="width:100%;height:180px;border-radius:14px;overflow:hidden;margin-bottom:14px">
+          <img src="images/pets/search_pet.jpg" style="width:100%;height:100%;object-fit:cover"/>
+        </div>
+        <div id="photoAnalyzing">
+          <div style="font-size:12px;font-weight:800;color:var(--gray-mid);margin-bottom:8px">Searching for matches…</div>
+          <div class="photo-progress-bar">
+            <div class="photo-progress-fill" id="photoProgressFill"></div>
+          </div>
+          <div id="photoProgressLabel" style="font-size:11px;font-weight:600;color:var(--gray);margin-top:6px">Analyzing coat color and markings…</div>
+        </div>
+        <div id="photoResults" style="display:none">
+          <div style="font-size:12px;font-weight:800;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            AI found a possible match
+          </div>
+          <div class="photo-match-card" onclick="closePhotoSearchAndShowDetail(3)">
+            <img src="images/pets/2.png" style="width:70px;height:70px;object-fit:cover;border-radius:10px;flex-shrink:0"/>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:900;color:var(--text)">Sombra · Dog · Female</div>
+              <div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:2px">Tierra Alta, Córdoba</div>
+              <div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:1px">Worn collar, calm demeanor</div>
+              <div class="photo-match-pct">91% match</div>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <button class="photo-search-confirm" onclick="closePhotoSearchAndShowDetail(3)">See full profile</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -105,33 +191,24 @@
         <div><div class="dl">Sex</div><div class="dv" id="dSex">Male</div></div>
         <div><div class="dl">Size</div><div class="dv" id="dSize">Medium</div></div>
         <div><div class="dl">Color</div><div class="dv" id="dColor">Brown</div></div>
-        <div class="df"><div class="dl">Distinguishing marks</div><div class="dv" id="dMarks" style="font-size:13px">—</div></div>
+        <div style="padding-top:4px;border-top:1px solid var(--gray-light)"><div class="dl">Distinguishing marks</div><div class="dv" id="dMarks" style="font-size:13px">—</div></div>
+        <div style="padding-top:4px;border-top:1px solid var(--gray-light)"><div class="dl">Date</div><div class="dv" id="dDate" style="font-size:13px">—</div></div>
         <div class="df"><div class="dl">Rescued in</div><div class="dv" id="dLoc" style="font-size:13px">—</div></div>
-        <div><div class="dl">Date</div><div class="dv" id="dDate" style="font-size:13px">—</div></div>
       </div>
     </div>
 
-    <div class="wellness-banner" onclick="showWellness('this-is-my-pet')" style="margin-top:4px">
-      <div class="wb-icon">✨</div>
-      <div class="wb-text">
-        <strong>Something inside you recognizes your pet</strong>
-        <span>That instinct deserves to be heard. Breathe and trust what you feel.</span>
-        <span class="wb-cta">A moment before continuing →</span>
-      </div>
-    </div>
-
-    <div style="padding:12px 18px 18px;display:flex;flex-direction:column;gap:8px">
-      <button class="cta-p" onclick="document.getElementById('petModal').style.display='flex'">🐾 This is my pet</button>
-      <button class="cta-s" onclick="goTo('ownerSearch')">Keep searching</button>
+    <div style="padding:12px 18px 18px;display:flex;flex-direction:row;gap:10px">
+      <button class="cta-p" style="width:auto;flex:1" onclick="document.getElementById('petModal').style.display='flex'">This is my pet</button>
+      <button class="cta-s" style="width:auto;flex:1" onclick="goTo('ownerSearch')">Keep searching</button>
     </div>
 
     <div class="modal-overlay" id="petModal" style="display:none">
       <div class="modal-box">
         <button class="modal-close" onclick="document.getElementById('petModal').style.display='none'">✕</button>
-        <div style="font-size:44px;margin-bottom:14px">🧡</div>
+        <img src="images/heart_filled.png" style="width:72px;height:72px;display:block;margin:0 auto 14px">
         <div style="font-size:19px;font-weight:900;margin-bottom:10px">The moment you've been waiting for</div>
         <div style="font-size:13px;font-weight:600;color:var(--gray);line-height:1.65;margin-bottom:22px">Your pet is not just part of your home, they are part of your strength. Being back together is the first big step toward a new beginning.</div>
-        <button style="width:100%;background:var(--orange);color:white;border:none;border-radius:50px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)" onclick="goTo('ownerFound');document.getElementById('petModal').style.display='none'">Find out where my pet is →</button>
+        <button style="width:100%;background:var(--orange);color:white;border:none;border-radius:50px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)" onclick="goTo('ownerFound');document.getElementById('petModal').style.display='none'">Find out where my pet is</button>
       </div>
     </div>
   </div>
@@ -153,14 +230,7 @@
       <h2 style="font-size:17px;font-weight:900;margin:4px 0 2px">Your pet has been found</h2>
       <p style="font-size:12px;opacity:.85;font-weight:600">Waiting for you at a shelter</p>
     </div>
-    <div class="wellness-banner" onclick="showWellness('reunion')" style="margin-top:0">
-      <div class="wb-icon">🧡</div>
-      <div class="wb-text">
-        <strong>You did it. Your love found the way.</strong>
-        <span>Before you go — close your eyes for a second. Let this moment truly reach you.</span>
-        <span class="wb-cta">You deserve this moment →</span>
-      </div>
-    </div>
+
     <div style="display:flex;align-items:center;gap:12px;margin:0 18px 12px;background:var(--white);border-radius:16px;padding:12px;box-shadow:var(--sh)">
       <div class="found-thumb"><img id="foundThumb" src="" alt=""/></div>
       <div>
@@ -187,97 +257,402 @@
       </ul>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 18px 22px">
-      <button style="padding:13px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;background:var(--orange);color:white;border:none;box-shadow:var(--sh-o);font-family:Nunito,sans-serif">💬 WhatsApp</button>
-      <button style="padding:13px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;background:white;color:var(--orange);border:2px solid var(--orange-border);font-family:Nunito,sans-serif">🗺 View map</button>
+      <button class="btn-wa" style="padding:13px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;background:white;color:var(--orange);border:2px solid var(--orange-border);box-shadow:var(--sh);font-family:Nunito,sans-serif;display:flex;align-items:center;justify-content:center;gap:7px"><i data-lucide="message-circle" style="width:16px;height:16px;flex-shrink:0"></i>WhatsApp</button>
+      <button onclick="openMap()" class="btn-map" style="padding:13px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;background:white;color:var(--orange);border:2px solid var(--orange-border);font-family:Nunito,sans-serif;display:flex;align-items:center;justify-content:center;gap:7px"><i data-lucide="map-pin" style="width:16px;height:16px;flex-shrink:0"></i>View map</button>
     </div>
     <div class="bnav o3">
       <button class="ni no" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
       <button class="ni"    onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
       <button class="ni"    onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
     </div>
+
+    <!-- MAP OVERLAY -->
+    <div id="mapOverlay" style="display:none;position:absolute;inset:0;z-index:50;background:var(--bg);flex-direction:column">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 18px 8px;flex-shrink:0">
+        <button class="back-btn" onclick="closeMap()">←</button>
+        <div style="flex:1;background:white;border:2px solid var(--orange-border);border-radius:50px;padding:9px 15px;display:flex;align-items:center;gap:8px;box-shadow:var(--sh)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#C5BDB5">Search…</span>
+        </div>
+      </div>
+      <div style="flex:1;margin:8px 18px 12px;border-radius:20px;overflow:hidden;box-shadow:var(--sh)">
+        <iframe id="mapFrame" src="" width="100%" height="100%" style="border:0;display:block" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="bnav o3" style="position:relative">
+        <button class="ni" onclick="closeMap();goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+        <button class="ni" onclick="closeMap();goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+        <button class="ni" onclick="closeMap();goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+      </div>
+    </div>
   </div>
 
   <!-- ══════════════════════════════
-       OWNER – REPORT
+       OWNER – REPORT (MAP VIEW)
   ══════════════════════════════ -->
   <div class="screen" id="ownerReport">
-    <div style="background:var(--orange);padding:20px 18px 18px;border-radius:0 0 26px 26px">
-      <h2 style="font-size:20px;font-weight:900;color:white">Report a rescued pet</h2>
-      <p style="font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:3px">Help reunite animals with their families</p>
-      <div class="prog-labels">
-        <span class="prog-label active" id="rpl1">Photo</span>
-        <span class="prog-label"        id="rpl2">Details</span>
-        <span class="prog-label"        id="rpl3">Location</span>
-        <span class="prog-label"        id="rpl4">Contact</span>
-      </div>
-      <div class="prog-track"><div class="prog-fill" id="rpf" style="width:25%"></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 18px 10px;flex-shrink:0">
+      <h2 style="font-size:20px;font-weight:900;color:var(--text)">Report lost pet</h2>
+      <button onclick="goTo('ownerReportForm')" style="background:var(--orange);color:white;border:none;border-radius:50px;padding:7px 16px;font-size:12px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)">+ Report</button>
     </div>
 
-    <div style="padding:18px;flex:1">
-      <div class="rstep active" id="rs1">
-        <div class="fl">Upload a photo of the animal</div>
-        <div class="upload-area" onclick="document.getElementById('rpi').click()">
-          <div style="font-size:42px;margin-bottom:8px" id="rup">📷</div>
-          <p style="font-size:13px;font-weight:700;color:var(--gray)" id="rut">Tap to <span style="color:var(--orange)">take or upload</span> a photo</p>
-          <input type="file" id="rpi" accept="image/*" style="display:none" onchange="prevPhoto(event,'rup','rut')">
-        </div>
-      </div>
-      <div class="rstep" id="rs2">
-        <div class="fl">Animal type</div>
-        <div style="display:flex;flex-wrap:wrap;gap:7px" id="rtc">
-          <span class="chip" onclick="sc(this,'rtc')">🐶 Dog</span>
-          <span class="chip" onclick="sc(this,'rtc')">🐱 Cat</span>
-          <span class="chip" onclick="sc(this,'rtc')">🐇 Rabbit</span>
-          <span class="chip" onclick="sc(this,'rtc')">Other</span>
-        </div>
-        <div class="fl">Sex</div>
-        <div style="display:flex;flex-wrap:wrap;gap:7px" id="rsc">
-          <span class="chip" onclick="sc(this,'rsc')">Male</span>
-          <span class="chip" onclick="sc(this,'rsc')">Female</span>
-          <span class="chip" onclick="sc(this,'rsc')">Unknown</span>
-        </div>
-        <div class="fl">Size</div>
-        <div style="display:flex;flex-wrap:wrap;gap:7px" id="rsz">
-          <span class="chip" onclick="sc(this,'rsz')">Small</span>
-          <span class="chip" onclick="sc(this,'rsz')">Medium</span>
-          <span class="chip" onclick="sc(this,'rsz')">Large</span>
-        </div>
-        <div class="fl">Color</div>
-        <input class="fi" placeholder="e.g. Brown and white"/>
-      </div>
-      <div class="rstep" id="rs3">
-        <div class="fl">Where was the animal rescued?</div><input class="fi" placeholder="City, neighborhood"/>
-        <div class="fl">Street address</div><input class="fi" placeholder="e.g. Boulevard Libertadores"/>
-        <div class="fl">Date rescued</div><input class="fi" type="date"/>
-        <div class="fl">Distinguishing marks?</div><input class="fi" placeholder="Scars, collar, chip…"/>
-      </div>
-      <div class="rstep" id="rs4">
-        <div style="background:var(--orange);border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:9px;margin-bottom:14px;box-shadow:var(--sh-o)">
-          <span>🔒</span>
-          <span style="font-size:13px;font-weight:800;color:white;flex:1">Private contact details</span>
-          <span style="font-size:10px;font-weight:700;color:rgba(255,255,255,.75)">Just for you</span>
-        </div>
-        <p style="font-size:12px;font-weight:600;color:var(--gray);margin-bottom:14px;text-align:center;line-height:1.5">No one else will see this. We only use it to notify you if someone finds your pet.</p>
-        <div class="fl">Phone number</div>
-        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">📞</span><input class="fi" style="flex:1" type="tel" placeholder="+57 …"/></div>
-        <div class="fl">Name</div><input class="fi" placeholder="Your name"/>
-        <div class="fl">Notify me via</div>
-        <div style="display:flex;gap:9px" id="rnb">
-          <button class="notify-btn" onclick="sn(this,'rnb')">📱 WhatsApp</button>
-          <button class="notify-btn" onclick="sn(this,'rnb')">📞 Call</button>
-        </div>
-      </div>
+    <!-- Leaflet map -->
+    <div style="margin:0 18px;border-radius:16px;overflow:hidden;height:220px;flex-shrink:0;box-shadow:var(--sh)">
+      <div id="reportMap" style="width:100%;height:100%"></div>
     </div>
 
-    <div class="rnav">
-      <button class="rnav-btn hollow" id="rBack" onclick="rPrev()" disabled>← Back</button>
-      <button class="rnav-btn filled" id="rNext" onclick="rNext()">Next →</button>
+    <!-- Filter pills -->
+    <div style="display:flex;gap:8px;padding:12px 18px 6px;overflow-x:auto;flex-shrink:0">
+      <button class="rpill sel" onclick="filterReport(this,'all')">All</button>
+      <button class="rpill" onclick="filterReport(this,'Dog')">Dogs</button>
+      <button class="rpill" onclick="filterReport(this,'Cat')">Cats</button>
+      <button class="rpill" onclick="filterReport(this,'Rabbit')">Rabbits</button>
+    </div>
+
+    <!-- Pet cards -->
+    <div id="reportPetsList" style="padding:4px 18px 120px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;flex:1"></div>
+
+    <div class="bnav o3">
+      <button class="ni" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni no"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni" onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       REPORT – DETAIL
+  ══════════════════════════════ -->
+  <div class="screen" id="reportDetail">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 18px 10px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="back-btn" onclick="goTo('ownerReport')">←</button>
+        <h2 style="font-size:20px;font-weight:900;color:var(--text)">Report lost pet</h2>
+      </div>
+      <button onclick="goTo('ownerReportForm')" style="background:var(--orange);color:white;border:none;border-radius:50px;padding:7px 16px;font-size:12px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)">+ Report</button>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding-bottom:16px">
+      <!-- Full-width photo -->
+      <div class="rd-photo" style="width:100%;height:260px;overflow-y:scroll;overflow-x:hidden;flex-shrink:0;scrollbar-width:none;-ms-overflow-style:none">
+        <img id="rdImg" src="" alt="" style="width:100%;height:auto;display:block"/>
+      </div>
+
+      <!-- Info block -->
+      <div style="padding:16px 18px 0">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+          <div id="rdAddress" style="font-size:15px;font-weight:900;color:var(--text)">Cra. 14 con calle 32</div>
+          <div id="rdSex" style="font-size:15px;font-weight:900;color:var(--text)">Female</div>
+        </div>
+        <div id="rdDesc" style="font-size:13px;font-weight:600;color:var(--gray);line-height:1.5;margin-bottom:18px">Small. Long hair, scar on left ear</div>
+
+        <div style="border-top:1px solid var(--gray-light);padding-top:16px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+            <div style="font-size:14px;font-weight:900;color:var(--text)">Have you seen it? Post an update</div>
+            <div style="display:flex;align-items:center;gap:4px;background:var(--orange-pale);border:1.5px solid var(--orange-border);border-radius:50px;padding:3px 9px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span id="rdCommentCount" style="font-size:12px;font-weight:900;color:var(--orange)">3</span>
+            </div>
+          </div>
+
+          <!-- Comments (shown when count > 0) -->
+          <div id="rdCommentSection" style="display:flex;flex-direction:column;gap:0">
+
+          <!-- Comment 1 -->
+          <div style="display:flex;gap:10px;margin-bottom:12px;align-items:flex-start">
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:11px;font-weight:800;color:var(--gray-mid);margin-bottom:4px">María G. · 2 days ago</div>
+              <div style="background:white;border-radius:14px;border-top-left-radius:4px;padding:10px 13px;box-shadow:var(--sh)">
+                <div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.5">I saw it near the park on Monday afternoon, around 4pm.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comment 2 -->
+          <div style="display:flex;gap:10px;margin-bottom:12px;align-items:flex-start">
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--gray-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-mid)" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:11px;font-weight:800;color:var(--gray-mid);margin-bottom:4px">Carlos R. · 1 day ago</div>
+              <div style="background:white;border-radius:14px;border-top-left-radius:4px;padding:10px 13px;box-shadow:var(--sh)">
+                <div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.5">I think I saw it on Cra. 15 near the market, it looked calm and well.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comment 3 -->
+          <div style="display:flex;gap:10px;margin-bottom:18px;align-items:flex-start">
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--gray-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-mid)" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:11px;font-weight:800;color:var(--gray-mid);margin-bottom:4px">Luisa M. · today</div>
+              <div style="background:white;border-radius:14px;border-top-left-radius:4px;padding:10px 13px;box-shadow:var(--sh)">
+                <div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.5">Still around the same area this morning. Someone left food for it.</div>
+              </div>
+            </div>
+          </div>
+          </div><!-- /rdCommentSection -->
+
+          <!-- No comments state -->
+          <div id="rdNoComments" style="display:none;font-size:13px;font-weight:600;color:var(--gray);text-align:center;padding:12px 0 18px">No sightings reported yet. Be the first!</div>
+
+          <!-- Update form -->
+          <div style="border-top:1px solid var(--gray-light);margin-bottom:16px;padding-top:16px">
+            <div style="font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Add your sighting</div>
+          </div>
+          <input class="fi" placeholder="Your name?" style="margin-bottom:8px"/>
+          <input class="fi" placeholder="Where did you see it? When?"/>
+          <button onclick="postReportUpdate()" style="width:100%;margin-top:14px;background:var(--orange);color:white;border:none;border-radius:50px;padding:15px;font-size:14px;font-weight:900;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)">Post report</button>
+        </div>
+      </div>
     </div>
 
     <div class="bnav o3">
-      <button class="ni"    onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
-      <button class="ni no"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
-      <button class="ni"    onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+      <button class="ni" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni no" onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni" onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       OWNER – REPORT FORM (single page)
+  ══════════════════════════════ -->
+  <div class="screen" id="ownerReportForm">
+    <div style="display:flex;align-items:center;gap:10px;padding:18px 18px 12px;flex-shrink:0">
+      <button class="back-btn" onclick="goTo('ownerReport')">←</button>
+      <h2 style="font-size:20px;font-weight:900;color:var(--text)">Report lost pet</h2>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:0 18px 120px">
+
+      <!-- Photo upload -->
+      <div id="rfPhotoWrap" onclick="loadDemoCatPhoto()" style="width:100%;height:180px;border-radius:16px;border:2px dashed var(--orange-border);background:var(--orange-pale);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-bottom:18px;overflow:hidden">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <div style="font-size:13px;font-weight:800;color:var(--orange)">Tap to upload a photo</div>
+      </div>
+
+      <!-- Pet name -->
+      <div class="fl">Pet name</div>
+      <input id="rfName" class="fi" value="Manchas" style="margin-bottom:4px"/>
+
+      <!-- Type -->
+      <div class="fl">Animal type</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px" id="rfType">
+        <span class="chip" onclick="sc(this,'rfType')">Dog</span>
+        <span class="chip sel" onclick="sc(this,'rfType')">Cat</span>
+        <span class="chip" onclick="sc(this,'rfType')">Rabbit</span>
+        <span class="chip" onclick="sc(this,'rfType')">Other</span>
+      </div>
+
+      <!-- Sex -->
+      <div class="fl">Sex</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px" id="rfSex">
+        <span class="chip sel" onclick="sc(this,'rfSex')">Male</span>
+        <span class="chip" onclick="sc(this,'rfSex')">Female</span>
+        <span class="chip" onclick="sc(this,'rfSex')">Unknown</span>
+      </div>
+
+      <!-- Size -->
+      <div class="fl">Size</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px" id="rfSize">
+        <span class="chip sel" onclick="sc(this,'rfSize')">Small</span>
+        <span class="chip" onclick="sc(this,'rfSize')">Medium</span>
+        <span class="chip" onclick="sc(this,'rfSize')">Large</span>
+      </div>
+
+      <!-- Color -->
+      <div class="fl">Color</div>
+      <input id="rfColor" class="fi" value="Black and white"/>
+
+      <!-- Location -->
+      <div class="fl">City / neighborhood</div>
+      <input id="rfCity" class="fi" value="Montería, Córdoba"/>
+
+      <div class="fl">Street address</div>
+      <input id="rfAddress" class="fi" value="Cra. 8 # 24-15"/>
+
+      <!-- Marks -->
+      <div class="fl">Distinguishing marks</div>
+      <input id="rfMarks" class="fi" value="Green eyes, white face with black patches"/>
+
+      <!-- Contact + Notification -->
+      <div style="background:var(--orange-pale);border:1.5px solid var(--orange-border);border-radius:14px;padding:14px;margin-top:6px">
+        <div class="fl" style="margin-top:0">Phone</div>
+        <input class="fi" type="tel" placeholder="+57 …"/>
+        <div class="fl">Your name</div>
+        <input class="fi" placeholder="Your name"/>
+
+        <div style="border-top:1px solid var(--orange-border);margin:14px 0 12px"></div>
+
+        <div style="font-size:14px;font-weight:900;color:var(--text);margin-bottom:12px">How should we notify you?</div>
+        <div style="display:flex;gap:10px;margin-bottom:12px" id="rfNotify">
+          <button onclick="sn(this,'rfNotify')" class="notify-btn sel" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.85a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            WhatsApp
+          </button>
+          <button onclick="sn(this,'rfNotify')" class="notify-btn" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.85a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call
+          </button>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray);line-height:1.6;text-align:center">
+          Your number doesn't appear on the map and<br>isn't visible to other users. It is only used by<br>the <strong style="color:var(--gray-mid)">Unidos</strong> alert system.
+        </div>
+      </div>
+    </div>
+
+    <!-- Publish button fixed at bottom -->
+    <div style="position:absolute;bottom:70px;left:0;right:0;padding:0 18px 10px;background:linear-gradient(transparent,var(--bg) 40%)">
+      <button onclick="publishReport()" style="width:100%;background:var(--orange);color:white;border:none;border-radius:50px;padding:15px;font-size:15px;font-weight:900;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)">Publish lost pet</button>
+    </div>
+
+    <div class="bnav o3">
+      <button class="ni" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni no" onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni" onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       REPORT – SUCCESS
+  ══════════════════════════════ -->
+  <div class="screen" id="reportSuccess">
+    <div style="padding:14px 18px 0;flex-shrink:0">
+      <button onclick="goTo('ownerReport')" style="font-size:13px;font-weight:700;color:var(--gray-mid);background:none;border:none;cursor:pointer;font-family:Nunito,sans-serif">← Back</button>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:12px 18px 100px">
+      <h2 style="font-size:22px;font-weight:900;color:var(--orange);text-align:center;margin-bottom:18px">Your report is live</h2>
+
+      <!-- Pet summary -->
+      <div style="background:white;border-radius:16px;padding:14px;box-shadow:var(--sh);display:flex;gap:12px;margin-bottom:8px">
+        <img id="rsImg" src="" style="width:72px;height:72px;border-radius:10px;object-fit:cover;flex-shrink:0"/>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px">
+            <span id="rsName" style="font-size:15px;font-weight:900;color:var(--text)"></span>
+            <span id="rsType" style="font-size:12px;font-weight:700;color:var(--gray)"></span>
+          </div>
+          <div id="rsSex"  style="font-size:12px;font-weight:700;color:var(--gray-mid)"></div>
+          <div id="rsLoc"  style="font-size:12px;font-weight:600;color:var(--gray-mid)"></div>
+          <div id="rsDate" style="font-size:11px;font-weight:600;color:var(--gray)"></div>
+        </div>
+      </div>
+      <p style="font-size:13px;font-weight:600;color:var(--gray-mid);text-align:center;line-height:1.6;margin-bottom:18px">Your pet is registered. Rescuers in Córdoba can<br>now find them.</p>
+
+      <!-- Emotional support -->
+      <div style="background:white;border-radius:16px;padding:18px;box-shadow:var(--sh);margin-bottom:12px;text-align:center">
+        <div style="font-size:15px;font-weight:900;color:var(--text);margin-bottom:8px">We know this is hard</div>
+        <div style="font-size:13px;font-weight:600;color:var(--gray);line-height:1.65">Losing a pet during a disaster is painful. Anxiety, fear, and sadness are completely normal right now. You are not alone.</div>
+      </div>
+
+      <!-- Breathing exercise -->
+      <div style="background:white;border-radius:16px;padding:18px;box-shadow:var(--sh);text-align:center">
+        <div style="font-size:15px;font-weight:900;color:var(--text);margin-bottom:16px">Take a breath with us</div>
+        <div id="rsBreathBtn" onclick="startBreathAnim()" style="width:96px;height:96px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;cursor:pointer;box-shadow:var(--sh-o);transition:transform 1.2s ease">
+          <div id="rsBreathTxt" style="font-size:13px;font-weight:900;color:white;text-align:center;line-height:1.35">Tap to<br>start</div>
+        </div>
+        <div id="rsBreathPhase" style="font-size:12px;font-weight:700;color:var(--gray)">Breath in · hold · breath out</div>
+      </div>
+    </div>
+
+    <div style="position:absolute;bottom:70px;left:0;right:0;padding:0 18px 10px;background:linear-gradient(transparent,var(--bg) 40%)">
+      <button onclick="goTo('reportPostcard')" style="width:100%;background:var(--orange);color:white;border:none;border-radius:50px;padding:15px;font-size:15px;font-weight:900;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)">Share to find him faster</button>
+    </div>
+
+    <div class="bnav o3">
+      <button class="ni" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni no" onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni" onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       REPORT – POSTCARD
+  ══════════════════════════════ -->
+  <div class="screen" id="reportPostcard">
+    <div style="padding:14px 18px 0;flex-shrink:0">
+      <button onclick="goTo('reportSuccess')" style="font-size:13px;font-weight:700;color:var(--gray-mid);background:none;border:none;cursor:pointer;font-family:Nunito,sans-serif">← Back</button>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:8px 18px 100px">
+      <!-- Orange card -->
+      <div style="background:var(--orange);border-radius:24px;padding:20px 18px;box-shadow:var(--sh-o)">
+        <!-- Missing pill -->
+        <div style="display:flex;justify-content:center;margin-bottom:16px">
+          <span style="border:2px solid white;border-radius:50px;padding:4px 20px;font-size:12px;font-weight:900;color:white;letter-spacing:.04em">Missing</span>
+        </div>
+
+        <!-- Photo -->
+        <div style="width:150px;height:150px;border-radius:16px;overflow:hidden;margin:0 auto 14px;border:3px solid white;box-shadow:0 4px 18px rgba(0,0,0,.18)">
+          <img id="pcImg" src="" style="width:100%;height:100%;object-fit:cover"/>
+        </div>
+
+        <!-- Name -->
+        <div id="pcName" style="font-size:24px;font-weight:900;color:white;text-align:center;margin-bottom:16px"></div>
+
+        <!-- Info pills -->
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+          <div id="pcType" style="background:rgba(255,255,255,.22);border-radius:50px;padding:9px 18px;font-size:13px;font-weight:700;color:white;text-align:center"></div>
+          <div id="pcDesc" style="background:rgba(255,255,255,.22);border-radius:50px;padding:9px 18px;font-size:13px;font-weight:700;color:white;text-align:center"></div>
+          <div id="pcLoc"  style="background:rgba(255,255,255,.22);border-radius:50px;padding:9px 18px;font-size:13px;font-weight:700;color:white;text-align:center"></div>
+        </div>
+
+        <!-- QR row -->
+        <div style="background:white;border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:12px">
+          <div style="flex:1;font-size:13px;font-weight:900;color:var(--orange);line-height:1.4">Seen it? Report<br>it on Unidos</div>
+          <svg width="64" height="64" viewBox="0 0 21 21" style="flex-shrink:0">
+            <rect width="21" height="21" fill="white"/>
+            <!-- TL finder -->
+            <rect x="0" y="0" width="7" height="7" fill="#1A1A1A"/><rect x="1" y="1" width="5" height="5" fill="white"/><rect x="2" y="2" width="3" height="3" fill="#1A1A1A"/>
+            <!-- TR finder -->
+            <rect x="14" y="0" width="7" height="7" fill="#1A1A1A"/><rect x="15" y="1" width="5" height="5" fill="white"/><rect x="16" y="2" width="3" height="3" fill="#1A1A1A"/>
+            <!-- BL finder -->
+            <rect x="0" y="14" width="7" height="7" fill="#1A1A1A"/><rect x="1" y="15" width="5" height="5" fill="white"/><rect x="2" y="16" width="3" height="3" fill="#1A1A1A"/>
+            <!-- Data modules -->
+            <rect x="8" y="0" width="1" height="1" fill="#1A1A1A"/><rect x="10" y="0" width="1" height="1" fill="#1A1A1A"/><rect x="12" y="0" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="9" y="1" width="1" height="1" fill="#1A1A1A"/><rect x="11" y="1" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="8" y="2" width="1" height="1" fill="#1A1A1A"/><rect x="10" y="2" width="2" height="1" fill="#1A1A1A"/><rect x="13" y="2" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="9" y="3" width="1" height="1" fill="#1A1A1A"/><rect x="12" y="3" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="8" y="4" width="2" height="1" fill="#1A1A1A"/><rect x="11" y="4" width="1" height="1" fill="#1A1A1A"/><rect x="13" y="4" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="8" y="5" width="1" height="1" fill="#1A1A1A"/><rect x="10" y="5" width="1" height="1" fill="#1A1A1A"/><rect x="12" y="5" width="2" height="1" fill="#1A1A1A"/>
+            <rect x="9" y="6" width="2" height="1" fill="#1A1A1A"/><rect x="13" y="6" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="0" y="8" width="1" height="1" fill="#1A1A1A"/><rect x="2" y="8" width="2" height="1" fill="#1A1A1A"/><rect x="6" y="8" width="1" height="1" fill="#1A1A1A"/><rect x="8" y="8" width="1" height="1" fill="#1A1A1A"/><rect x="10" y="8" width="1" height="1" fill="#1A1A1A"/><rect x="12" y="8" width="1" height="1" fill="#1A1A1A"/><rect x="14" y="8" width="2" height="1" fill="#1A1A1A"/><rect x="17" y="8" width="1" height="1" fill="#1A1A1A"/><rect x="19" y="8" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="1" y="9" width="1" height="1" fill="#1A1A1A"/><rect x="5" y="9" width="1" height="1" fill="#1A1A1A"/><rect x="9" y="9" width="2" height="1" fill="#1A1A1A"/><rect x="13" y="9" width="1" height="1" fill="#1A1A1A"/><rect x="16" y="9" width="1" height="1" fill="#1A1A1A"/><rect x="18" y="9" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="0" y="10" width="2" height="1" fill="#1A1A1A"/><rect x="4" y="10" width="1" height="1" fill="#1A1A1A"/><rect x="6" y="10" width="1" height="1" fill="#1A1A1A"/><rect x="8" y="10" width="1" height="1" fill="#1A1A1A"/><rect x="11" y="10" width="2" height="1" fill="#1A1A1A"/><rect x="15" y="10" width="2" height="1" fill="#1A1A1A"/><rect x="19" y="10" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="1" y="11" width="2" height="1" fill="#1A1A1A"/><rect x="5" y="11" width="1" height="1" fill="#1A1A1A"/><rect x="9" y="11" width="1" height="1" fill="#1A1A1A"/><rect x="12" y="11" width="1" height="1" fill="#1A1A1A"/><rect x="14" y="11" width="1" height="1" fill="#1A1A1A"/><rect x="17" y="11" width="2" height="1" fill="#1A1A1A"/>
+            <rect x="0" y="12" width="1" height="1" fill="#1A1A1A"/><rect x="3" y="12" width="2" height="1" fill="#1A1A1A"/><rect x="7" y="12" width="1" height="1" fill="#1A1A1A"/><rect x="10" y="12" width="1" height="1" fill="#1A1A1A"/><rect x="13" y="12" width="1" height="1" fill="#1A1A1A"/><rect x="16" y="12" width="1" height="1" fill="#1A1A1A"/><rect x="18" y="12" width="2" height="1" fill="#1A1A1A"/>
+            <rect x="8" y="14" width="1" height="1" fill="#1A1A1A"/><rect x="10" y="14" width="2" height="1" fill="#1A1A1A"/><rect x="14" y="14" width="2" height="1" fill="#1A1A1A"/><rect x="18" y="14" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="9" y="15" width="1" height="1" fill="#1A1A1A"/><rect x="12" y="15" width="1" height="1" fill="#1A1A1A"/><rect x="15" y="15" width="1" height="1" fill="#1A1A1A"/><rect x="17" y="15" width="1" height="1" fill="#1A1A1A"/><rect x="19" y="15" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="8" y="16" width="2" height="1" fill="#1A1A1A"/><rect x="11" y="16" width="2" height="1" fill="#1A1A1A"/><rect x="14" y="16" width="1" height="1" fill="#1A1A1A"/><rect x="16" y="16" width="1" height="1" fill="#1A1A1A"/><rect x="18" y="16" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="9" y="17" width="1" height="1" fill="#1A1A1A"/><rect x="13" y="17" width="2" height="1" fill="#1A1A1A"/><rect x="17" y="17" width="2" height="1" fill="#1A1A1A"/>
+            <rect x="8" y="18" width="1" height="1" fill="#1A1A1A"/><rect x="10" y="18" width="1" height="1" fill="#1A1A1A"/><rect x="12" y="18" width="1" height="1" fill="#1A1A1A"/><rect x="15" y="18" width="2" height="1" fill="#1A1A1A"/><rect x="19" y="18" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="9" y="19" width="2" height="1" fill="#1A1A1A"/><rect x="14" y="19" width="1" height="1" fill="#1A1A1A"/><rect x="16" y="19" width="1" height="1" fill="#1A1A1A"/><rect x="18" y="19" width="1" height="1" fill="#1A1A1A"/>
+            <rect x="8" y="20" width="1" height="1" fill="#1A1A1A"/><rect x="11" y="20" width="1" height="1" fill="#1A1A1A"/><rect x="13" y="20" width="2" height="1" fill="#1A1A1A"/><rect x="17" y="20" width="2" height="1" fill="#1A1A1A"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Share icons -->
+      <div style="display:flex;justify-content:center;gap:24px;margin-top:22px">
+        <button style="width:52px;height:52px;border-radius:50%;background:white;border:none;cursor:pointer;box-shadow:var(--sh);display:flex;align-items:center;justify-content:center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        </button>
+        <button style="width:52px;height:52px;border-radius:50%;background:white;border:none;cursor:pointer;box-shadow:var(--sh);display:flex;align-items:center;justify-content:center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="url(#ig)"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </button>
+        <button style="width:52px;height:52px;border-radius:50%;background:white;border:none;cursor:pointer;box-shadow:var(--sh);display:flex;align-items:center;justify-content:center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="bnav o3">
+      <button class="ni" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni no" onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni" onclick="goTo('ownerAdopt')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
     </div>
   </div>
 
@@ -353,10 +728,6 @@
       </div>
     </div>
 
-    <div class="role-switch">
-      <button class="role-pill"    id="op2" onclick="switchRole('owner');goTo('ownerSearch')">🐶 Pet owner</button>
-      <button class="role-pill as" id="sp2" onclick="switchRole('shelter');goTo('shelterDash')">🏠 Shelter</button>
-    </div>
 
     <div class="metrics-grid">
       <div class="mc" onclick="goTo('shelterAnimals')">
@@ -664,6 +1035,24 @@
 
 <script src="js/app.js"></script>
 <script>
+  lucide.createIcons();
+
+  const MAP_URL = 'https://maps.google.com/maps?q=8.8145844,-75.8017518&z=15&output=embed';
+
+  function openMap() {
+    const overlay = document.getElementById('mapOverlay');
+    const frame   = document.getElementById('mapFrame');
+    if (!frame.src || frame.src === window.location.href) frame.src = MAP_URL;
+    overlay.style.display = 'flex';
+  }
+
+  function closeMap() {
+    document.getElementById('mapOverlay').style.display = 'none';
+  }
+</script>
+<script>
+  function requestFullscreen() {}
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('sw.js').catch(() => {});
