@@ -2,7 +2,7 @@
   "name": "Unidos – Rescue & Adopt",
   "short_name": "Unidos",
   "description": "Reuniting pets with their families",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#F4F1EE",
