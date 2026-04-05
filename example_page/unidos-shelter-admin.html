@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Unidos · Shelter Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#1B8C5A; --green-l:#22A86C; --green-pale:#EAF7F1; --green-border:#B3E0CC;
+  --orange:#F07020; --orange-pale:#FFF4ED; --orange-border:#FDDCC4;
+  --blue:#1565C0; --blue-pale:#E3EEF9; --blue-border:#B3CEE8;
+  --red:#C62828; --red-pale:#FDECEA;
+  --gold:#B8860B; --gold-pale:#FDF8E1;
+  --ink:#0F1A14; --ink-2:#2D3D35; --ink-3:#5A6E63; --ink-4:#8FA099;
+  --surface:#F4F8F5; --card:#FFFFFF; --border:#DDE8E2;
+  --sh:0 1px 4px rgba(15,26,20,.07),0 4px 16px rgba(15,26,20,.05);
+  --sh-md:0 4px 20px rgba(15,26,20,.1);
+  --sh-lg:0 12px 48px rgba(15,26,20,.14);
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--ink)}
+body{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:220px;flex-shrink:0;background:var(--ink);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;z-index:100;
+}
+.sidebar-logo{
+  padding:24px 20px 20px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.logo-mark{font-size:22px;font-weight:700;color:white;letter-spacing:-.5px}
+.logo-mark span{color:var(--green-l)}
+.logo-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px;font-weight:500}
+.sidebar-shelter{
+  padding:14px 16px;margin:12px;
+  background:rgba(255,255,255,.06);border-radius:10px;
+  border:1px solid rgba(255,255,255,.08);
+}
+.shelter-name{font-size:13px;font-weight:600;color:white}
+.shelter-city{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+.sidebar-nav{flex:1;padding:8px 10px;overflow-y:auto}
+.nav-section-label{
+  font-size:10px;font-weight:600;color:rgba(255,255,255,.25);
+  letter-spacing:1px;text-transform:uppercase;
+  padding:16px 10px 6px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:8px;
+  font-size:13px;font-weight:500;color:rgba(255,255,255,.55);
+  cursor:pointer;transition:all .15s;
+  position:relative;margin-bottom:1px;
+  border:none;background:none;width:100%;text-align:left;
+  font-family:'DM Sans',sans-serif;
+}
+.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.nav-item.active{background:var(--green);color:white;font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.nav-badge{
+  margin-left:auto;background:var(--orange);color:white;
+  font-size:10px;font-weight:700;border-radius:50px;
+  padding:2px 7px;min-width:20px;text-align:center;
+}
+.nav-badge.blue{background:var(--blue)}
+.sidebar-bottom{
+  padding:14px;border-top:1px solid rgba(255,255,255,.08);
+}
+.sidebar-user{display:flex;align-items:center;gap:10px}
+.user-av{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--green);display:flex;align-items:center;
+  justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0;
+}
+.user-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.8)}
+.user-role{font-size:10px;color:rgba(255,255,255,.35)}
+
+/* ── MAIN ── */
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{
+  background:var(--card);border-bottom:1px solid var(--border);
+  padding:0 28px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+}
+.page-title{font-size:17px;font-weight:700;color:var(--ink)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-btn{
+  padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;
+  cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .15s;
+}
+.topbar-btn.primary{background:var(--green);color:white}
+.topbar-btn.primary:hover{background:var(--green-l)}
+.topbar-btn.ghost{background:transparent;color:var(--ink-3);border:1.5px solid var(--border)}
+.topbar-btn.ghost:hover{border-color:var(--green);color:var(--green)}
+.notif-dot{
+  position:relative;width:36px;height:36px;border-radius:8px;
+  background:var(--surface);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.notif-dot::after{
+  content:'3';position:absolute;top:-4px;right:-4px;
+  background:var(--orange);color:white;font-size:9px;font-weight:700;
+  border-radius:50px;padding:1px 5px;border:2px solid var(--card);
+}
+.page-content{padding:24px 28px;flex:1}
+
+/* ── SCREEN MANAGEMENT ── */
+.screen{display:none}.screen.active{display:block}
+
+/* ── METRICS ROW ── */
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.metric{
+  background:var(--card);border-radius:var(--r);
+  padding:18px 20px;border:1px solid var(--border);
+  box-shadow:var(--sh);cursor:pointer;transition:all .2s;
+}
+.metric:hover{box-shadow:var(--sh-md);transform:translateY(-1px)}
+.metric-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.metric-icon{
+  width:36px;height:36px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.metric-trend{font-size:11px;font-weight:600;border-radius:50px;padding:2px 8px}
+.metric-trend.up{background:var(--green-pale);color:var(--green)}
+.metric-trend.warn{background:var(--gold-pale);color:var(--gold)}
+.metric-trend.alert{background:var(--orange-pale);color:var(--orange)}
+.metric-num{font-size:30px;font-weight:700;color:var(--ink);line-height:1}
+.metric-label{font-size:12px;font-weight:500;color:var(--ink-3);margin-top:4px}
+
+/* ── SECTION HEADER ── */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:15px;font-weight:700;color:var(--ink)}
+.section-link{font-size:13px;font-weight:600;color:var(--green);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif}
+
+/* ── GRID LAYOUT ── */
+.two-col{display:grid;grid-template-columns:1fr 360px;gap:20px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);overflow:hidden}
+.card-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:14px;font-weight:700;color:var(--ink)}
+.card-body{padding:0}
+
+/* ── ANIMAL LIST ── */
+.animal-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 18px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .15s;
+}
+.animal-row:last-child{border-bottom:none}
+.animal-row:hover{background:var(--surface)}
+.animal-thumb{
+  width:44px;height:44px;border-radius:8px;overflow:hidden;
+  flex-shrink:0;background:var(--surface);
+}
+.animal-thumb img{width:100%;height:100%;object-fit:cover}
+.animal-info{flex:1;min-width:0}
+.animal-id{font-size:10px;font-weight:600;color:var(--ink-4);font-family:'DM Mono',monospace;margin-bottom:2px}
+.animal-name{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.animal-meta{font-size:11px;color:var(--ink-3);margin-top:1px}
+.animal-days{font-size:11px;font-weight:600;color:var(--ink-4);text-align:right;white-space:nowrap}
+.status-pill{
+  font-size:10px;font-weight:700;border-radius:50px;
+  padding:3px 9px;white-space:nowrap;flex-shrink:0;
+}
+.sp-available{background:var(--green-pale);color:var(--green)}
+.sp-match{background:var(--blue-pale);color:var(--blue)}
+.sp-adopt{background:var(--orange-pale);color:var(--orange)}
+.sp-critical{background:var(--red-pale);color:var(--red)}
+.sp-reunited{background:var(--surface);color:var(--ink-4);border:1px solid var(--border)}
+
+/* ── MATCH CARDS ── */
+.match-card{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .15s;
+}
+.match-card:last-child{border-bottom:none}
+.match-card:hover{background:var(--surface)}
+.match-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.match-photos{display:flex;gap:-8px}
+.match-photo{
+  width:40px;height:40px;border-radius:8px;overflow:hidden;
+  border:2px solid white;flex-shrink:0;
+}
+.match-photo img{width:100%;height:100%;object-fit:cover}
+.match-photo+.match-photo{margin-left:-10px}
+.match-score-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;margin:0 4px}
+.match-arrow{font-size:14px;color:var(--ink-4)}
+.match-score{
+  font-size:18px;font-weight:700;
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.match-score.high{background:linear-gradient(135deg,var(--green),#00BFA5);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.match-score.med{background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.match-info{flex:1}
+.match-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.match-sub{font-size:11px;color:var(--ink-3)}
+.match-actions{display:flex;gap:6px}
+.match-btn{
+  flex:1;padding:7px;border-radius:7px;font-size:12px;font-weight:600;
+  cursor:pointer;border:1.5px solid var(--border);background:white;
+  color:var(--ink-2);font-family:'DM Sans',sans-serif;transition:all .15s;
+}
+.match-btn.confirm{background:var(--green);border-color:var(--green);color:white}
+.match-btn.confirm:hover{background:var(--green-l)}
+.match-btn:hover{border-color:var(--ink-3)}
+
+/* ── ACTIVITY FEED ── */
+.activity-item{
+  padding:12px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:10px;
+}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;
+}
+.ad-green{background:var(--green)}
+.ad-blue{background:var(--blue)}
+.ad-orange{background:var(--orange)}
+.ad-red{background:var(--red)}
+.activity-text{font-size:12px;color:var(--ink-2);line-height:1.5;flex:1}
+.activity-text strong{font-weight:700;color:var(--ink)}
+.activity-time{font-size:10px;color:var(--ink-4);white-space:nowrap;margin-top:1px}
+
+/* ── FILTER TABS ── */
+.filter-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.ftab{
+  padding:6px 14px;border-radius:50px;font-size:12px;font-weight:600;
+  cursor:pointer;border:1.5px solid var(--border);background:var(--card);
+  color:var(--ink-3);font-family:'DM Sans',sans-serif;transition:all .15s;
+}
+.ftab.active{background:var(--ink);color:white;border-color:var(--ink)}
+.ftab:hover:not(.active){border-color:var(--ink-3);color:var(--ink-2)}
+
+/* ── SEARCH BAR ── */
+.search-bar{
+  display:flex;align-items:center;gap:8px;
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:8px;padding:8px 14px;margin-bottom:16px;
+  transition:border-color .15s;
+}
+.search-bar:focus-within{border-color:var(--green)}
+.search-bar input{
+  border:none;outline:none;font-family:'DM Sans',sans-serif;
+  font-size:13px;color:var(--ink);background:transparent;flex:1;
+}
+.search-bar input::placeholder{color:var(--ink-4)}
+
+/* ── ANIMAL DETAIL / EXPEDIENTE ── */
+.expediente-header{
+  background:var(--ink);padding:20px 24px;
+  display:flex;align-items:center;gap:16px;
+}
+.exp-photo{
+  width:64px;height:64px;border-radius:10px;overflow:hidden;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.15);
+}
+.exp-photo img{width:100%;height:100%;object-fit:cover}
+.exp-id{font-size:11px;font-weight:600;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;margin-bottom:4px}
+.exp-name{font-size:20px;font-weight:700;color:white;margin-bottom:4px}
+.exp-meta{font-size:12px;color:rgba(255,255,255,.55)}
+.exp-status-pill{
+  margin-left:auto;padding:5px 14px;border-radius:50px;
+  font-size:12px;font-weight:700;
+}
+.exp-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--card)}
+.exp-tab{
+  padding:12px 18px;font-size:13px;font-weight:600;color:var(--ink-3);
+  cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;
+  border:none;background:none;font-family:'DM Sans',sans-serif;
+}
+.exp-tab.active{color:var(--green);border-bottom-color:var(--green)}
+.exp-panel{display:none;padding:20px 24px}.exp-panel.active{display:block}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.info-field label{font-size:11px;font-weight:600;color:var(--ink-4);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+.info-field .value{font-size:14px;font-weight:600;color:var(--ink)}
+.health-checks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.health-check{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border-radius:8px;padding:10px 14px;
+  border:1px solid var(--border);
+}
+.health-check label{font-size:13px;font-weight:600;color:var(--ink-2)}
+.check-badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:50px}
+.check-yes{background:var(--green-pale);color:var(--green)}
+.check-no{background:var(--red-pale);color:var(--red)}
+.check-pend{background:var(--gold-pale);color:var(--gold)}
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:14px;padding-bottom:20px;position:relative}
+.tl-item::before{content:'';position:absolute;left:15px;top:28px;bottom:0;width:1px;background:var(--border)}
+.tl-item:last-child::before{display:none}
+.tl-dot{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  border:2px solid var(--card);box-shadow:0 0 0 1px var(--border);
+  background:var(--card);
+}
+.tl-content{flex:1;padding-top:5px}
+.tl-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.tl-meta{font-size:11px;color:var(--ink-3)}
+.tl-body{font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.5;background:var(--surface);border-radius:6px;padding:8px 12px;border:1px solid var(--border)}
+
+/* ── MATCH DETAIL ── */
+.match-compare{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin-bottom:20px}
+.compare-card{background:var(--surface);border-radius:10px;padding:14px;border:1px solid var(--border)}
+.compare-photo{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;margin-bottom:10px}
+.compare-photo img{width:100%;height:100%;object-fit:cover}
+.compare-label{font-size:10px;font-weight:600;color:var(--ink-4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.compare-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.compare-attrs{display:flex;flex-direction:column;gap:4px}
+.attr-row{display:flex;justify-content:space-between;font-size:12px}
+.attr-key{color:var(--ink-3);font-weight:500}
+.attr-val{color:var(--ink);font-weight:600}
+.attr-val.match-yes{color:var(--green)}
+.attr-val.match-no{color:var(--red)}
+.score-center{text-align:center}
+.score-big{font-size:40px;font-weight:700;color:var(--green);line-height:1}
+.score-label{font-size:11px;font-weight:600;color:var(--ink-4);margin-top:4px}
+.score-bar-wrap{width:60px;height:6px;background:var(--border);border-radius:50px;margin:8px auto 0;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--green),#00BFA5)}
+
+/* ── ADOPTION FUNNEL ── */
+.adoption-card{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .15s;
+}
+.adoption-card:hover{background:var(--surface)}
+.adoption-card:last-child{border-bottom:none}
+.adopter-av{
+  width:40px;height:40px;border-radius:50%;background:var(--green-pale);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;font-weight:700;color:var(--green);
+}
+.adopter-info{flex:1}
+.adopter-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.adopter-pet{font-size:12px;color:var(--ink-3);margin-bottom:4px}
+.adopter-msg{font-size:12px;color:var(--ink-2);font-style:italic;line-height:1.4}
+.adopter-time{font-size:10px;color:var(--ink-4);white-space:nowrap;margin-top:2px}
+.adopt-actions{display:flex;gap:6px;margin-top:10px}
+.adopt-btn{
+  padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;
+  cursor:pointer;border:1.5px solid var(--border);
+  font-family:'DM Sans',sans-serif;transition:all .15s;
+}
+.adopt-btn.contact{background:var(--green);border-color:var(--green);color:white}
+.adopt-btn.pass{background:var(--surface);color:var(--ink-3)}
+
+/* ── WHATSAPP INTEGRATION CARD ── */
+.wa-card{
+  background:linear-gradient(135deg,#064E3B,#065F46);
+  border-radius:var(--r);padding:20px;color:white;
+  margin-bottom:20px;position:relative;overflow:hidden;
+}
+.wa-card::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+.wa-title{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.wa-sub{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5;margin-bottom:14px}
+.wa-number{
+  background:rgba(255,255,255,.1);border-radius:8px;padding:10px 14px;
+  font-family:'DM Mono',monospace;font-size:13px;font-weight:500;
+  border:1px solid rgba(255,255,255,.15);margin-bottom:12px;
+}
+.wa-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.wa-stat{text-align:center}
+.wa-stat-num{font-size:22px;font-weight:700}
+.wa-stat-label{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px}
+.wa-recent{margin-top:14px;border-top:1px solid rgba(255,255,255,.1);padding-top:14px}
+.wa-msg{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px}
+.wa-msg:last-child{margin-bottom:0}
+.wa-bubble{
+  background:rgba(255,255,255,.1);border-radius:0 10px 10px 10px;
+  padding:8px 12px;font-size:12px;color:rgba(255,255,255,.9);
+  max-width:220px;line-height:1.45;
+}
+.wa-bubble.agent{
+  background:rgba(37,211,102,.2);border-radius:10px 0 10px 10px;
+  margin-left:auto;
+}
+.wa-vol{font-size:10px;font-weight:600;color:rgba(255,255,255,.4);margin-top:2px}
+
+/* ── EMPTY STATE ── */
+.empty{padding:48px 24px;text-align:center;color:var(--ink-4)}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
+.empty-title{font-size:14px;font-weight:700;color:var(--ink-3);margin-bottom:6px}
+.empty-sub{font-size:12px;line-height:1.5}
+
+/* ── BACK BUTTON ── */
+.back-btn-top{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:600;color:var(--ink-3);
+  cursor:pointer;border:none;background:none;
+  font-family:'DM Sans',sans-serif;padding:0;margin-bottom:20px;
+  transition:color .15s;
+}
+.back-btn-top:hover{color:var(--green)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.screen.active .metrics-row{animation:fadeUp .3s ease both}
+.screen.active .two-col{animation:fadeUp .3s .05s ease both}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">uni<span>dos</span></div>
+    <div class="logo-sub">Shelter Management</div>
+  </div>
+  <div class="sidebar-shelter">
+    <div class="shelter-name">Montería Central Shelter</div>
+    <div class="shelter-city">📍 Montería, Córdoba</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <button class="nav-item active" onclick="showScreen('dashboard',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="showScreen('animals',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Animals
+      <span class="nav-badge">12</span>
+    </button>
+    <button class="nav-item" onclick="showScreen('matches',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Matches
+      <span class="nav-badge">3</span>
+    </button>
+    <button class="nav-item" onclick="showScreen('adoptions',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Adoptions
+      <span class="nav-badge blue">5</span>
+    </button>
+    <div class="nav-section-label">Integration</div>
+    <button class="nav-item" onclick="showScreen('whatsapp',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      WhatsApp Agent
+    </button>
+    <div class="nav-section-label">Settings</div>
+    <button class="nav-item" onclick="showScreen('config',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Configuration
+    </button>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="sidebar-user">
+      <div class="user-av">ML</div>
+      <div>
+        <div class="user-name">María López</div>
+        <div class="user-role">Shelter Admin</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="page-title" id="pageTitle">Dashboard</div>
+    <div class="topbar-right">
+      <button class="topbar-btn ghost" onclick="showScreen('whatsapp',document.querySelector('.nav-item:nth-child(8)'))">📱 WhatsApp Agent</button>
+      <button class="topbar-btn primary" onclick="showScreen('animals',document.querySelectorAll('.nav-item')[1])">+ Register animal</button>
+      <div class="notif-dot" onclick="showScreen('matches',document.querySelectorAll('.nav-item')[2])">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+  <!-- ══ DASHBOARD ══ -->
+  <div class="screen active" id="screen-dashboard">
+    <div class="metrics-row">
+      <div class="metric" onclick="showScreen('animals',document.querySelectorAll('.nav-item')[1])">
+        <div class="metric-top">
+          <div class="metric-icon" style="background:var(--green-pale)">🐾</div>
+          <span class="metric-trend up">↑ 3 this week</span>
+        </div>
+        <div class="metric-num">12</div>
+        <div class="metric-label">Animals in custody</div>
+      </div>
+      <div class="metric" onclick="showScreen('matches',document.querySelectorAll('.nav-item')[2])">
+        <div class="metric-top">
+          <div class="metric-icon" style="background:var(--blue-pale)">🎯</div>
+          <span class="metric-trend warn">3 pending</span>
+        </div>
+        <div class="metric-num">3</div>
+        <div class="metric-label">Active matches</div>
+      </div>
+      <div class="metric" onclick="showScreen('adoptions',document.querySelectorAll('.nav-item')[3])">
+        <div class="metric-top">
+          <div class="metric-icon" style="background:var(--orange-pale)">🏠</div>
+          <span class="metric-trend alert">5 requests</span>
+        </div>
+        <div class="metric-num">5</div>
+        <div class="metric-label">Adoption requests</div>
+      </div>
+      <div class="metric">
+        <div class="metric-top">
+          <div class="metric-icon" style="background:var(--green-pale)">✅</div>
+          <span class="metric-trend up">+2 this month</span>
+        </div>
+        <div class="metric-num">34</div>
+        <div class="metric-label">Reunited this year</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <!-- Recent Animals -->
+        <div class="section-hdr">
+          <span class="section-title">Recent arrivals</span>
+          <button class="section-link" onclick="showScreen('animals',document.querySelectorAll('.nav-item')[1])">See all →</button>
+        </div>
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-body">
+            <div class="animal-row" onclick="showExpediente('A-2847')">
+              <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=100&fit=crop" alt=""/></div>
+              <div class="animal-info">
+                <div class="animal-id">#A-2847</div>
+                <div class="animal-name">Dog · Male · Medium · Brown</div>
+                <div class="animal-meta">San Pelayo · via WhatsApp · Feb 19</div>
+              </div>
+              <span class="status-pill sp-match">🎯 Match 87%</span>
+            </div>
+            <div class="animal-row" onclick="showExpediente('A-2846')">
+              <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=100&h=100&fit=crop" alt=""/></div>
+              <div class="animal-info">
+                <div class="animal-id">#A-2846</div>
+                <div class="animal-name">Cat · Female · Small · White</div>
+                <div class="animal-meta">Lorica · via App · Feb 18</div>
+              </div>
+              <span class="status-pill sp-available">Available</span>
+            </div>
+            <div class="animal-row" onclick="showExpediente('A-2845')">
+              <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=100&h=100&fit=crop" alt=""/></div>
+              <div class="animal-info">
+                <div class="animal-id">#A-2845</div>
+                <div class="animal-name">Dog · Male · Small · White</div>
+                <div class="animal-meta">Montería · via WhatsApp · Feb 17</div>
+              </div>
+              <span class="status-pill sp-adopt">Adoption process</span>
+            </div>
+            <div class="animal-row" onclick="showExpediente('A-2844')">
+              <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=100&h=100&fit=crop" alt=""/></div>
+              <div class="animal-info">
+                <div class="animal-id">#A-2844</div>
+                <div class="animal-name">Dog · Female · Large · Black</div>
+                <div class="animal-meta">Tierra Alta · via App · Feb 15</div>
+              </div>
+              <span class="status-pill sp-critical">⚠ 30+ days</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Matches -->
+        <div class="section-hdr">
+          <span class="section-title">Active matches</span>
+          <button class="section-link" onclick="showScreen('matches',document.querySelectorAll('.nav-item')[2])">See all →</button>
+        </div>
+        <div class="card">
+          <div class="match-card">
+            <div class="match-top">
+              <div class="match-photos">
+                <div class="match-photo"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=80&h=80&fit=crop" alt=""/></div>
+                <div class="match-photo"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=80&h=80&fit=crop" alt=""/></div>
+              </div>
+              <div class="match-score-wrap">
+                <div class="match-arrow">↔</div>
+                <div class="match-score high">87%</div>
+              </div>
+              <div class="match-info">
+                <div class="match-title">#A-2847 ↔ Report #R-1923</div>
+                <div class="match-sub">Dog · Male · Medium · Brown · San Pelayo<br>Owner notified automatically · 2h ago</div>
+              </div>
+            </div>
+            <div class="match-actions">
+              <button class="match-btn confirm" onclick="event.stopPropagation();alert('Owner has been notified. Awaiting their confirmation.')">✓ Owner notified</button>
+              <button class="match-btn" onclick="event.stopPropagation();showScreen('matches',document.querySelectorAll('.nav-item')[2])">View details</button>
+            </div>
+          </div>
+          <div class="match-card">
+            <div class="match-top">
+              <div class="match-photos">
+                <div class="match-photo"><img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=80&h=80&fit=crop" alt=""/></div>
+                <div class="match-photo"><img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=80&h=80&fit=crop" alt=""/></div>
+              </div>
+              <div class="match-score-wrap">
+                <div class="match-arrow">↔</div>
+                <div class="match-score med">61%</div>
+              </div>
+              <div class="match-info">
+                <div class="match-title">#A-2843 ↔ Report #R-1917</div>
+                <div class="match-sub">Cat · Male · Small · Black · Lorica<br>Needs manual review</div>
+              </div>
+            </div>
+            <div class="match-actions">
+              <button class="match-btn confirm" onclick="event.stopPropagation();alert('Notifying owner...')">Notify owner</button>
+              <button class="match-btn" onclick="event.stopPropagation()">Dismiss</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <!-- WhatsApp summary -->
+        <div class="section-hdr"><span class="section-title">WhatsApp Agent</span></div>
+        <div class="wa-card" style="margin-bottom:16px">
+          <div class="wa-title">📱 Agent active</div>
+          <div class="wa-sub">+57 310 432 1100 · Receiving registrations 24/7</div>
+          <div class="wa-number">+57 310 432 1100</div>
+          <div class="wa-stats">
+            <div class="wa-stat"><div class="wa-stat-num">8</div><div class="wa-stat-label">Registered today</div></div>
+            <div class="wa-stat"><div class="wa-stat-num">2m</div><div class="wa-stat-label">Avg. time</div></div>
+            <div class="wa-stat"><div class="wa-stat-num">94%</div><div class="wa-stat-label">Completion</div></div>
+          </div>
+        </div>
+
+        <!-- Activity feed -->
+        <div class="section-hdr"><span class="section-title">Activity</span></div>
+        <div class="card">
+          <div class="activity-item">
+            <div class="activity-dot ad-green"></div>
+            <div class="activity-text"><strong>#A-2847</strong> matched with owner report at 87% · Owner notified via app</div>
+            <div class="activity-time">2h ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot ad-blue"></div>
+            <div class="activity-text"><strong>Carlos S.</strong> expressed adoption interest in Toby (#A-2845)</div>
+            <div class="activity-time">3h ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot ad-green"></div>
+            <div class="activity-text"><strong>#A-2847</strong> registered via WhatsApp by volunteer Juan M.</div>
+            <div class="activity-time">5h ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot ad-orange"></div>
+            <div class="activity-text"><strong>#A-2844</strong> reached 30 days in custody · Review recommended</div>
+            <div class="activity-time">8h ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot ad-green"></div>
+            <div class="activity-text"><strong>Biscuit (#A-2831)</strong> successfully reunited with owner Ana G.</div>
+            <div class="activity-time">Yesterday</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ANIMALS ══ -->
+  <div class="screen" id="screen-animals">
+    <div class="filter-tabs">
+      <button class="ftab active" onclick="filterAnimals('all',this)">All (12)</button>
+      <button class="ftab" onclick="filterAnimals('match',this)">🎯 Matches (3)</button>
+      <button class="ftab" onclick="filterAnimals('available',this)">Available (7)</button>
+      <button class="ftab" onclick="filterAnimals('adopt',this)">Adoption (2)</button>
+      <button class="ftab" onclick="filterAnimals('critical',this)">⚠ 30+ days (1)</button>
+    </div>
+    <div class="search-bar">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA099" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input placeholder="Search by ID, species, color, location, volunteer…"/>
+    </div>
+    <div class="card" id="animalsList">
+      <div class="animal-row" data-status="match" onclick="showExpediente('A-2847')">
+        <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=100&fit=crop" alt=""/></div>
+        <div class="animal-info">
+          <div class="animal-id">#A-2847 · via WhatsApp · Juan M.</div>
+          <div class="animal-name">Dog · Male · Medium · Brown and white</div>
+          <div class="animal-meta">📍 San Pelayo, Blvd Libertadores · Feb 19, 2026</div>
+        </div>
+        <div style="text-align:right">
+          <span class="status-pill sp-match">🎯 Match 87%</span>
+          <div class="animal-days" style="margin-top:4px">5 days</div>
+        </div>
+      </div>
+      <div class="animal-row" data-status="available" onclick="showExpediente('A-2846')">
+        <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=100&h=100&fit=crop" alt=""/></div>
+        <div class="animal-info">
+          <div class="animal-id">#A-2846 · via App · Admin</div>
+          <div class="animal-name">Cat · Female · Small · White with brown spots</div>
+          <div class="animal-meta">📍 Lorica, Parque Central · Feb 18, 2026</div>
+        </div>
+        <div style="text-align:right">
+          <span class="status-pill sp-available">Available</span>
+          <div class="animal-days" style="margin-top:4px">6 days</div>
+        </div>
+      </div>
+      <div class="animal-row" data-status="adopt" onclick="showExpediente('A-2845')">
+        <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=100&h=100&fit=crop" alt=""/></div>
+        <div class="animal-info">
+          <div class="animal-id">#A-2845 · via WhatsApp · Laura P.</div>
+          <div class="animal-name">Dog · Male · Small · White (Poodle mix)</div>
+          <div class="animal-meta">📍 Montería, Cra. 5 · Feb 17, 2026</div>
+        </div>
+        <div style="text-align:right">
+          <span class="status-pill sp-adopt">Adoption process</span>
+          <div class="animal-days" style="margin-top:4px">7 days</div>
+        </div>
+      </div>
+      <div class="animal-row" data-status="available" onclick="showExpediente('A-2844')">
+        <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=100&h=100&fit=crop" alt=""/></div>
+        <div class="animal-info">
+          <div class="animal-id">#A-2844 · via WhatsApp · Carlos R.</div>
+          <div class="animal-name">Dog · Female · Medium · Golden</div>
+          <div class="animal-meta">📍 Tierra Alta · Feb 12, 2026</div>
+        </div>
+        <div style="text-align:right">
+          <span class="status-pill sp-available">Available</span>
+          <div class="animal-days" style="margin-top:4px">12 days</div>
+        </div>
+      </div>
+      <div class="animal-row" data-status="critical" onclick="showExpediente('A-2820')">
+        <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=100&h=100&fit=crop" alt=""/></div>
+        <div class="animal-info">
+          <div class="animal-id">#A-2820 · via App · Admin</div>
+          <div class="animal-name">Dog · Female · Large · Black</div>
+          <div class="animal-meta">📍 Tierra Alta, Cra. 3 · Jan 15, 2026</div>
+        </div>
+        <div style="text-align:right">
+          <span class="status-pill sp-critical">⚠ 34 days</span>
+          <div class="animal-days" style="margin-top:4px;color:var(--red)">34 days</div>
+        </div>
+      </div>
+      <div class="animal-row" data-status="available" onclick="showExpediente('A-2819')">
+        <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=100&h=100&fit=crop" alt=""/></div>
+        <div class="animal-info">
+          <div class="animal-id">#A-2819 · via WhatsApp · Ana G.</div>
+          <div class="animal-name">Cat · Male · Small · Black</div>
+          <div class="animal-meta">📍 Lorica · Jan 14, 2026</div>
+        </div>
+        <div style="text-align:right">
+          <span class="status-pill sp-available">Available</span>
+          <div class="animal-days" style="margin-top:4px">35 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ EXPEDIENTE (Animal Detail) ══ -->
+  <div class="screen" id="screen-expediente">
+    <button class="back-btn-top" onclick="showScreen('animals',document.querySelectorAll('.nav-item')[1])">
+      ← Back to animals
+    </button>
+    <div class="card">
+      <div class="expediente-header">
+        <div class="exp-photo"><img id="expImg" src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=128&h=128&fit=crop" alt=""/></div>
+        <div>
+          <div class="exp-id" id="expId">#A-2847</div>
+          <div class="exp-name" id="expName">Dog · Male · Medium</div>
+          <div class="exp-meta" id="expMeta">Brown and white · San Pelayo · Rescued Feb 19, 2026</div>
+        </div>
+        <div class="exp-status-pill sp-match" id="expStatus">🎯 Match 87%</div>
+      </div>
+      <div class="exp-tabs">
+        <button class="exp-tab active" onclick="showExpTab('profile',this)">Profile</button>
+        <button class="exp-tab" onclick="showExpTab('health',this)">Health</button>
+        <button class="exp-tab" onclick="showExpTab('history',this)">History</button>
+        <button class="exp-tab" onclick="showExpTab('match',this)">Match</button>
+      </div>
+      <!-- Profile -->
+      <div class="exp-panel active" id="exp-profile">
+        <div class="info-grid">
+          <div class="info-field"><label>Species</label><div class="value">Dog</div></div>
+          <div class="info-field"><label>Sex</label><div class="value">Male</div></div>
+          <div class="info-field"><label>Size</label><div class="value">Medium (~12 kg)</div></div>
+          <div class="info-field"><label>Color</label><div class="value">Brown and white</div></div>
+          <div class="info-field"><label>Age (estimated)</label><div class="value">Adult (2-4 yrs)</div></div>
+          <div class="info-field"><label>Registered by</label><div class="value">Juan M. via WhatsApp</div></div>
+          <div class="info-field" style="grid-column:1/-1"><label>Location found</label><div class="value">San Pelayo, Córdoba · Boulevard Libertadores near Cra. 2</div></div>
+          <div class="info-field" style="grid-column:1/-1"><label>Distinguishing marks</label><div class="value">White patch on chest. Responds to commands. No visible collar or chip at intake.</div></div>
+        </div>
+      </div>
+      <!-- Health -->
+      <div class="exp-panel" id="exp-health">
+        <div class="health-checks">
+          <div class="health-check"><label>Vaccinated</label><span class="check-badge check-pend">Pending</span></div>
+          <div class="health-check"><label>Dewormed</label><span class="check-badge check-yes">Done</span></div>
+          <div class="health-check"><label>Sterilized</label><span class="check-badge check-no">No</span></div>
+          <div class="health-check"><label>Microchipped</label><span class="check-badge check-no">No</span></div>
+          <div class="health-check"><label>Vet checkup</label><span class="check-badge check-pend">Scheduled Feb 22</span></div>
+          <div class="health-check"><label>Overall status</label><span class="check-badge check-yes">Good</span></div>
+        </div>
+        <div style="margin-top:16px">
+          <div class="info-field"><label>Vet notes</label>
+          <div class="value" style="margin-top:6px;font-size:13px;color:var(--ink-2);line-height:1.5;background:var(--surface);border-radius:8px;padding:10px 14px;border:1px solid var(--border)">Animal appears well-nourished. Slight anxiety on intake. Small scar on right front paw, healed. No signs of abuse or trauma. Recommend rabies vaccine on next visit.</div></div>
+        </div>
+      </div>
+      <!-- History -->
+      <div class="exp-panel" id="exp-history">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--green-pale)">📱</div>
+            <div class="tl-content">
+              <div class="tl-title">Registered via WhatsApp</div>
+              <div class="tl-meta">Feb 19, 2026 · 08:42 am · Juan M. (Field volunteer)</div>
+              <div class="tl-body">Photo received → AI extracted: dog, medium, brown. Agent asked 3 follow-up questions. Full record created in 1m 48s.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--blue-pale)">🎯</div>
+            <div class="tl-content">
+              <div class="tl-title">Automatic match detected</div>
+              <div class="tl-meta">Feb 19, 2026 · 08:43 am · System</div>
+              <div class="tl-body">87% similarity with Report #R-1923 (filed Feb 14 by Daniela R.). Owner notified automatically via app push notification.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--gold-pale)">🏥</div>
+            <div class="tl-content">
+              <div class="tl-title">Initial health check</div>
+              <div class="tl-meta">Feb 19, 2026 · 02:00 pm · Dr. Ramírez</div>
+              <div class="tl-body">Good overall condition. Deworming administered. Rabies vaccine scheduled for Feb 22.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--orange-pale)">👁️</div>
+            <div class="tl-content">
+              <div class="tl-title">Owner confirmed match</div>
+              <div class="tl-meta">Feb 20, 2026 · 10:15 am · Daniela R. (via app)</div>
+              <div class="tl-body">Owner confirmed identity in app. Reunion scheduled for Feb 24 at shelter. Owner notified to bring ID and vaccination records.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Match -->
+      <div class="exp-panel" id="exp-match">
+        <div class="match-compare">
+          <div class="compare-card">
+            <div class="compare-label">In custody</div>
+            <div class="compare-photo"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=300&h=300&fit=crop" alt=""/></div>
+            <div class="compare-name">#A-2847 · Shelter</div>
+            <div class="compare-attrs">
+              <div class="attr-row"><span class="attr-key">Species</span><span class="attr-val">Dog</span></div>
+              <div class="attr-row"><span class="attr-key">Sex</span><span class="attr-val">Male</span></div>
+              <div class="attr-row"><span class="attr-key">Size</span><span class="attr-val">Medium</span></div>
+              <div class="attr-row"><span class="attr-key">Color</span><span class="attr-val">Brown/white</span></div>
+              <div class="attr-row"><span class="attr-key">Location</span><span class="attr-val">San Pelayo</span></div>
+            </div>
+          </div>
+          <div class="score-center">
+            <div class="score-big">87%</div>
+            <div class="score-label">Similarity</div>
+            <div class="score-bar-wrap"><div class="score-bar-fill" style="width:87%"></div></div>
+            <div style="margin-top:12px;font-size:11px;color:var(--ink-4)">5 of 6 attributes match</div>
+          </div>
+          <div class="compare-card">
+            <div class="compare-label">Owner report</div>
+            <div class="compare-photo"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=300&h=300&fit=crop" alt=""/></div>
+            <div class="compare-name">#R-1923 · Daniela R.</div>
+            <div class="compare-attrs">
+              <div class="attr-row"><span class="attr-key">Species</span><span class="attr-val match-yes">Dog ✓</span></div>
+              <div class="attr-row"><span class="attr-key">Sex</span><span class="attr-val match-yes">Male ✓</span></div>
+              <div class="attr-row"><span class="attr-key">Size</span><span class="attr-val match-yes">Medium ✓</span></div>
+              <div class="attr-row"><span class="attr-key">Color</span><span class="attr-val match-yes">Brown ✓</span></div>
+              <div class="attr-row"><span class="attr-key">Location</span><span class="attr-val match-yes">San Pelayo ✓</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="match-btn confirm" style="flex:1;padding:12px" onclick="alert('Owner Daniela R. has been notified and confirmed the match. Reunion scheduled for Feb 24.')">✓ Owner confirmed · Reunion Feb 24</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MATCHES ══ -->
+  <div class="screen" id="screen-matches">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+      <div class="metric"><div class="metric-top"><div class="metric-icon" style="background:var(--green-pale)">🎯</div><span class="metric-trend up">Auto-notified</span></div><div class="metric-num">2</div><div class="metric-label">High confidence ≥75%</div></div>
+      <div class="metric"><div class="metric-top"><div class="metric-icon" style="background:var(--gold-pale)">🔍</div><span class="metric-trend warn">Review needed</span></div><div class="metric-num">1</div><div class="metric-label">Medium 40–74%</div></div>
+      <div class="metric"><div class="metric-top"><div class="metric-icon" style="background:var(--green-pale)">✅</div></div><div class="metric-num">8</div><div class="metric-label">Confirmed this month</div></div>
+    </div>
+    <div class="section-hdr"><span class="section-title">High confidence matches — owner notified automatically</span></div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="match-card">
+        <div class="match-top">
+          <div class="match-photos">
+            <div class="match-photo"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=80&h=80&fit=crop" alt=""/></div>
+            <div class="match-photo"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=80&h=80&fit=crop" alt=""/></div>
+          </div>
+          <div class="match-score-wrap"><div class="match-arrow">↔</div><div class="match-score high">87%</div></div>
+          <div class="match-info">
+            <div class="match-title">#A-2847 ↔ Report #R-1923</div>
+            <div class="match-sub">Dog · Male · Medium · Brown · San Pelayo<br>Owner Daniela R. notified · confirmed match ✓ · Reunion Feb 24</div>
+          </div>
+        </div>
+        <div class="match-actions">
+          <button class="match-btn confirm" onclick="showExpediente('A-2847')">View expediente</button>
+          <button class="match-btn" style="color:var(--ink-4)">Reunited ✓</button>
+        </div>
+      </div>
+      <div class="match-card">
+        <div class="match-top">
+          <div class="match-photos">
+            <div class="match-photo"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=80&h=80&fit=crop" alt=""/></div>
+            <div class="match-photo"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=80&h=80&fit=crop" alt=""/></div>
+          </div>
+          <div class="match-score-wrap"><div class="match-arrow">↔</div><div class="match-score high">79%</div></div>
+          <div class="match-info">
+            <div class="match-title">#A-2846 ↔ Report #R-1919</div>
+            <div class="match-sub">Cat · Female · Small · White · Lorica<br>Owner Jorge M. notified automatically · Awaiting response</div>
+          </div>
+        </div>
+        <div class="match-actions">
+          <button class="match-btn confirm" onclick="showExpediente('A-2846')">View expediente</button>
+          <button class="match-btn">Send reminder</button>
+        </div>
+      </div>
+    </div>
+    <div class="section-hdr"><span class="section-title">Medium confidence — review before notifying</span></div>
+    <div class="card">
+      <div class="match-card">
+        <div class="match-top">
+          <div class="match-photos">
+            <div class="match-photo"><img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=80&h=80&fit=crop" alt=""/></div>
+            <div class="match-photo"><img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=80&h=80&fit=crop" alt=""/></div>
+          </div>
+          <div class="match-score-wrap"><div class="match-arrow">↔</div><div class="match-score med">61%</div></div>
+          <div class="match-info">
+            <div class="match-title">#A-2843 ↔ Report #R-1917</div>
+            <div class="match-sub">Cat · Male · Small · Black · Lorica<br>3 of 5 attributes match · Manual review recommended</div>
+          </div>
+        </div>
+        <div class="match-actions">
+          <button class="match-btn confirm" onclick="alert('Owner notified.')">Notify owner</button>
+          <button class="match-btn" onclick="showExpediente('A-2843')">Review</button>
+          <button class="match-btn" onclick="this.closest('.match-card').style.opacity='.4'">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ADOPTIONS ══ -->
+  <div class="screen" id="screen-adoptions">
+    <div class="filter-tabs">
+      <button class="ftab active" onclick="filterAdopt('all',this)">All requests (5)</button>
+      <button class="ftab" onclick="filterAdopt('pending',this)">Pending (3)</button>
+      <button class="ftab" onclick="filterAdopt('contacted',this)">Contacted (2)</button>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="adoption-card" data-adopt="pending">
+          <div class="adopter-av">MC</div>
+          <div class="adopter-info">
+            <div class="adopter-name">María Camila Reyes</div>
+            <div class="adopter-pet">Interested in Toby · #A-2845 · ⭐ Super interested</div>
+            <div class="adopter-msg">"I've been looking for a small dog for months. I have a house with a yard."</div>
+            <div class="adopt-actions">
+              <button class="adopt-btn contact" onclick="alert('Opening WhatsApp to contact María Camila...')">💬 Contact via WhatsApp</button>
+              <button class="adopt-btn pass" onclick="this.closest('.adoption-card').style.opacity='.4'">Pass</button>
+            </div>
+          </div>
+          <div class="adopter-time">2h ago</div>
+        </div>
+        <div class="adoption-card" data-adopt="pending">
+          <div class="adopter-av">CS</div>
+          <div class="adopter-info">
+            <div class="adopter-name">Carlos Suárez</div>
+            <div class="adopter-pet">Interested in Luna · #A-2846 · 🐾 Interested</div>
+            <div class="adopter-msg">"I work from home. I'd love a calm indoor cat."</div>
+            <div class="adopt-actions">
+              <button class="adopt-btn contact" onclick="alert('Opening WhatsApp to contact Carlos...')">💬 Contact via WhatsApp</button>
+              <button class="adopt-btn pass" onclick="this.closest('.adoption-card').style.opacity='.4'">Pass</button>
+            </div>
+          </div>
+          <div class="adopter-time">5h ago</div>
+        </div>
+        <div class="adoption-card" data-adopt="pending">
+          <div class="adopter-av">LT</div>
+          <div class="adopter-info">
+            <div class="adopter-name">Luisa F. Torres</div>
+            <div class="adopter-pet">Interested in Luna · #A-2846 · ⭐ Super interested</div>
+            <div class="adopter-msg">"I have experience with cats, quiet apartment, no other pets."</div>
+            <div class="adopt-actions">
+              <button class="adopt-btn contact" onclick="alert('Opening WhatsApp to contact Luisa...')">💬 Contact via WhatsApp</button>
+              <button class="adopt-btn pass" onclick="this.closest('.adoption-card').style.opacity='.4'">Pass</button>
+            </div>
+          </div>
+          <div class="adopter-time">Feb 20</div>
+        </div>
+        <div class="adoption-card" data-adopt="contacted">
+          <div class="adopter-av" style="background:var(--green-pale);color:var(--green)">AG</div>
+          <div class="adopter-info">
+            <div class="adopter-name">Ana Gómez <span style="font-size:11px;color:var(--green);font-weight:600">· Contacted</span></div>
+            <div class="adopter-pet">Interested in Toby · #A-2845 · 🐾 Interested</div>
+            <div class="adopter-msg">"Family with children, large house, previous dog owner."</div>
+            <div class="adopt-actions">
+              <button class="adopt-btn contact" style="background:var(--green-pale);color:var(--green);border-color:var(--green-border)">✓ Meeting Feb 25</button>
+            </div>
+          </div>
+          <div class="adopter-time">Feb 19</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-hdr" style="margin-bottom:12px"><span class="section-title">Animals available for adoption</span></div>
+        <div class="card">
+          <div class="animal-row" onclick="showExpediente('A-2845')">
+            <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=100&h=100&fit=crop" alt=""/></div>
+            <div class="animal-info"><div class="animal-id">#A-2845 · 7 days</div><div class="animal-name">Dog · Male · Small · White</div><div class="animal-meta">3 requests pending</div></div>
+            <span class="status-pill sp-adopt">3 requests</span>
+          </div>
+          <div class="animal-row" onclick="showExpediente('A-2846')">
+            <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=100&h=100&fit=crop" alt=""/></div>
+            <div class="animal-info"><div class="animal-id">#A-2846 · 6 days</div><div class="animal-name">Cat · Female · Small · White</div><div class="animal-meta">2 requests pending</div></div>
+            <span class="status-pill sp-adopt">2 requests</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ WHATSAPP AGENT ══ -->
+  <div class="screen" id="screen-whatsapp">
+    <div class="two-col">
+      <div>
+        <div class="wa-card" style="margin-bottom:20px">
+          <div class="wa-title">📱 WhatsApp Agent · Active</div>
+          <div class="wa-sub">Field volunteers send a photo + message to this number. The AI agent guides them through a 3-question flow and creates the animal record automatically.</div>
+          <div class="wa-number">+57 310 432 1100</div>
+          <div class="wa-stats">
+            <div class="wa-stat"><div class="wa-stat-num">8</div><div class="wa-stat-label">Today</div></div>
+            <div class="wa-stat"><div class="wa-stat-num">1m 48s</div><div class="wa-stat-label">Avg. registration</div></div>
+            <div class="wa-stat"><div class="wa-stat-num">94%</div><div class="wa-stat-label">Completion rate</div></div>
+          </div>
+        </div>
+        <div class="section-hdr"><span class="section-title">Recent registrations via WhatsApp</span></div>
+        <div class="card">
+          <div class="animal-row" onclick="showExpediente('A-2847')">
+            <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=100&fit=crop" alt=""/></div>
+            <div class="animal-info">
+              <div class="animal-id">#A-2847 · Juan M. · 08:42am today</div>
+              <div class="animal-name">Dog · Male · Medium · Brown</div>
+              <div class="animal-meta">Registered in 1m 48s · Matched 87% immediately</div>
+            </div>
+            <span class="status-pill sp-match">🎯 Matched</span>
+          </div>
+          <div class="animal-row">
+            <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=100&h=100&fit=crop" alt=""/></div>
+            <div class="animal-info">
+              <div class="animal-id">#A-2844 · Carlos R. · Yesterday 3:12pm</div>
+              <div class="animal-name">Dog · Female · Medium · Golden</div>
+              <div class="animal-meta">Registered in 2m 04s · No match yet</div>
+            </div>
+            <span class="status-pill sp-available">Available</span>
+          </div>
+          <div class="animal-row">
+            <div class="animal-thumb"><img src="https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=100&h=100&fit=crop" alt=""/></div>
+            <div class="animal-info">
+              <div class="animal-id">#A-2845 · Laura P. · Feb 17 10:31am</div>
+              <div class="animal-name">Dog · Male · Small · White</div>
+              <div class="animal-meta">Registered in 1m 22s · In adoption process</div>
+            </div>
+            <span class="status-pill sp-adopt">Adopting</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-hdr"><span class="section-title">Agent conversation preview</span></div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div style="background:#075E54;padding:14px 16px;display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
+            <div><div style="font-size:13px;font-weight:700;color:white">Unidos Agent</div><div style="font-size:11px;color:rgba(255,255,255,.6)">+57 310 432 1100 · Automated</div></div>
+          </div>
+          <div style="background:#ECE5DD;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:400px">
+            <!-- Volunteer message with photo -->
+            <div style="align-self:flex-end;max-width:70%">
+              <div style="background:white;border-radius:12px 12px 0 12px;padding:8px 10px;box-shadow:0 1px 2px rgba(0,0,0,.1)">
+                <div style="background:#C5D5C0;border-radius:6px;padding:28px 20px;margin-bottom:6px;text-align:center;font-size:12px;color:#4A6B45">📷 image.jpg<br>2.4 MB</div>
+                <div style="font-size:13px;color:#1A1A1A">Just rescued this dog on Blvd Libertadores, San Pelayo</div>
+              </div>
+              <div style="font-size:10px;color:#8A8A8A;text-align:right;margin-top:2px">08:41 ✓✓</div>
+            </div>
+            <!-- Agent response -->
+            <div style="align-self:flex-start;max-width:80%">
+              <div style="background:white;border-radius:12px 12px 12px 0;padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.1)">
+                <div style="font-size:11px;font-weight:700;color:#075E54;margin-bottom:4px">Unidos Agent 🤖</div>
+                <div style="font-size:13px;color:#1A1A1A;line-height:1.5">Thanks Juan! I can see a medium-sized brown dog 🐕<br><br>Quick questions to complete the record:<br><br><strong>1.</strong> Any visible injuries or health concerns?<br><strong>2.</strong> Does the animal have a collar or ID tag?<br><strong>3.</strong> General condition: Good / Injured / Critical?</div>
+              </div>
+              <div style="font-size:10px;color:#8A8A8A;margin-top:2px">08:42</div>
+            </div>
+            <!-- Volunteer reply -->
+            <div style="align-self:flex-end;max-width:70%">
+              <div style="background:white;border-radius:12px 12px 0 12px;padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.1)">
+                <div style="font-size:13px;color:#1A1A1A">No injuries. No collar. Seems good, a bit scared but friendly</div>
+              </div>
+              <div style="font-size:10px;color:#8A8A8A;text-align:right;margin-top:2px">08:43 ✓✓</div>
+            </div>
+            <!-- Agent confirmation -->
+            <div style="align-self:flex-start;max-width:85%">
+              <div style="background:white;border-radius:12px 12px 12px 0;padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.1)">
+                <div style="font-size:11px;font-weight:700;color:#075E54;margin-bottom:4px">Unidos Agent 🤖</div>
+                <div style="font-size:13px;color:#1A1A1A;line-height:1.5">✅ <strong>Animal registered as #A-2847</strong><br><br>🐕 Dog · Male · Medium · Brown<br>📍 San Pelayo, Blvd Libertadores<br>📅 Feb 19, 2026 · 08:42am<br>👤 Juan M.<br><br>🎯 <strong>Possible match found at 87%</strong> with a report filed by an owner in San Pelayo. Owner has been notified automatically.<br><br>View expediente: unidos.app/A-2847</div>
+              </div>
+              <div style="font-size:10px;color:#8A8A8A;margin-top:2px">08:43</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONFIG ══ -->
+  <div class="screen" id="screen-config">
+    <div class="two-col">
+      <div>
+        <div class="section-hdr"><span class="section-title">Shelter information</span></div>
+        <div class="card" style="padding:20px;margin-bottom:20px">
+          <div class="info-grid">
+            <div class="info-field"><label>Shelter name</label><div class="value">Montería Central Shelter</div></div>
+            <div class="info-field"><label>City</label><div class="value">Montería, Córdoba</div></div>
+            <div class="info-field"><label>WhatsApp number</label><div class="value" style="font-family:'DM Mono',monospace">+57 310 432 1100</div></div>
+            <div class="info-field"><label>Address</label><div class="value">Cra. 2 #32-45, Montería</div></div>
+            <div class="info-field"><label>Hours</label><div class="value">Mon–Sat 7:00am – 6:00pm</div></div>
+            <div class="info-field"><label>Capacity</label><div class="value">40 animals</div></div>
+          </div>
+        </div>
+        <div class="section-hdr"><span class="section-title">Match thresholds</span></div>
+        <div class="card" style="padding:20px">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--green-pale);border-radius:8px;border:1px solid var(--green-border)">
+              <div><div style="font-size:13px;font-weight:700;color:var(--ink)">High confidence ≥75%</div><div style="font-size:11px;color:var(--ink-3);margin-top:2px">Notify owner automatically</div></div>
+              <div style="font-size:16px;font-weight:700;color:var(--green)">Auto ✓</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--gold-pale);border-radius:8px;border:1px solid rgba(184,134,11,.2)">
+              <div><div style="font-size:13px;font-weight:700;color:var(--ink)">Medium 40–74%</div><div style="font-size:11px;color:var(--ink-3);margin-top:2px">Send to admin for review</div></div>
+              <div style="font-size:16px;font-weight:700;color:var(--gold)">Review</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border-radius:8px;border:1px solid var(--border)">
+              <div><div style="font-size:13px;font-weight:700;color:var(--ink)">Low &lt;40%</div><div style="font-size:11px;color:var(--ink-3);margin-top:2px">No action, animal stays available</div></div>
+              <div style="font-size:16px;font-weight:700;color:var(--ink-4)">Skip</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-hdr"><span class="section-title">Field volunteers</span></div>
+        <div class="card">
+          <div class="animal-row">
+            <div class="adopter-av" style="width:40px;height:40px;border-radius:50%;font-size:14px">JM</div>
+            <div class="animal-info"><div class="animal-name">Juan M.</div><div class="animal-meta">+57 311 ··· 4421 · 23 animals registered</div></div>
+            <span class="status-pill sp-available">Active</span>
+          </div>
+          <div class="animal-row">
+            <div class="adopter-av" style="width:40px;height:40px;border-radius:50%;font-size:14px">LP</div>
+            <div class="animal-info"><div class="animal-name">Laura P.</div><div class="animal-meta">+57 312 ··· 8834 · 17 animals registered</div></div>
+            <span class="status-pill sp-available">Active</span>
+          </div>
+          <div class="animal-row">
+            <div class="adopter-av" style="width:40px;height:40px;border-radius:50%;font-size:14px">CR</div>
+            <div class="animal-info"><div class="animal-name">Carlos R.</div><div class="animal-meta">+57 310 ··· 2201 · 9 animals registered</div></div>
+            <span class="status-pill sp-available">Active</span>
+          </div>
+          <div class="animal-row">
+            <div class="animal-thumb" style="background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--ink-4)">+</div>
+            <div class="animal-info"><div class="animal-name" style="color:var(--ink-3)">Add volunteer</div><div class="animal-meta">Register phone number to allow WhatsApp registrations</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /page-content -->
+</div><!-- /main -->
+
+<script>
+const pageTitles = {
+  dashboard:'Dashboard', animals:'Animals in custody',
+  expediente:'Animal expediente', matches:'Owner matches',
+  adoptions:'Adoption requests', whatsapp:'WhatsApp Agent',
+  config:'Configuration'
+};
+
+function showScreen(id, navEl) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[id] || id;
+  if (navEl) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
+  }
+}
+
+function showExpediente(id) {
+  const data = {
+    'A-2847': { img:'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=128&h=128&fit=crop', id:'#A-2847', name:'Dog · Male · Medium', meta:'Brown and white · San Pelayo · Rescued Feb 19, 2026', status:'🎯 Match 87%', statusClass:'sp-match' },
+    'A-2846': { img:'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=128&h=128&fit=crop', id:'#A-2846', name:'Cat · Female · Small', meta:'White with brown spots · Lorica · Rescued Feb 18, 2026', status:'Available', statusClass:'sp-available' },
+    'A-2845': { img:'https://images.unsplash.com/photo-1616149030927-a09e0f2ea9cc?w=128&h=128&fit=crop', id:'#A-2845', name:'Dog · Male · Small', meta:'White (Poodle mix) · Montería · Rescued Feb 17, 2026', status:'Adoption process', statusClass:'sp-adopt' },
+    'A-2844': { img:'https://images.unsplash.com/photo-1552053831-71594a27632d?w=128&h=128&fit=crop', id:'#A-2844', name:'Dog · Female · Medium', meta:'Golden · Tierra Alta · Rescued Feb 12, 2026', status:'Available', statusClass:'sp-available' },
+    'A-2820': { img:'https://images.unsplash.com/photo-1568572933382-74d440642117?w=128&h=128&fit=crop', id:'#A-2820', name:'Dog · Female · Large', meta:'Black · Tierra Alta · Rescued Jan 15, 2026', status:'⚠ 34 days', statusClass:'sp-critical' },
+    'A-2843': { img:'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=128&h=128&fit=crop', id:'#A-2843', name:'Cat · Male · Small', meta:'Black · Lorica · Rescued Feb 14, 2026', status:'🔍 Match 61%', statusClass:'sp-match' },
+  };
+  const d = data[id] || data['A-2847'];
+  document.getElementById('expImg').src = d.img;
+  document.getElementById('expId').textContent = d.id;
+  document.getElementById('expName').textContent = d.name;
+  document.getElementById('expMeta').textContent = d.meta;
+  const st = document.getElementById('expStatus');
+  st.textContent = d.status;
+  st.className = 'exp-status-pill ' + d.statusClass;
+  showExpTab('profile', document.querySelector('.exp-tab'));
+  showScreen('expediente', null);
+  document.getElementById('pageTitle').textContent = d.id + ' · Expediente';
+}
+
+function showExpTab(tab, btn) {
+  document.querySelectorAll('.exp-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.exp-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('exp-'+tab).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function filterAnimals(status, tab) {
+  document.querySelectorAll('.filter-tabs .ftab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('#animalsList .animal-row').forEach(r => {
+    r.style.display = (status === 'all' || r.dataset.status === status) ? 'flex' : 'none';
+  });
+}
+
+function filterAdopt(status, tab) {
+  document.querySelectorAll('.filter-tabs .ftab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('.adoption-card').forEach(c => {
+    c.style.display = (status === 'all' || c.dataset.adopt === status) ? 'flex' : 'none';
+  });
+}
+</script>
+</body>
+</html>

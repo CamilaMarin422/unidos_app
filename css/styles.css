@@ -8,10 +8,12 @@
   --blue:   #1976D2; --blue-pale:   #E3F0FB;
   --white:  #fff;    --bg: #F4F1EE;
   --gray:   #9A9A9A; --gray-mid: #666; --gray-light: #EFEFEF; --text: #1A1A1A;
+  --shelter: #619B8A; --shelter-pale: #EEF5F3; --shelter-border: #B8D8CF;
   --sh:    0 2px 14px rgba(0,0,0,.08);
   --sh-lg: 0 8px 30px rgba(0,0,0,.13);
   --sh-o:  0 4px 16px rgba(240,112,32,.28);
   --sh-g:  0 4px 16px rgba(46,158,107,.28);
+  --sh-s:  0 4px 16px rgba(97,155,138,.28);
 }
 
 /* ══════════════════════════════
@@ -150,6 +152,8 @@ body {
 .ni.no::after { background: var(--orange); transform: scaleX(1); }
 .ni.ns { color: var(--green); }
 .ni.ns::after { background: var(--green); transform: scaleX(1); }
+.ni.nsh { color: var(--shelter); }
+.ni.nsh::after { background: var(--shelter); transform: scaleX(1); }
 
 /* ══════════════════════════════
    OWNER TOP BAR
@@ -573,16 +577,20 @@ body {
   width: calc(100% - 36px);
   margin: 0 18px;
   border-radius: 20px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: 470px;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  flex-shrink: 0;
   box-shadow: var(--sh);
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
-.detail-photo::-webkit-scrollbar { display: none; }
-#reportDetail .rd-photo::-webkit-scrollbar { display: none; }
-.detail-photo img { width: 100%; height: auto; display: block; }
+.detail-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transform: scale(0.97);
+  transform-origin: top center;
+  display: block;
+}
 
 .adopt-photo {
   aspect-ratio: 3 / 4;
@@ -821,7 +829,7 @@ body {
 }
 .recent-row:last-child { border-bottom: none; }
 
-.filter-tabs { display: flex; gap: 7px; padding: 12px 18px 4px; overflow-x: auto; }
+.filter-tabs { display: flex; gap: 7px; padding: 10px 18px 0; overflow-x: auto; }
 .filter-tabs::-webkit-scrollbar { display: none; }
 .ftab {
   padding: 7px 14px;
@@ -833,12 +841,12 @@ body {
   font-family: 'Nunito', sans-serif;
   transition: all .2s;
 }
-.ftab.active     { background: var(--green); color: white; box-shadow: var(--sh-g); }
-.ftab:not(.active) { background: var(--white); color: var(--gray-mid); box-shadow: var(--sh); }
+.ftab.active       { background: white; color: var(--shelter); box-shadow: var(--sh-s); }
+.ftab:not(.active) { background: rgba(255,255,255,.22); color: white; box-shadow: none; }
 
 .animal-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 13px;
   padding: 11px 14px;
   background: var(--white);
@@ -871,7 +879,7 @@ body {
   transition: background .2s;
   flex-shrink: 0;
 }
-.ts.on { background: var(--green); }
+.ts.on { background: var(--shelter); }
 .ts::after {
   content: '';
   position: absolute;
@@ -896,7 +904,7 @@ body {
   transition: all .2s;
   box-shadow: var(--sh);
 }
-.tb.sel { background: var(--green); color: white; border-color: var(--green); }
+.tb.sel { background: var(--shelter); color: white; border-color: var(--shelter); }
 
 .req-card {
   background: var(--white);

@@ -12,7 +12,7 @@ const animals = [
     type: 'Dog', sex: 'Male', size: 'Small', color: 'Brown and white',
     marks: 'Friendly and white snout markings',
     loc: 'San Pelayo, Córdoba', locStreet: 'Boulevard Libertadores',
-    date: 'Feb 19',
+    date: 'Feb 19, 2026', channel: 'WhatsApp', vol: 'Juan M.',
     searchTags: 'dog male san pelayo córdoba brown white jack russell terrier',
     age: '2 yrs',
     adoptTags: ['Friendly', 'Good with kids', 'Vaccinated', 'Healthy'],
@@ -28,7 +28,7 @@ const animals = [
     type: 'Cat', sex: 'Female', size: 'Small', color: 'White with chocolate markings',
     marks: 'Blue eyes, very calm, siamese-type coat',
     loc: 'Lorica, Córdoba', locStreet: 'Parque Central',
-    date: 'Feb 18',
+    date: 'Feb 18, 2026', channel: 'App', vol: 'María R.',
     searchTags: 'cat female lorica córdoba white siamese chocolate',
     age: '1 yr',
     adoptTags: ['Playful', 'Indoor', 'Sterilized'],
@@ -44,7 +44,7 @@ const animals = [
     type: 'Dog', sex: 'Male', size: 'Small', color: 'Beige and white',
     marks: 'Fluffy coat, scruffy terrier mix',
     loc: 'San Pelayo, Córdoba', locStreet: 'Boulevard Libertadores',
-    date: 'Feb 17',
+    date: 'Feb 17, 2026', channel: 'WhatsApp', vol: 'Juan M.',
     searchTags: 'dog male san pelayo terrier beige white small fluffy',
     age: '4 yrs',
     adoptTags: ['Trained', 'Good with kids', 'Healthy'],
@@ -60,7 +60,7 @@ const animals = [
     type: 'Dog', sex: 'Female', size: 'Medium', color: 'Black',
     marks: 'Worn collar, calm demeanor',
     loc: 'Tierra Alta, Córdoba', locStreet: '',
-    date: 'Feb 15',
+    date: 'Feb 15, 2026', channel: 'App', vol: 'Carlos V.',
     searchTags: 'dog female tierra alta córdoba black labrador mix',
     age: '3 yrs',
     adoptTags: ['Calm', 'Vaccinated'],
@@ -76,7 +76,7 @@ const animals = [
     type: 'Cat', sex: 'Male', size: 'Small', color: 'Black',
     marks: 'Young kitten, approx. 2 months, blue eyes',
     loc: 'Lorica, Córdoba', locStreet: '',
-    date: 'Feb 14',
+    date: 'Feb 14, 2026', channel: 'App', vol: 'María R.',
     searchTags: 'cat male lorica córdoba black kitten',
     age: '2 mo',
     adoptTags: ['Playful', 'Indoor'],
@@ -92,7 +92,7 @@ const animals = [
     type: 'Rabbit', sex: 'Female', size: 'Small', color: 'White',
     marks: 'Red eyes, wearing a red harness',
     loc: 'Montería, Córdoba', locStreet: '',
-    date: 'Feb 12',
+    date: 'Feb 12, 2026', channel: 'Direct', vol: 'Staff',
     searchTags: 'rabbit female montería córdoba white albino',
     age: '1 yr',
     adoptTags: ['Calm', 'Gentle', 'Vaccinated'],
@@ -198,20 +198,28 @@ function renderShelterAnimals(filter = 'all') {
   const list = document.getElementById('animalsList');
   const filtered = filter === 'all' ? animals : animals.filter(a => a.status === filter);
   const pill = a => statusPill[a.status];
-  list.innerHTML = filtered.map(a => `
+  list.innerHTML = filtered.map(a => {
+    const animalId = `#A-${2844 + a.id}`;
+    const street = a.locStreet ? `${a.loc.split(',')[0]}, ${a.locStreet}` : a.loc.split(',')[0];
+    return `
     <div class="animal-card" data-status="${a.status}">
       <div class="ac-thumb"><img src="${a.imgThumb}" alt="${a.type}"/></div>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">
-          ${a.type} · ${a.sex} · ${a.size}
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:3px">
+          <div style="font-size:12px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+            ${animalId} · via ${a.channel} · ${a.vol}
+          </div>
+          <span class="pill ${pill(a).cls}" style="flex-shrink:0">${pill(a).label}</span>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">
+          ${a.type} · ${a.sex} · ${a.size} · ${a.color}
         </div>
         <div style="font-size:11px;font-weight:600;color:var(--gray)">
-          ${a.color} · ${a.loc.split(',')[0]} · ${a.date}
+          📍 ${street} · ${a.date}
         </div>
       </div>
-      <span class="pill ${pill(a).cls}" style="flex-shrink:0">${pill(a).label}</span>
-    </div>`
-  ).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderRecentArrivals() {
@@ -363,6 +371,13 @@ function showAdoptSnack() {
   const s = document.getElementById('adoptSnack');
   s.classList.add('show');
   setTimeout(() => s.classList.remove('show'), 2600);
+}
+
+function sendAdoptRequest() {
+  goTo('ownerAdopt');
+  const s = document.getElementById('requestSnack');
+  s.style.bottom = '90px';
+  setTimeout(() => { s.style.bottom = '-90px'; }, 3000);
 }
 
 function swipe(action) {
