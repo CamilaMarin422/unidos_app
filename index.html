@@ -48,6 +48,14 @@
        OWNER – SEARCH
   ══════════════════════════════ -->
   <div class="screen" id="ownerSearch">
+    <div class="owner-topbar">
+      <div class="owner-topbar-title">Unidos</div>
+      <div class="owner-tabs">
+        <button class="otab ota">Search</button>
+        <button class="otab" onclick="goTo('ownerReport')">Report</button>
+        <button class="otab" onclick="goTo('ownerAdopt')">Adopt</button>
+      </div>
+    </div>
     <div style="padding:18px 18px 8px">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -267,7 +275,7 @@
     </div>
 
     <!-- MAP OVERLAY -->
-    <div id="mapOverlay" style="display:none;position:absolute;inset:0;z-index:50;background:var(--bg);flex-direction:column">
+    <div id="mapOverlay" style="display:none;position:absolute;inset:0;z-index:150;background:var(--bg);flex-direction:column">
       <div style="display:flex;align-items:center;gap:10px;padding:14px 18px 8px;flex-shrink:0">
         <button class="back-btn" onclick="closeMap()">←</button>
         <div style="flex:1;background:white;border:2px solid var(--orange-border);border-radius:50px;padding:9px 15px;display:flex;align-items:center;gap:8px;box-shadow:var(--sh)">
@@ -276,7 +284,7 @@
         </div>
       </div>
       <div style="flex:1;margin:8px 18px 12px;border-radius:20px;overflow:hidden;box-shadow:var(--sh)">
-        <iframe id="mapFrame" src="" width="100%" height="100%" style="border:0;display:block" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div id="ownerMapLeaflet" style="width:100%;height:100%"></div>
       </div>
       <div class="bnav o3" style="position:relative">
         <button class="ni" onclick="closeMap();goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
@@ -290,6 +298,14 @@
        OWNER – REPORT (MAP VIEW)
   ══════════════════════════════ -->
   <div class="screen" id="ownerReport">
+    <div class="owner-topbar">
+      <div class="owner-topbar-title">Unidos</div>
+      <div class="owner-tabs">
+        <button class="otab" onclick="goTo('ownerSearch')">Search</button>
+        <button class="otab ota">Report</button>
+        <button class="otab" onclick="goTo('ownerAdopt')">Adopt</button>
+      </div>
+    </div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 18px 10px;flex-shrink:0">
       <h2 style="font-size:20px;font-weight:900;color:var(--text)">Report lost pet</h2>
       <button onclick="goTo('ownerReportForm')" style="background:var(--orange);color:white;border:none;border-radius:50px;padding:7px 16px;font-size:12px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)">+ Report</button>
@@ -660,50 +676,138 @@
        OWNER – ADOPT
   ══════════════════════════════ -->
   <div class="screen" id="ownerAdopt">
-    <div style="background:var(--orange);padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
-      <h2 style="font-size:19px;font-weight:900;color:white">unidos</h2>
-      <span style="background:rgba(255,255,255,.22);color:white;font-size:11px;font-weight:800;padding:5px 13px;border-radius:50px;border:1.5px solid rgba(255,255,255,.35)">Adopt</span>
+    <div class="owner-topbar">
+      <div class="owner-topbar-title">Unidos</div>
+      <div class="owner-tabs">
+        <button class="otab" onclick="goTo('ownerSearch')">Search</button>
+        <button class="otab" onclick="goTo('ownerReport')">Report</button>
+        <button class="otab ota">Adopt</button>
+      </div>
     </div>
-    <div style="margin:11px 18px;background:#E8F5E9;border-radius:13px;padding:10px 13px;display:flex;align-items:flex-start;gap:9px">
-      <span>✅</span>
-      <span style="font-size:12px;font-weight:600;color:#2E7D32;line-height:1.4"><strong>Shelter-approved only.</strong> These animals have no owner after 30+ days.</span>
+    <!-- Snackbar -->
+    <div id="adoptSnack" class="adopt-snack">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Saved to your favorites!
     </div>
 
-    <div style="padding:0 18px">
-      <div class="adopt-card">
+    <div style="padding:16px 8px 0;display:flex;flex-direction:column">
+      <div class="adopt-card" id="adoptCardWrap">
         <div class="adopt-photo" id="adoptPhotoWrap">
-          <img id="adoptImg" src="" alt="" style="width:100%;height:100%;object-fit:cover"/>
-          <div class="approved-stamp" id="adoptStamp">✓ Approved<br>PASS</div>
+          <img id="adoptImg" src="" alt=""/>
         </div>
-        <div style="padding:14px 16px">
-          <div style="display:flex;align-items:baseline;gap:7px;margin-bottom:2px">
-            <span id="adoptName" style="font-size:21px;font-weight:900">Toby</span>
-            <span id="adoptAge"  style="font-size:14px;font-weight:600;color:var(--gray)">· 2 yrs</span>
+        <div style="padding:12px 16px 14px">
+          <div id="adoptName" style="font-size:22px;font-weight:900;color:var(--orange);margin-bottom:3px"></div>
+          <div id="adoptSub" style="font-size:13px;font-weight:600;color:var(--orange);font-style:italic;margin-bottom:8px"></div>
+          <div style="display:flex;align-items:center;gap:5px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span id="adoptShelterText" style="font-size:12px;font-weight:600;color:var(--gray)"></span>
           </div>
-          <div id="adoptSub"     style="font-size:12px;color:var(--gray);font-weight:600;margin-bottom:9px">Mixed dog · Male · Medium</div>
-          <div id="adoptTags"    style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px"></div>
-          <div id="adoptShelter" style="font-size:11px;color:var(--gray);font-weight:600">🏠 Albergue Montería 2 · 2.3 km</div>
         </div>
       </div>
-      <div style="display:flex;gap:5px;justify-content:center;margin:9px 0 3px" id="adoptDots"></div>
+      <div style="display:flex;gap:5px;justify-content:center;margin:10px 0 0" id="adoptDots"></div>
     </div>
 
-    <div style="display:flex;gap:10px;justify-content:center;align-items:center;padding:8px 18px 2px">
-      <button class="aa pass" onclick="swipe('pass')">✕</button>
-      <button class="aa inf"  onclick="alert('Vaccinated: Yes\nSterilized: Yes\nHealth: Good\nTemperament: Calm, friendly')">ℹ</button>
-      <button class="aa int"  onclick="swipe('interested')">🐾</button>
-      <button class="aa sup"  onclick="swipe('super')">⭐</button>
-    </div>
-    <div style="display:flex;justify-content:center;gap:6px;padding-bottom:6px;font-size:10px;font-weight:700;color:var(--gray)">
-      <span style="min-width:56px;text-align:center">✕ Pass</span>
-      <span style="min-width:40px;text-align:center">Info</span>
-      <span style="min-width:48px;text-align:center">🐾 Like</span>
-      <span style="min-width:56px;text-align:center">⭐ Super</span>
+    <div style="display:flex;gap:16px;justify-content:center;align-items:center;padding:10px 18px 14px">
+      <button class="aa pass" onclick="swipe('pass')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <button class="aa sup" onclick="swipe('super')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </button>
+      <button class="aa int" onclick="openAdoptForm()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
     </div>
 
     <div class="bnav o3">
       <button class="ni"    onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
       <button class="ni"    onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
+      <button class="ni no"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       OWNER – ADOPT FORM
+  ══════════════════════════════ -->
+  <div class="screen" id="ownerAdoptForm">
+    <div style="overflow-y:auto;flex:1;padding-bottom:16px">
+      <!-- Match header -->
+      <div style="background:var(--orange);border-radius:0 0 22px 22px;padding:16px 18px 0">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="font-size:22px;line-height:1">♥</div>
+          <div>
+            <h2 style="font-size:16px;font-weight:900;color:white;margin:0 0 2px">It's a match!</h2>
+            <p style="font-size:11px;color:rgba(255,255,255,.88);font-weight:600;margin:0">You and <span id="formPetName"></span> are a great fit.</p>
+          </div>
+        </div>
+        <!-- Pet row -->
+        <div style="background:white;border-radius:14px 14px 0 0;padding:10px 14px;display:flex;align-items:center;gap:10px">
+          <div style="width:46px;height:46px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--orange-pale)">
+            <img id="formPetThumb" src="" alt="" style="width:100%;height:100%;object-fit:cover"/>
+          </div>
+          <div>
+            <div id="formPetSubline" style="font-size:12px;font-weight:800;color:var(--text)"></div>
+            <div id="formPetDesc" style="font-size:11px;font-weight:600;color:var(--gray-mid)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div style="padding:14px 18px 0">
+        <div style="font-size:13px;font-weight:900;color:var(--orange);margin-bottom:10px">Your contact</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:5px">Phone number</div>
+            <div style="position:relative">
+              <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%)" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.06 6.06l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16c.12.6.19 1.21.19 1.83v.09"/></svg>
+              <input class="fi" placeholder="" style="padding:9px 10px 9px 30px;font-size:13px"/>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:5px">Name</div>
+            <input class="fi" placeholder="" style="padding:9px 12px;font-size:13px"/>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:7px">How should we notify you?</div>
+          <div style="display:flex;gap:8px">
+            <button style="flex:1;padding:8px;border-radius:50px;border:2px solid var(--orange-border);background:white;font-size:12px;font-weight:700;color:var(--gray-mid);cursor:pointer;font-family:Nunito,sans-serif" onclick="selectNotify(this)">WhatsApp</button>
+            <button style="flex:1;padding:8px;border-radius:50px;border:2px solid var(--orange-border);background:white;font-size:12px;font-weight:700;color:var(--gray-mid);cursor:pointer;font-family:Nunito,sans-serif" onclick="selectNotify(this)">Call</button>
+          </div>
+        </div>
+
+        <!-- What happens next -->
+        <div style="background:var(--orange);border-radius:16px;padding:12px 14px;margin-bottom:12px">
+          <div style="font-size:12px;font-weight:900;color:white;margin-bottom:8px">What happens next</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.25);color:white;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+              <span style="font-size:11px;font-weight:600;color:white">Shelter reviews your request</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.25);color:white;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+              <span style="font-size:11px;font-weight:600;color:white">You receive a WhatsApp confirmation</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.25);color:white;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+              <span style="font-size:11px;font-weight:600;color:white">Visit the shelter to meet <span id="formPetName2"></span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.25);color:white;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
+              <span style="font-size:11px;font-weight:600;color:white">Take <span id="formPetName3"></span> home</span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="goTo('ownerAdopt')" style="width:100%;padding:12px;border-radius:50px;background:var(--orange);color:white;border:none;font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;box-shadow:var(--sh-o)">Send request</button>
+        <button onclick="goTo('ownerAdopt')" style="width:100%;margin-top:6px;padding:10px;border-radius:50px;background:transparent;color:var(--gray);border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:Nunito,sans-serif">← Back</button>
+      </div>
+    </div>
+    <div class="bnav o3">
+      <button class="ni" onclick="goTo('ownerSearch')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+      <button class="ni" onclick="goTo('ownerReport')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Report</button>
       <button class="ni no"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Adopt</button>
     </div>
   </div>
@@ -1037,13 +1141,24 @@
 <script>
   lucide.createIcons();
 
-  const MAP_URL = 'https://maps.google.com/maps?q=8.8145844,-75.8017518&z=15&output=embed';
+  let ownerMap = null;
 
   function openMap() {
     const overlay = document.getElementById('mapOverlay');
-    const frame   = document.getElementById('mapFrame');
-    if (!frame.src || frame.src === window.location.href) frame.src = MAP_URL;
     overlay.style.display = 'flex';
+    if (!ownerMap) {
+      ownerMap = L.map('ownerMapLeaflet', { zoomControl: false, attributionControl: false })
+        .setView([8.8145844, -75.8017518], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(ownerMap);
+      L.circleMarker([8.8145844, -75.8017518], {
+        radius: 13,
+        fillColor: '#F07020',
+        color: 'white',
+        weight: 2.5,
+        fillOpacity: 1,
+      }).addTo(ownerMap);
+    }
+    setTimeout(() => ownerMap.invalidateSize(), 50);
   }
 
   function closeMap() {

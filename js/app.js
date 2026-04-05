@@ -300,43 +300,85 @@ function showDetail(i) {
 /* ══════════════════════════════
    ADOPT (SWIPE)
 ══════════════════════════════ */
+const adoptAnimals = [
+  {
+    name: 'Michi',
+    img: 'images/pets_adopt/11.png',
+    desc: 'Cat. Female. Mixed. Love to play and cuddle.',
+    subline: 'Female cat · small',
+    shelter: 'Montería shelter',
+  },
+  {
+    name: 'Leo',
+    img: 'images/pets_adopt/12.png',
+    desc: 'Dog. Male. Mixed. Full of energy and love.',
+    subline: 'Male dog · medium',
+    shelter: 'Albergue Central',
+  },
+  {
+    name: 'Nala',
+    img: 'images/pets_adopt/13.png',
+    desc: 'Cat. Female. Mixed. Calm and very affectionate.',
+    subline: 'Female cat · small',
+    shelter: 'Albergue Norte',
+  },
+];
+
 let adoptIdx = 0;
 
 function loadAdopt() {
-  const a = animals[adoptIdx];
+  const a = adoptAnimals[adoptIdx];
   document.getElementById('adoptImg').src             = a.img;
   document.getElementById('adoptName').textContent    = a.name;
-  document.getElementById('adoptAge').textContent     = '· ' + a.age;
-  document.getElementById('adoptSub').textContent     = `${a.type} · ${a.sex} · ${a.size}`;
-  document.getElementById('adoptShelter').textContent = '🏠 ' + a.shelter;
-  document.getElementById('adoptTags').innerHTML = a.adoptTags.map((t, i) =>
-    `<span style="padding:4px 11px;border-radius:50px;font-size:11px;font-weight:700;background:${i % 2 === 0 ? 'var(--orange-pale)' : 'var(--gray-light)'};color:${i % 2 === 0 ? 'var(--orange)' : 'var(--gray-mid)'}">${t}</span>`
-  ).join('');
-  const s = document.getElementById('adoptStamp');
-  s.style.borderColor = a.stamp === 'approved' ? 'var(--red)' : '#43A047';
-  s.style.color       = a.stamp === 'approved' ? 'var(--red)' : '#43A047';
-  s.innerHTML         = a.stamp === 'approved' ? '✓ Approved<br>PASS' : '✓ PASS';
-  document.getElementById('adoptDots').innerHTML = animals.map((_, i) =>
+  document.getElementById('adoptSub').textContent     = a.desc;
+  document.getElementById('adoptShelterText').textContent = a.shelter;
+  document.getElementById('adoptDots').innerHTML = adoptAnimals.map((_, i) =>
     `<div class="adopt-dot ${i === adoptIdx ? 'active' : ''}"></div>`
   ).join('');
 }
 
+function openAdoptForm() {
+  const a = adoptAnimals[adoptIdx];
+  document.getElementById('formPetName').textContent   = a.name;
+  document.getElementById('formPetName2').textContent  = a.name;
+  document.getElementById('formPetName3').textContent  = a.name;
+  document.getElementById('formPetThumb').src          = a.img;
+  document.getElementById('formPetSubline').textContent = a.subline;
+  document.getElementById('formPetDesc').textContent   = a.desc;
+  goTo('ownerAdoptForm');
+}
+
+function selectNotify(btn) {
+  btn.closest('div').querySelectorAll('button').forEach(b => {
+    b.style.background = 'white';
+    b.style.color = 'var(--gray-mid)';
+    b.style.borderColor = 'var(--orange-border)';
+  });
+  btn.style.background = 'var(--orange)';
+  btn.style.color = 'white';
+  btn.style.borderColor = 'var(--orange)';
+}
+
+function showAdoptSnack() {
+  const s = document.getElementById('adoptSnack');
+  s.classList.add('show');
+  setTimeout(() => s.classList.remove('show'), 2600);
+}
+
 function swipe(action) {
-  const w = document.getElementById('adoptPhotoWrap');
+  const w = document.getElementById('adoptCardWrap');
   const dir = action === 'pass' ? -1 : 1;
   w.style.transition = 'transform .35s ease,opacity .35s';
-  w.style.transform  = `translateX(${dir * 320}px) rotate(${dir * 10}deg)`;
+  w.style.transform  = `translateX(${dir * 320}px) rotate(${dir * 8}deg)`;
   w.style.opacity    = '0';
   setTimeout(() => {
-    adoptIdx = (adoptIdx + 1) % animals.length;
+    adoptIdx = (adoptIdx + 1) % adoptAnimals.length;
     loadAdopt();
     w.style.transition = 'none';
     w.style.transform  = 'translateX(0) rotate(0)';
     w.style.opacity    = '1';
     setTimeout(() => { w.style.transition = 'transform .35s ease,opacity .35s'; }, 20);
-    if (action === 'super') {
-      showSuccess('ownerAdopt', 'ob', 'ot', '⭐🐾', "It's a match!", "The shelter has been notified. They'll contact you within 24 hours.", () => {});
-    }
+    if (action === 'super') showAdoptSnack();
   }, 350);
 }
 
