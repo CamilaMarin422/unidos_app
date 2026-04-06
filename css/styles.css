@@ -490,6 +490,7 @@ body {
 .pill.g { background: var(--green-pale);  color: var(--green); }
 .pill.o { background: var(--orange-pale); color: var(--orange); }
 .pill.b { background: var(--blue-pale);   color: var(--blue); }
+.pill.n { background: var(--gray-light);  color: var(--gray-mid); }
 
 .chip {
   padding: 7px 14px;
@@ -694,6 +695,10 @@ body {
   z-index: 200;
   padding: 36px 20px;
 }
+#petModal {
+  position: fixed;
+  z-index: 1000;
+}
 .modal-box {
   background: white;
   border-radius: 26px;
@@ -762,7 +767,7 @@ body {
 
 .adopt-snack {
   position: absolute;
-  top: -64px;
+  bottom: 90px;
   left: 18px;
   right: 18px;
   background: #2B2B2B;
@@ -777,10 +782,12 @@ body {
   gap: 8px;
   z-index: 200;
   box-shadow: 0 6px 24px rgba(0,0,0,.22);
-  transition: top .38s cubic-bezier(.34,1.4,.64,1);
+  transform: translateY(160px);
+  opacity: 0;
+  transition: transform .38s cubic-bezier(.34,1.4,.64,1), opacity .38s;
   pointer-events: none;
 }
-.adopt-snack.show { top: 14px; }
+.adopt-snack.show { transform: translateY(0); opacity: 1; }
 .adopt-dot {
   height: 6px;
   border-radius: 50px;
@@ -1089,12 +1096,12 @@ body {
 
 /* Full-screen overlay */
 .wov {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 400;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(160deg, #1A1040 0%, #2D1B6E 50%, #1A3040 100%);
+  background: linear-gradient(160deg, #FFF8F3 0%, #FFE4CC 55%, #FFF4ED 100%);
   overflow-y: auto;
   animation: wFadeIn .5s ease;
 }
@@ -1111,17 +1118,17 @@ body {
 .wov-stars::after {
   content: '';
   position: absolute;
-  background: radial-gradient(circle, rgba(255,255,255,.9) 1px, transparent 1px);
+  background: radial-gradient(circle, rgba(240,112,32,.3) 1px, transparent 1px);
   background-size: 40px 40px;
   width: 200%; height: 200%;
   animation: wStarDrift 60s linear infinite;
-  opacity: .15;
+  opacity: .1;
 }
 .wov-stars::after {
   background-size: 60px 60px;
   animation-duration: 90s;
   animation-direction: reverse;
-  opacity: .08;
+  opacity: .06;
 }
 @keyframes wStarDrift {
   from { transform: translateX(0) translateY(0); }
@@ -1134,10 +1141,10 @@ body {
   z-index: 10;
   width: 32px; height: 32px;
   border-radius: 50%;
-  background: rgba(255,255,255,.12);
+  background: rgba(0,0,0,.06);
   border: none;
   cursor: pointer;
-  color: rgba(255,255,255,.7);
+  color: var(--gray-mid);
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -1146,7 +1153,7 @@ body {
   font-weight: 800;
   transition: background .2s;
 }
-.wov-close:hover { background: rgba(255,255,255,.22); }
+.wov-close:hover { background: rgba(0,0,0,.1); }
 
 .wov-body {
   flex: 1;
@@ -1168,20 +1175,20 @@ body {
 
 .wov-eyebrow {
   font-size: 10px; font-weight: 800;
-  color: rgba(255,255,255,.5);
+  color: var(--gray);
   letter-spacing: 1.5px;
   text-transform: uppercase;
   margin-bottom: 12px;
 }
 .wov-title {
   font-size: 22px; font-weight: 900;
-  color: white;
+  color: var(--text);
   line-height: 1.25;
   margin-bottom: 12px;
 }
 .wov-body-text {
   font-size: 14px; font-weight: 600;
-  color: rgba(255,255,255,.7);
+  color: var(--gray-mid);
   line-height: 1.7;
   margin-bottom: 32px;
   max-width: 300px;
@@ -1189,14 +1196,14 @@ body {
 
 /* Affirmation pill */
 .wov-affirmation {
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(240,112,32,.07);
+  border: 1px solid rgba(240,112,32,.2);
   border-radius: 16px;
   padding: 16px 20px;
   margin-bottom: 28px;
   width: 100%;
   font-size: 15px; font-weight: 700;
-  color: rgba(255,255,255,.9);
+  color: var(--text);
   font-style: italic;
   line-height: 1.5;
   position: relative;
@@ -1204,7 +1211,7 @@ body {
 .wov-affirmation::before {
   content: '"';
   font-size: 36px;
-  color: rgba(255,255,255,.2);
+  color: rgba(240,112,32,.25);
   position: absolute;
   top: -8px; left: 12px;
   font-family: Georgia, serif;
@@ -1219,48 +1226,41 @@ body {
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px;
-  border: 2px solid rgba(255,255,255,.15);
+  border: 2px solid rgba(240,112,32,.2);
   position: relative;
 }
 .breath-ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 3px solid rgba(180,160,255,.5);
+  border: 3px solid rgba(240,112,32,.4);
   animation: none;
 }
-.breath-ring.breathing { animation: breathExpand 4s ease-in-out infinite; }
-@keyframes breathExpand {
-  0%, 100% { transform: scale(1); opacity: .5; }
-  50%       { transform: scale(1.18); opacity: 1; }
+@keyframes breathHoldPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
 }
 .breath-inner {
   width: 96px; height: 96px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(160,130,255,.35) 0%, rgba(100,80,200,.2) 100%);
+  background: radial-gradient(circle, rgba(240,112,32,.15) 0%, rgba(240,112,32,.05) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 28px;
-  border: 1px solid rgba(255,255,255,.2);
+  border: 1px solid rgba(240,112,32,.2);
   animation: none;
-  transition: transform .3s;
 }
-.breath-inner.breathing { animation: breathInner 4s ease-in-out infinite; }
-@keyframes breathInner {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.1); }
-}
-.breath-label { font-size: 13px; font-weight: 800; color: rgba(255,255,255,.7); letter-spacing: .5px; height: 20px; }
-.breath-phase { font-size: 18px; font-weight: 900; color: white; margin-top: 4px; height: 24px; animation: fadePhase .4s ease; }
+.breath-label { font-size: 13px; font-weight: 800; color: var(--gray); letter-spacing: .5px; height: 20px; }
+.breath-phase { font-size: 18px; font-weight: 900; color: var(--text); margin-top: 4px; height: 24px; animation: fadePhase .4s ease; }
 @keyframes fadePhase { from { opacity: 0; } to { opacity: 1; } }
-.breath-count { font-size: 12px; font-weight: 700; color: rgba(255,255,255,.4); margin-top: 6px; }
+.breath-count { font-size: 12px; font-weight: 700; color: var(--gray); margin-top: 6px; }
 
 /* Wellness action buttons */
 .wov-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 .wov-btn-primary {
-  background: rgba(255,255,255,.15);
-  border: 1.5px solid rgba(255,255,255,.25);
+  background: var(--orange);
+  border: 1.5px solid var(--orange);
   border-radius: 50px;
   padding: 14px;
   font-size: 14px; font-weight: 800;
@@ -1268,14 +1268,13 @@ body {
   cursor: pointer;
   font-family: 'Nunito', sans-serif;
   transition: background .2s;
-  backdrop-filter: blur(8px);
 }
-.wov-btn-primary:hover { background: rgba(255,255,255,.22); }
+.wov-btn-primary:hover { background: #d96010; border-color: #d96010; }
 .wov-btn-secondary {
   background: transparent;
   border: none;
   font-size: 13px; font-weight: 700;
-  color: rgba(255,255,255,.45);
+  color: var(--gray);
   cursor: pointer;
   font-family: 'Nunito', sans-serif;
   padding: 8px;
@@ -1286,14 +1285,14 @@ body {
   position: absolute;
   bottom: 80px;
   left: 12px; right: 12px;
-  background: linear-gradient(135deg, #1A1040, #2D1B6E);
-  border: 1px solid rgba(160,130,255,.3);
+  background: white;
+  border: 1px solid var(--orange-border);
   border-radius: 18px;
   padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  box-shadow: 0 8px 32px rgba(240,112,32,.12);
   z-index: 350;
   animation: toastIn .4s cubic-bezier(.34,1.56,.64,1) both;
   cursor: pointer;
@@ -1334,10 +1333,10 @@ body {
 
 .toast-icon    { font-size: 24px; flex-shrink: 0; }
 .toast-content { flex: 1; }
-.toast-title   { font-size: 13px; font-weight: 800; color: white; margin-bottom: 2px; }
-.toast-sub     { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.6); line-height: 1.4; }
-.toast-action  { font-size: 11px; font-weight: 800; color: rgba(160,130,255,.9); white-space: nowrap; flex-shrink: 0; }
-.toast-dismiss { font-size: 14px; color: rgba(255,255,255,.35); flex-shrink: 0; font-weight: 800; }
+.toast-title   { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.toast-sub     { font-size: 11px; font-weight: 600; color: var(--gray); line-height: 1.4; }
+.toast-action  { font-size: 11px; font-weight: 800; color: var(--orange); white-space: nowrap; flex-shrink: 0; }
+.toast-dismiss { font-size: 14px; color: var(--gray); flex-shrink: 0; font-weight: 800; }
 
 /* Wellness banner (inline, inside screens) */
 .wellness-banner {
@@ -1347,10 +1346,12 @@ body {
   border-radius: 16px;
   padding: 14px 16px;
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
   cursor: pointer;
   transition: background .2s;
+  text-align: center;
 }
 .wellness-banner:hover { background: linear-gradient(135deg, rgba(26,16,64,.13), rgba(45,27,110,.1)); }
 .wb-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }

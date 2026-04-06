@@ -16,7 +16,7 @@ const animals = [
     searchTags: 'dog male san pelayo córdoba brown white jack russell terrier',
     age: '2 yrs',
     adoptTags: ['Friendly', 'Good with kids', 'Vaccinated', 'Healthy'],
-    shelter: 'Albergue Montería 2 · 2.3 km',
+    shelter: 'Shelter Montería 2 · 2.3 km',
     stamp: 'approved',
     status: 'available',   // available | match | adopt
   },
@@ -32,7 +32,7 @@ const animals = [
     searchTags: 'cat female lorica córdoba white siamese chocolate',
     age: '1 yr',
     adoptTags: ['Playful', 'Indoor', 'Sterilized'],
-    shelter: 'Albergue Central · 5.1 km',
+    shelter: 'Shelter Central · 5.1 km',
     stamp: 'approved',
     status: 'match',
   },
@@ -48,7 +48,7 @@ const animals = [
     searchTags: 'dog male san pelayo terrier beige white small fluffy',
     age: '4 yrs',
     adoptTags: ['Trained', 'Good with kids', 'Healthy'],
-    shelter: 'Albergue Sur · 8.4 km',
+    shelter: 'Shelter Sur · 8.4 km',
     stamp: 'pass',
     status: 'adopt',
   },
@@ -64,7 +64,7 @@ const animals = [
     searchTags: 'dog female tierra alta córdoba black labrador mix',
     age: '3 yrs',
     adoptTags: ['Calm', 'Vaccinated'],
-    shelter: 'Albergue Norte · 3.7 km',
+    shelter: 'Shelter Norte · 3.7 km',
     stamp: 'approved',
     status: 'available',
   },
@@ -80,7 +80,7 @@ const animals = [
     searchTags: 'cat male lorica córdoba black kitten',
     age: '2 mo',
     adoptTags: ['Playful', 'Indoor'],
-    shelter: 'Albergue Central · 5.1 km',
+    shelter: 'Shelter Central · 5.1 km',
     stamp: 'pass',
     status: 'match',
   },
@@ -96,7 +96,7 @@ const animals = [
     searchTags: 'rabbit female montería córdoba white albino',
     age: '1 yr',
     adoptTags: ['Calm', 'Gentle', 'Vaccinated'],
-    shelter: 'Albergue Norte · 3.7 km',
+    shelter: 'Shelter Norte · 3.7 km',
     stamp: 'approved',
     status: 'available',
   },
@@ -112,7 +112,7 @@ const animals = [
   //   searchTags: 'dog male montería córdoba brown large',
   //   age: '5 yrs',
   //   adoptTags: ['Calm', 'Vaccinated'],
-  //   shelter: 'Albergue Montería 1 · 1.8 km',
+  //   shelter: 'Shelter Montería 1 · 1.8 km',
   //   stamp: 'approved',
   //   status: 'adopt',
   // },
@@ -316,8 +316,8 @@ function renderShelterAnimals(filter = 'all') {
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">
           ${a.type} · ${a.sex} · ${a.size} · ${a.color}
         </div>
-        <div style="font-size:11px;font-weight:600;color:var(--gray)">
-          📍 ${street} · ${a.date}
+        <div style="font-size:11px;font-weight:600;color:var(--gray);display:flex;align-items:center;gap:4px">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> ${street} · ${a.date}
         </div>
       </div>
     </div>`;
@@ -341,7 +341,7 @@ function renderRecentArrivals() {
           ${a.loc.split(',')[0]} · ${a.date}
         </div>
       </div>
-      <span class="pill ${pill(a).cls}">${pill(a).recentLabel}</span>
+      <span class="pill n">${pill(a).recentLabel}</span>
     </div>`
   ).join('');
 }
@@ -398,9 +398,9 @@ function switchRole(r) {
 ══════════════════════════════ */
 function renderIntRecentList() {
   var statusCfg = {
-    available: { label: 'Available', color: '#619B8A', bg: 'var(--shelter-pale)' },
-    match:     { label: 'Matched',   color: '#2563EB', bg: '#EFF6FF' },
-    adopt:     { label: 'Adopting',  color: '#D97706', bg: '#FFFBEB' },
+    available: { label: 'Available', color: 'var(--gray-mid)', bg: 'var(--gray-light)' },
+    match:     { label: 'Matched',   color: 'var(--gray-mid)', bg: 'var(--gray-light)' },
+    adopt:     { label: 'Adopting',  color: 'var(--gray-mid)', bg: 'var(--gray-light)' },
   };
 
   var timeLabels = {
@@ -781,6 +781,16 @@ function showDetail(i) {
   goTo('ownerDetail');
 }
 
+function openPetModal() {
+  document.getElementById('ownerDetail').style.overflow = 'hidden';
+  document.getElementById('petModal').style.display = 'flex';
+}
+
+function closePetModal() {
+  document.getElementById('ownerDetail').style.overflow = '';
+  document.getElementById('petModal').style.display = 'none';
+}
+
 /* ══════════════════════════════
    ADOPT (SWIPE)
 ══════════════════════════════ */
@@ -797,18 +807,19 @@ const adoptAnimals = [
     img: 'images/pets_adopt/12.png',
     desc: 'Dog. Male. Mixed. Full of energy and love.',
     subline: 'Male dog · medium',
-    shelter: 'Albergue Central',
+    shelter: 'Shelter Central',
   },
   {
     name: 'Nala',
     img: 'images/pets_adopt/13.png',
     desc: 'Cat. Female. Mixed. Calm and very affectionate.',
     subline: 'Female cat · small',
-    shelter: 'Albergue Norte',
+    shelter: 'Shelter Norte',
   },
 ];
 
 let adoptIdx = 0;
+let likedAnimals = [];
 
 function loadAdopt() {
   const a = adoptAnimals[adoptIdx];
@@ -858,6 +869,7 @@ function sendAdoptRequest() {
 
 function swipe(action) {
   const w = document.getElementById('adoptCardWrap');
+  const current = adoptAnimals[adoptIdx];
   const dir = action === 'pass' ? -1 : 1;
   w.style.transition = 'transform .35s ease,opacity .35s';
   w.style.transform  = `translateX(${dir * 320}px) rotate(${dir * 8}deg)`;
@@ -869,8 +881,42 @@ function swipe(action) {
     w.style.transform  = 'translateX(0) rotate(0)';
     w.style.opacity    = '1';
     setTimeout(() => { w.style.transition = 'transform .35s ease,opacity .35s'; }, 20);
-    if (action === 'super') showAdoptSnack();
+    if (action === 'super') {
+      if (!likedAnimals.find(a => a.name === current.name)) likedAnimals.push(current);
+      showAdoptSnack();
+      updateFavBadge();
+    }
   }, 350);
+}
+
+function updateFavBadge() {
+  const badge = document.getElementById('favBadge');
+  if (!badge) return;
+  if (likedAnimals.length > 0) {
+    badge.textContent = likedAnimals.length;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function openFavorites() {
+  const list = document.getElementById('favList');
+  if (likedAnimals.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px 0;color:var(--gray);font-size:13px;font-weight:600">No favorites yet.<br>Tap ★ on a pet you like!</div>`;
+  } else {
+    list.innerHTML = likedAnimals.map(a => `
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+        <img src="${a.img}" alt="${a.name}" style="width:52px;height:52px;border-radius:14px;object-fit:cover;flex-shrink:0">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:900;color:var(--text)">${a.name}</div>
+          <div style="font-size:12px;font-weight:600;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.desc}</div>
+          <div style="font-size:11px;font-weight:700;color:var(--orange);margin-top:2px">${a.shelter}</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--orange)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>`).join('');
+  }
+  document.getElementById('adoptFavModal').style.display = 'flex';
 }
 
 /* ══════════════════════════════
@@ -982,7 +1028,41 @@ function startBreathAnim() {
 }
 
 function postReportUpdate() {
-  alert('Thanks for your update! The pet owner will be notified.');
+  const nameInput = document.getElementById('rdInputName');
+  const textInput = document.getElementById('rdInputText');
+  const name = nameInput.value.trim();
+  const text = textInput.value.trim();
+  if (!name || !text) return;
+
+  // Add comment to list
+  const section = document.getElementById('rdCommentSection');
+  const noComments = document.getElementById('rdNoComments');
+  const countEl = document.getElementById('rdCommentCount');
+
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:10px;margin-bottom:12px;align-items:flex-start';
+  div.innerHTML = `
+    <div style="width:34px;height:34px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    </div>
+    <div style="flex:1">
+      <div style="font-size:11px;font-weight:800;color:var(--gray-mid);margin-bottom:4px">${name} · just now</div>
+      <div style="background:white;border-radius:14px;border-top-left-radius:4px;padding:10px 13px;box-shadow:var(--sh)">
+        <div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.5">${text}</div>
+      </div>
+    </div>`;
+  section.appendChild(div);
+  noComments.style.display = 'none';
+  countEl.textContent = parseInt(countEl.textContent) + 1;
+
+  // Clear inputs
+  nameInput.value = '';
+  textInput.value = '';
+
+  // Show snackbar
+  const snack = document.getElementById('reportSnack');
+  snack.classList.add('show');
+  setTimeout(() => snack.classList.remove('show'), 2600);
 }
 
 function loadDemoCatPhoto() {
@@ -1351,26 +1431,22 @@ let toastShown     = {};
 let wellnessActive = false;
 
 function checkSessionTime() {
+  const activeScreen = document.querySelector('.screen.active');
+  if (!activeScreen || activeScreen.id.startsWith('shelter')) return;
   const mins = (Date.now() - sessionStart) / 1000 / 60;
-  if (mins >= 1 && !toastShown['1hr']) {
+  if (mins >= 2 && !toastShown['1hr']) {
     toastShown['1hr'] = true;
-    showWellnessToast(
-      '☁️',
-      "You've been searching for a while",
-      'Your dedication is pure love. Take a breath?',
-      () => showWellness('long-search')
-    );
+    showWellness('long-search');
   }
 }
 setInterval(checkSessionTime, 15000);
 
 const wellnessContent = {
   'long-search': {
-    moon: '☁️',
+    moon: '',
     eyebrow: "You've been searching for a while",
     title: 'Your love has no limits. Your body needs rest.',
     body: "Searching for someone we love activates our mind intensely. It's normal to feel anxiety, exhaustion, or hopelessness. All of that is valid.",
-    affirmation: 'Every time you search, you tell your pet they matter. That is never wasted time.',
     tool: 'breath',
     breathLabel: '4-7-8 Breathing',
     breathPhases: [
@@ -1383,11 +1459,9 @@ const wellnessContent = {
     closeNote: 'Skip for now',
   },
   'no-results': {
-    moon: '🌙',
     eyebrow: 'No matches right now',
     title: 'Not finding today does not mean\nnot finding tomorrow.',
     body: 'Records are updated constantly. Many owners find their pets days or even weeks after starting their search.',
-    affirmation: 'Hope is not naivety — it is the fuel that keeps you searching.',
     tool: 'breath',
     breathLabel: 'Box Breathing',
     breathPhases: [
@@ -1457,7 +1531,7 @@ function showWellness(type) {
   wellnessActive = true;
 
   const activeScreen = document.querySelector('.screen.active');
-  if (!activeScreen) return;
+  if (!activeScreen || activeScreen.id.startsWith('shelter')) return;
 
   const ov = document.createElement('div');
   ov.className = 'wov';
@@ -1472,15 +1546,15 @@ function showWellness(type) {
       <div class="wov-breath-wrap">
         <div class="breath-circle-outer">
           <div class="breath-ring" id="breathRing"></div>
-          <div class="breath-inner" id="breathInner">🫁</div>
+          <div class="breath-inner" id="breathInner"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="21" y="3" width="6" height="11" rx="3" fill="#F07020" opacity=".65"/><path d="M21 12 Q15 13 15 19" stroke="#F07020" stroke-width="2.5" stroke-linecap="round"/><path d="M27 12 Q33 13 33 19" stroke="#F07020" stroke-width="2.5" stroke-linecap="round"/><path d="M15 19 C9 21 5 27 5 33 C5 39 9 45 15 45 C19 45 21 42 21 39 L21 19 Z" fill="#F07020" fill-opacity=".18" stroke="#F07020" stroke-opacity=".6" stroke-width="1.5"/><path d="M33 19 C39 21 43 27 43 33 C43 39 39 45 33 45 C29 45 27 42 27 39 L27 19 Z" fill="#F07020" fill-opacity=".18" stroke="#F07020" stroke-opacity=".6" stroke-width="1.5"/></svg></div>
         </div>
-        <div class="breath-label">${c.breathLabel}</div>
+
         <div class="breath-phase" id="breathPhase">Get ready…</div>
         <div class="breath-count" id="breathCount"></div>
       </div>`;
   } else if (isAffirm) {
     const affirmItems = c.affirmations.map((a, i) =>
-      `<div style="padding:12px 16px;background:rgba(255,255,255,${i === 0 ? '.12' : '.06'});border-radius:14px;margin-bottom:8px;font-size:14px;font-weight:700;color:rgba(255,255,255,${i === 0 ? '.95' : '.65'});text-align:left;border:1px solid rgba(255,255,255,${i === 0 ? '.2' : '.08'})">${i === 0 ? '🌟 ' : ''}${a}</div>`
+      `<div style="padding:12px 16px;background:rgba(240,112,32,${i === 0 ? '.1' : '.05'});border-radius:14px;margin-bottom:8px;font-size:14px;font-weight:700;color:${i === 0 ? 'var(--text)' : 'var(--gray-mid)'};text-align:left;border:1px solid rgba(240,112,32,${i === 0 ? '.25' : '.1'})">${i === 0 ? '🌟 ' : ''}${a}</div>`
     ).join('');
     toolHTML = `<div style="width:100%;margin-bottom:20px">${affirmItems}</div>`;
   }
@@ -1489,7 +1563,7 @@ function showWellness(type) {
     <div class="wov-stars"></div>
     <button class="wov-close" onclick="closeWellness()">✕</button>
     <div class="wov-body">
-      <div class="wov-moon">${c.moon}</div>
+      ${c.moon ? `<div class="wov-moon">${c.moon}</div>` : ''}
       <div class="wov-eyebrow">${c.eyebrow}</div>
       <div class="wov-title">${c.title.split('\\n').join('<br>')}</div>
       <div class="wov-body-text">${c.body}</div>
@@ -1501,7 +1575,7 @@ function showWellness(type) {
       </div>
     </div>`;
 
-  activeScreen.appendChild(ov);
+  document.body.appendChild(ov);
   if (isBreath) startBreathing(c.breathPhases, c.cycles);
 }
 
@@ -1519,22 +1593,63 @@ function startBreathing(phases, totalCycles) {
   const countEl = document.getElementById('breathCount');
   if (!ring) return;
 
+  // Initial resting state
+  inner.style.transform = 'scale(1)';
+  ring.style.opacity    = '0.45';
+
+  function applyPhase(p) {
+    const durSec = p.duration / 1000;
+    const label  = p.label.toLowerCase();
+
+    if (label === 'inhale') {
+      inner.style.transition = 'none';
+      inner.style.transform  = 'scale(1)';
+      ring.style.animation   = 'none';
+      ring.style.transition  = 'none';
+      ring.style.opacity     = '0.45';
+      inner.offsetHeight;
+      inner.style.transition = `transform ${durSec}s ease-in`;
+      inner.style.transform  = 'scale(1.25)';
+      ring.style.transition  = `opacity ${durSec}s ease-in`;
+      ring.style.opacity     = '1';
+    } else if (label === 'hold') {
+      inner.style.transition = 'none';
+      ring.style.transition  = 'none';
+      ring.style.animation   = 'none';
+      ring.offsetHeight;
+      ring.style.animation   = 'breathHoldPulse 1.8s ease-in-out infinite';
+    } else if (label === 'exhale') {
+      inner.style.transition = 'none';
+      inner.style.transform  = 'scale(1.25)';
+      ring.style.animation   = 'none';
+      ring.style.transition  = 'none';
+      ring.style.opacity     = '1';
+      inner.offsetHeight;
+      inner.style.transition = `transform ${durSec}s ease-out`;
+      inner.style.transform  = 'scale(1)';
+      ring.style.transition  = `opacity ${durSec}s ease-out`;
+      ring.style.opacity     = '0.45';
+    }
+  }
+
   setTimeout(() => {
-    ring.classList.add('breathing');
-    inner.classList.add('breathing');
+    if (!document.getElementById('breathRing')) return;
     runPhase();
   }, 800);
 
   function runPhase() {
     if (!document.getElementById('breathRing')) return;
     const p = phases[phaseIdx];
+
     if (phaseEl) {
       phaseEl.style.animation = 'none';
       phaseEl.offsetHeight;
       phaseEl.style.animation = 'fadePhase .4s ease';
       phaseEl.textContent = p.label;
     }
-    if (countEl) countEl.textContent = `Ciclo ${cycle + 1} de ${totalCycles}`;
+    if (countEl) countEl.textContent = `Cycle ${cycle + 1} of ${totalCycles}`;
+
+    applyPhase(p);
 
     breathTimer = setTimeout(() => {
       phaseIdx++;
@@ -1544,14 +1659,17 @@ function startBreathing(phases, totalCycles) {
         if (cycle >= totalCycles) {
           if (phaseEl)  phaseEl.textContent  = '✓ Done';
           if (countEl)  countEl.textContent  = '';
+          ring.style.animation   = 'none';
+          ring.style.transition  = 'opacity 1s ease';
+          ring.style.opacity     = '0.45';
+          inner.style.transition = 'transform 1s ease';
+          inner.style.transform  = 'scale(1)';
           const cta = document.getElementById('wovMainCta');
           if (cta) {
             cta.textContent       = 'I feel better';
-            cta.style.background  = 'rgba(100,255,180,.2)';
-            cta.style.borderColor = 'rgba(100,255,180,.4)';
+            cta.style.background  = 'rgba(240,112,32,.15)';
+            cta.style.borderColor = 'rgba(240,112,32,.35)';
           }
-          if (ring)  ring.classList.remove('breathing');
-          if (inner) inner.classList.remove('breathing');
           return;
         }
       }
@@ -1575,7 +1693,7 @@ function closeWellness() {
 ══════════════════════════════ */
 function showWellnessToast(icon, title, sub, onTap) {
   const activeScreen = document.querySelector('.screen.active');
-  if (!activeScreen) return;
+  if (!activeScreen || activeScreen.id.startsWith('shelter')) return;
 
   const t = document.createElement('div');
   t.className = 'wellness-toast';
