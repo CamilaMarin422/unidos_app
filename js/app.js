@@ -377,6 +377,9 @@ function goTo(id) {
   if (id === 'shelterMatches') {
     renderShelterMatches();
   }
+  if (id === 'shelterAdoptions') {
+    renderAdoptionAvailableList();
+  }
 }
 
 function switchRole(r) {
@@ -388,6 +391,79 @@ function switchRole(r) {
     const e = document.getElementById(id);
     if (e) e.className = 'role-pill' + (r === 'shelter' ? ' as' : '');
   });
+}
+
+/* ══════════════════════════════
+   SHELTER – INTEGRATIONS
+══════════════════════════════ */
+function renderIntRecentList() {
+  var statusCfg = {
+    available: { label: 'Available', color: '#619B8A', bg: 'var(--shelter-pale)' },
+    match:     { label: 'Matched',   color: '#2563EB', bg: '#EFF6FF' },
+    adopt:     { label: 'Adopting',  color: '#D97706', bg: '#FFFBEB' },
+  };
+
+  var timeLabels = {
+    1: 'today · 08:43am',
+    2: 'yesterday · 11:20am',
+    3: 'yesterday · 10:15am',
+    4: 'Feb 15 · 07:55am',
+    5: 'Feb 14 · 06:30pm',
+    6: 'Feb 12 · 03:00pm',
+  };
+
+  var html = '';
+  animals.forEach(function(a, i) {
+    var animalId = '#A-' + (2844 + a.id);
+    var cfg = statusCfg[a.status] || statusCfg.available;
+    var border = i < animals.length - 1 ? 'border-bottom:1px solid var(--gray-light);' : '';
+
+    html += '<div style="display:flex;align-items:center;gap:12px;padding:11px 14px;' + border + '">'
+      + '<div style="width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0"><img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover"/></div>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:2px">' + animalId + ' · ' + a.vol + ' · ' + timeLabels[a.id] + '</div>'
+      + '<div style="font-size:13px;font-weight:800;color:var(--text)">' + a.type + ' · ' + a.sex + ' · ' + a.size + ' · ' + a.color.split(' ')[0] + '</div>'
+      + '</div>'
+      + '<span style="font-size:10px;font-weight:800;color:' + cfg.color + ';background:' + cfg.bg + ';border-radius:20px;padding:3px 9px;white-space:nowrap;flex-shrink:0">' + cfg.label + '</span>'
+      + '</div>';
+  });
+
+  var el = document.getElementById('intRecentList');
+  if (el) el.innerHTML = html;
+}
+
+/* ══════════════════════════════
+   SHELTER – ADOPTIONS
+══════════════════════════════ */
+var adoptionRequests = { 1: 3, 4: 1, 6: 2 };
+
+function renderAdoptionAvailableList() {
+  var available = animals.filter(function(a) { return a.status === 'available'; });
+  var html = '';
+
+  available.forEach(function(a) {
+    var animalId = '#A-' + (2844 + a.id);
+    var intakeDate = new Date(a.date);
+    var days = Math.round((Date.now() - intakeDate.getTime()) / 86400000);
+    var reqs = adoptionRequests[a.id] || 0;
+    var reqLabel = reqs === 1 ? '1 request' : reqs + ' requests';
+
+    html += '<div class="adopt-avail-card" onclick="openAnimalDetail(' + a.id + ',\'shelterAdoptions\')">'
+      + '<div style="width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0"><img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover"/></div>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:2px">' + animalId + ' · ' + days + ' days</div>'
+      + '<div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">' + a.type + ' · ' + a.sex + ' · ' + a.size + ' · ' + a.color.split(' ')[0] + '</div>'
+      + '<div style="font-size:11px;font-weight:600;color:var(--gray-mid)">' + reqs + ' requests pending</div>'
+      + '</div>'
+      + (reqs > 0 ? '<div style="background:var(--shelter-pale);color:#619B8A;font-size:11px;font-weight:800;border-radius:20px;padding:4px 10px;white-space:nowrap;flex-shrink:0">' + reqLabel + '</div>' : '')
+      + '</div>';
+  });
+
+  if (!html) {
+    html = '<div style="text-align:center;padding:24px 0;font-size:13px;font-weight:700;color:var(--gray-mid)">No animals available for adoption</div>';
+  }
+
+  document.getElementById('adoptionAvailableList').innerHTML = html;
 }
 
 /* ══════════════════════════════
@@ -432,15 +508,15 @@ function buildMatchCard(a) {
 
   var actionBtns = '';
   if (m.confirmed) {
-    actionBtns  = '<button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="dismissMatchCard(this,\'✓ Reunión confirmada\',\'✓\')">✓ Owner confirmed</button>';
+    actionBtns  = '<button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="dismissMatchCard(this,\'Owner notified\',\'✓\')">✓ Owner confirmed</button>';
     actionBtns += '<button class="req-btn inf" onclick="openAnimalDetail(' + a.id + ',\'shelterMatches\')">View details</button>';
   } else if (isHigh) {
-    actionBtns  = '<button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="dismissMatchCard(this,\'Owner notificado ✓\',\'✉\')">✓ Notified</button>';
+    actionBtns  = '<button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="dismissMatchCard(this,\'Owner notified\',\'✉\')">✓ Notified</button>';
     actionBtns += '<button class="req-btn inf" onclick="openAnimalDetail(' + a.id + ',\'shelterMatches\')">View details</button>';
   } else {
-    actionBtns  = '<button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="dismissMatchCard(this,\'Owner notificado exitosamente\',\'✉\')">Notify owner</button>';
+    actionBtns  = '<button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="dismissMatchCard(this,\'Owner notified successfully\',\'✉\')">Notify owner</button>';
     actionBtns += '<button class="req-btn inf" onclick="openAnimalDetail(' + a.id + ',\'shelterMatches\')">Review</button>';
-    actionBtns += '<button class="req-btn dec" onclick="dismissMatchCard(this,\'Coincidencia descartada\',\'✕\')">Dismiss</button>';
+    actionBtns += '<button class="req-btn dec" onclick="dismissMatchCard(this,\'Match dismissed\',\'✕\')">Dismiss</button>';
   }
 
   var ownerLine;
@@ -913,6 +989,18 @@ function loadDemoCatPhoto() {
   const wrap = document.getElementById('rfPhotoWrap');
   wrap.innerHTML = `<img src="images/pets_report/new_pet.png" style="width:100%;height:100%;object-fit:cover"/>`;
   wrap.onclick = null;
+}
+
+function loadDemoShelterPhoto() {
+  const wrap = document.getElementById('srPhotoWrap');
+  wrap.innerHTML = '<img src="images/pets/6.png" style="width:100%;height:100%;object-fit:cover"/>';
+  wrap.onclick = null;
+}
+
+function publishShelterAnimal() {
+  showSuccess('shelterRegister', 'gb', 'gt', '🐾', 'Animal registered!', 'The animal is now in the system.', function() {
+    goTo('shelterAnimals');
+  });
 }
 
 function publishReport() {
@@ -1510,6 +1598,37 @@ function showWellnessToast(icon, title, sub, onTap) {
   setTimeout(() => { if (t.parentNode) dismissToast(null, t); }, 8000);
 }
 
+function toggleAddVolForm() {
+  var form = document.getElementById('addVolForm');
+  var btn  = document.getElementById('addVolBtn');
+  var open = form.style.display !== 'none';
+  form.style.display = open ? 'none' : 'block';
+  btn.style.borderBottom = open ? '1px solid var(--gray-light)' : 'none';
+}
+
+function addVolunteer() {
+  var name  = document.getElementById('volName').value.trim();
+  var phone = document.getElementById('volPhone').value.trim();
+  if (!name || !phone) return;
+
+  var initials = name.split(' ').slice(0, 2).map(function(w) { return w[0].toUpperCase(); }).join('');
+  var row = document.createElement('div');
+  row.style.cssText = 'padding:11px 14px;border-top:1px solid var(--gray-light);display:flex;align-items:center;gap:12px';
+  row.innerHTML = '<div style="width:36px;height:36px;border-radius:50%;background:#619B8A;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;flex-shrink:0">' + initials + '</div>'
+    + '<div style="flex:1">'
+    + '<div style="font-size:13px;font-weight:800;color:var(--text)">' + name + '</div>'
+    + '<div style="font-size:11px;font-weight:600;color:var(--gray)">' + phone + ' · 0 animals registered</div>'
+    + '</div>'
+    + '<span style="font-size:10px;font-weight:800;color:#619B8A;background:var(--shelter-pale);border-radius:20px;padding:3px 9px">Active</span>';
+
+  var addBtn = document.getElementById('addVolBtn');
+  addBtn.parentNode.insertBefore(row, addBtn);
+  document.getElementById('addVolForm').style.display = 'none';
+  document.getElementById('addVolBtn').style.borderBottom = '1px solid var(--gray-light)';
+  document.getElementById('volName').value  = '';
+  document.getElementById('volPhone').value = '';
+}
+
 function dismissToast(e, el) {
   if (e) e.stopPropagation();
   el.classList.add('hiding');
@@ -1535,6 +1654,7 @@ renderPetsGrid();
 filterPets();
 renderShelterAnimals();
 filterShelterAnimals();
+renderIntRecentList();
 renderRecentArrivals();
 renderMetrics();
 loadAdopt();
