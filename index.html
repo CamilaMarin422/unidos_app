@@ -955,6 +955,49 @@
       </div>
     </div>
 
+    <!-- Search bar -->
+    <div style="padding:12px 18px 0">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="shelterSearchInput" placeholder="Search by type, color, location…" oninput="filterShelterAnimals()" onfocus="showShelterFilters()" onblur="hideShelterFilters(event)"/>
+        <svg id="shelterClearSearch" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5BDB5" stroke-width="2.5" style="cursor:pointer;display:none" onclick="clearShelterSearch()"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+
+    <!-- Filter pills -->
+    <div class="filter-section" id="shelterFilterSection" style="display:none" onmousedown="event.preventDefault()">
+      <div class="filter-label">Type</div>
+      <div class="filter-row" id="sfg-type">
+        <button class="fpill sel" onclick="selectShelterFilter(this,'sfg-type','all-type')">All</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-type','Dog')">Dog</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-type','Cat')">Cat</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-type','Rabbit')">Rabbit</button>
+      </div>
+      <div class="filter-label" style="margin-top:8px">Sex</div>
+      <div class="filter-row" id="sfg-sex">
+        <button class="fpill sel" onclick="selectShelterFilter(this,'sfg-sex','all-sex')">All</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-sex','Male')">Male</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-sex','Female')">Female</button>
+      </div>
+      <div class="filter-label" style="margin-top:8px">Size</div>
+      <div class="filter-row" id="sfg-size">
+        <button class="fpill sel" onclick="selectShelterFilter(this,'sfg-size','all-size')">All</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-size','Small')">Small</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-size','Medium')">Medium</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-size','Large')">Large</button>
+      </div>
+      <div class="filter-label" style="margin-top:8px">Location</div>
+      <div class="filter-row" id="sfg-loc">
+        <button class="fpill sel" onclick="selectShelterFilter(this,'sfg-loc','all-loc')">All</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-loc','San Pelayo')">San Pelayo</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-loc','Lorica')">Lórica</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-loc','Tierra Alta')">Tierra Alta</button>
+        <button class="fpill" onclick="selectShelterFilter(this,'sfg-loc','Montería')">Montería</button>
+      </div>
+    </div>
+
+    <div id="shelterResultsCount" style="font-size:13px;font-weight:800;color:var(--gray-mid);padding:6px 18px 2px;min-height:24px"></div>
+
     <div id="animalsList" style="padding-bottom:16px">
       <!-- Populated by renderShelterAnimals() in app.js -->
     </div>

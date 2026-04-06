@@ -878,6 +878,21 @@ body {
 }
 .ad-tab.active { color: var(--shelter); border-bottom-color: var(--shelter); }
 
+/* Shelter Animals search bar – green overrides */
+#shelterAnimals .search-box { border-color: var(--shelter-border); }
+#shelterAnimals .search-box:focus-within { border-color: var(--shelter); }
+#shelterAnimals .fpill {
+  border-color: var(--shelter-border);
+  color: var(--shelter);
+  background: white;
+}
+#shelterAnimals .fpill.sel {
+  background: var(--shelter);
+  border-color: var(--shelter);
+  color: white;
+  box-shadow: var(--sh-s);
+}
+
 .ad-panel { display: none; }
 .ad-panel.active { display: block; padding: 16px 18px 24px; }
 

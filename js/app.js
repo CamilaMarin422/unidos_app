@@ -304,14 +304,14 @@ function renderShelterAnimals(filter = 'all') {
     const animalId = `#A-${2844 + a.id}`;
     const street = a.locStreet ? `${a.loc.split(',')[0]}, ${a.locStreet}` : a.loc.split(',')[0];
     return `
-    <div class="animal-card" data-status="${a.status}" onclick="openAnimalDetail(${a.id})">
+    <div class="animal-card" data-status="${a.status}" data-tags="${a.searchTags}" data-type="${a.type}" data-sex="${a.sex}" data-size="${a.size}" data-loc="${a.loc}" onclick="openAnimalDetail(${a.id})">
       <div class="ac-thumb"><img src="${a.imgThumb}" alt="${a.type}"/></div>
       <div style="flex:1;min-width:0">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:3px">
           <div style="font-size:12px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
             ${animalId} · via ${a.channel} · ${a.vol}
           </div>
-          <span class="pill ${pill(a).cls}" style="flex-shrink:0">${pill(a).label}</span>
+          <span style="flex-shrink:0;font-size:10px;font-weight:800;color:var(--gray-mid);background:var(--gray-light);border-radius:50px;padding:3px 9px;white-space:nowrap">${pill(a).label}</span>
         </div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">
           ${a.type} · ${a.sex} · ${a.size} · ${a.color}
@@ -432,7 +432,7 @@ function openAnimalDetail(id) {
 
   var pillEl = document.getElementById('sad-pill');
   if (d.match) {
-    pillEl.textContent = '🎯 ' + d.match.similarity + '% Match';
+    pillEl.textContent = d.match.similarity + '% Match';
   } else {
     pillEl.textContent = p.label;
   }
@@ -1026,10 +1026,63 @@ function closePhotoSearchAndShowDetail(idx) {
 /* ══════════════════════════════
    SHELTER FILTER TABS
 ══════════════════════════════ */
+let currentShelterStatusFilter = 'all';
+const activeShelterFilters = { type: 'all-type', sex: 'all-sex', size: 'all-size', loc: 'all-loc' };
+
 function fa(status, tab) {
   document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
   tab.classList.add('active');
+  currentShelterStatusFilter = status;
   renderShelterAnimals(status);
+  filterShelterAnimals();
+}
+
+function showShelterFilters() {
+  document.getElementById('shelterFilterSection').style.display = 'block';
+}
+
+function hideShelterFilters(event) {
+  if (event && event.relatedTarget && document.getElementById('shelterFilterSection').contains(event.relatedTarget)) return;
+  document.getElementById('shelterFilterSection').style.display = 'none';
+}
+
+function selectShelterFilter(el, groupId, value) {
+  document.querySelectorAll('#' + groupId + ' .fpill').forEach(p => p.classList.remove('sel'));
+  el.classList.add('sel');
+  const key = groupId.replace('sfg-', '');
+  activeShelterFilters[key] = value;
+  filterShelterAnimals();
+}
+
+function filterShelterAnimals() {
+  const q = document.getElementById('shelterSearchInput').value.toLowerCase().trim();
+  document.getElementById('shelterClearSearch').style.display = q ? 'block' : 'none';
+  let visible = 0;
+  document.querySelectorAll('#animalsList .animal-card').forEach(c => {
+    const matchQ    = !q || c.dataset.tags.toLowerCase().includes(q);
+    const matchType = activeShelterFilters.type === 'all-type' || c.dataset.type === activeShelterFilters.type;
+    const matchSex  = activeShelterFilters.sex  === 'all-sex'  || c.dataset.sex  === activeShelterFilters.sex;
+    const matchSize = activeShelterFilters.size === 'all-size' || c.dataset.size === activeShelterFilters.size;
+    const matchLoc  = activeShelterFilters.loc  === 'all-loc'  || (c.dataset.loc || '').toLowerCase().includes(activeShelterFilters.loc.toLowerCase());
+    const show = matchQ && matchType && matchSex && matchSize && matchLoc;
+    c.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  const countEl = document.getElementById('shelterResultsCount');
+  if (countEl) countEl.textContent = visible + ' animal' + (visible !== 1 ? 's' : '');
+}
+
+function clearShelterSearch() {
+  document.getElementById('shelterSearchInput').value = '';
+  ['sfg-type','sfg-sex','sfg-size','sfg-loc'].forEach(gid => {
+    const pills = document.querySelectorAll('#' + gid + ' .fpill');
+    pills.forEach((p, i) => p.classList.toggle('sel', i === 0));
+  });
+  activeShelterFilters.type = 'all-type';
+  activeShelterFilters.sex  = 'all-sex';
+  activeShelterFilters.size = 'all-size';
+  activeShelterFilters.loc  = 'all-loc';
+  filterShelterAnimals();
 }
 
 /* ══════════════════════════════
@@ -1365,6 +1418,7 @@ function showWellnessSuccess(screenId) {
 renderPetsGrid();
 filterPets();
 renderShelterAnimals();
+filterShelterAnimals();
 renderRecentArrivals();
 renderMetrics();
 loadAdopt();
