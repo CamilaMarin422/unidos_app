@@ -1018,7 +1018,7 @@
     <!-- Header -->
     <div style="background:#619B8A;padding:16px 18px 18px;flex-shrink:0">
       <div style="display:flex;align-items:center;gap:12px">
-        <button onclick="goTo('shelterAnimals')" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Nunito',sans-serif">←</button>
+        <button class="back-btn" onclick="goTo('shelterAnimals')" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Nunito',sans-serif">←</button>
         <div style="width:56px;height:56px;border-radius:12px;overflow:hidden;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.35)">
           <img id="sad-img" src="" alt="" style="width:100%;height:100%;object-fit:cover"/>
         </div>
@@ -1344,78 +1344,18 @@
 
     <div class="metrics-grid" style="padding:14px 18px 4px">
       <div class="mc">
-        <div style="font-size:24px;font-weight:900;color:#619B8A;line-height:1;margin-bottom:4px">2</div>
+        <div id="sm-high" style="font-size:24px;font-weight:900;color:#619B8A;line-height:1;margin-bottom:4px">2</div>
         <div style="font-size:12px;font-weight:700;color:var(--gray)">High confidence ≥75%</div>
         <div style="font-size:11px;font-weight:700;color:#619B8A;margin-top:4px">Auto-notified</div>
       </div>
       <div class="mc">
-        <div style="font-size:24px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:4px">1</div>
+        <div id="sm-med" style="font-size:24px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:4px">0</div>
         <div style="font-size:12px;font-weight:700;color:var(--gray)">Medium 40–74%</div>
         <div style="font-size:11px;font-weight:700;color:var(--orange);margin-top:4px">● Review needed</div>
       </div>
     </div>
 
-    <div style="padding:4px 18px 6px;font-size:13px;font-weight:800;color:var(--text)">High confidence — owner notified automatically</div>
-
-    <div class="req-card">
-      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
-        <div style="display:flex;gap:-4px">
-          <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;border:2px solid white;flex-shrink:0"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=88&h=88&fit=crop" style="width:100%;height:100%;object-fit:cover"/></div>
-          <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;border:2px solid white;flex-shrink:0;margin-left:-8px"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=88&h=88&fit=crop" style="width:100%;height:100%;object-fit:cover"/></div>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">#A-2847 ↔ Report #R-1923</div>
-          <div style="font-size:11px;font-weight:600;color:var(--gray)">Dog · Male · Medium · Brown · San Pelayo</div>
-          <div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:1px">Owner Daniela R. · confirmed ✓ · Reunion Feb 24</div>
-        </div>
-        <div style="font-size:18px;font-weight:900;color:#619B8A;flex-shrink:0">87%</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="req-btn app" style="background:#619B8A;border-color:#619B8A">✓ Owner confirmed</button>
-        <button class="req-btn inf">View details</button>
-      </div>
-    </div>
-
-    <div class="req-card" style="margin-top:8px">
-      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
-        <div style="display:flex;gap:-4px">
-          <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;border:2px solid white;flex-shrink:0"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=88&h=88&fit=crop" style="width:100%;height:100%;object-fit:cover"/></div>
-          <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;border:2px solid white;flex-shrink:0;margin-left:-8px"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=88&h=88&fit=crop" style="width:100%;height:100%;object-fit:cover"/></div>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">#A-2846 ↔ Report #R-1919</div>
-          <div style="font-size:11px;font-weight:600;color:var(--gray)">Cat · Female · Small · White · Lorica</div>
-          <div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:1px">Owner Jorge M. notified · Awaiting response</div>
-        </div>
-        <div style="font-size:18px;font-weight:900;color:#619B8A;flex-shrink:0">79%</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="req-btn app" style="background:#619B8A;border-color:#619B8A">✓ Notified</button>
-        <button class="req-btn inf">Send reminder</button>
-      </div>
-    </div>
-
-    <div style="padding:10px 18px 6px;font-size:13px;font-weight:800;color:var(--text)">Medium confidence — review before notifying</div>
-
-    <div class="req-card">
-      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
-        <div style="display:flex;gap:-4px">
-          <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;border:2px solid white;flex-shrink:0"><img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=88&h=88&fit=crop" style="width:100%;height:100%;object-fit:cover"/></div>
-          <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;border:2px solid white;flex-shrink:0;margin-left:-8px"><img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=88&h=88&fit=crop" style="width:100%;height:100%;object-fit:cover"/></div>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">#A-2843 ↔ Report #R-1917</div>
-          <div style="font-size:11px;font-weight:600;color:var(--gray)">Cat · Male · Small · Black · Lorica</div>
-          <div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:1px">3 of 5 attributes match · Manual review needed</div>
-        </div>
-        <div style="font-size:18px;font-weight:900;color:var(--orange);flex-shrink:0">61%</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="alert('Notifying owner...')">Notify owner</button>
-        <button class="req-btn inf">Review</button>
-        <button class="req-btn dec" onclick="this.closest('.req-card').style.opacity='.4'">Dismiss</button>
-      </div>
-    </div>
+    <div id="matchesList" style="padding-bottom:4px"></div>
 
     <div style="height:18px"></div>
 

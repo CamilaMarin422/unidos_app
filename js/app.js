@@ -374,6 +374,9 @@ function goTo(id) {
     setTimeout(initReportMap, 50);
     renderReportPets();
   }
+  if (id === 'shelterMatches') {
+    renderShelterMatches();
+  }
 }
 
 function switchRole(r) {
@@ -385,6 +388,116 @@ function switchRole(r) {
     const e = document.getElementById(id);
     if (e) e.className = 'role-pill' + (r === 'shelter' ? ' as' : '');
   });
+}
+
+/* ══════════════════════════════
+   SHELTER – MATCHES
+══════════════════════════════ */
+function renderShelterMatches() {
+  var matchAnimals = animals.filter(function(a) {
+    return animalDetails[a.id] && animalDetails[a.id].match;
+  });
+
+  var high = matchAnimals.filter(function(a) { return animalDetails[a.id].match.similarity >= 75; });
+  var med  = matchAnimals.filter(function(a) { return animalDetails[a.id].match.similarity < 75; });
+
+  var elHigh = document.getElementById('sm-high');
+  var elMed  = document.getElementById('sm-med');
+  if (elHigh) elHigh.textContent = high.length;
+  if (elMed)  elMed.textContent  = med.length;
+
+  var html = '';
+
+  if (high.length) {
+    html += '<div style="padding:4px 18px 6px;font-size:13px;font-weight:800;color:var(--text)">High confidence — owner notified automatically</div>';
+    high.forEach(function(a) { html += buildMatchCard(a); });
+  }
+  if (med.length) {
+    html += '<div style="padding:10px 18px 6px;font-size:13px;font-weight:800;color:var(--text)">Medium confidence — review before notifying</div>';
+    med.forEach(function(a) { html += buildMatchCard(a); });
+  }
+  if (!matchAnimals.length) {
+    html = '<div style="text-align:center;padding:48px 20px"><div style="font-size:40px;margin-bottom:12px">🔍</div><div style="font-size:15px;font-weight:800;color:var(--text)">No active matches</div></div>';
+  }
+
+  document.getElementById('matchesList').innerHTML = html;
+}
+
+function buildMatchCard(a) {
+  var m = animalDetails[a.id].match;
+  var animalId = '#A-' + (2844 + a.id);
+  var sim = m.similarity;
+  var simColor = sim >= 75 ? '#619B8A' : 'var(--orange)';
+  var isHigh = sim >= 75;
+
+  var actionBtns = '';
+  if (m.confirmed) {
+    actionBtns  = '<button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="dismissMatchCard(this,\'✓ Reunión confirmada\',\'✓\')">✓ Owner confirmed</button>';
+    actionBtns += '<button class="req-btn inf" onclick="openAnimalDetail(' + a.id + ',\'shelterMatches\')">View details</button>';
+  } else if (isHigh) {
+    actionBtns  = '<button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="dismissMatchCard(this,\'Owner notificado ✓\',\'✉\')">✓ Notified</button>';
+    actionBtns += '<button class="req-btn inf" onclick="openAnimalDetail(' + a.id + ',\'shelterMatches\')">View details</button>';
+  } else {
+    actionBtns  = '<button class="req-btn app" style="background:#619B8A;border-color:#619B8A" onclick="dismissMatchCard(this,\'Owner notificado exitosamente\',\'✉\')">Notify owner</button>';
+    actionBtns += '<button class="req-btn inf" onclick="openAnimalDetail(' + a.id + ',\'shelterMatches\')">Review</button>';
+    actionBtns += '<button class="req-btn dec" onclick="dismissMatchCard(this,\'Coincidencia descartada\',\'✕\')">Dismiss</button>';
+  }
+
+  var ownerLine;
+  if (m.confirmed) {
+    ownerLine = 'Owner ' + m.reporterName + ' · confirmed ✓' + (m.reunionDate ? ' · Reunion ' + m.reunionDate : '');
+  } else {
+    ownerLine = 'Owner ' + m.reporterName + ' notified · Awaiting response';
+  }
+
+  return '<div class="req-card match-card" style="margin-top:8px" data-animal-id="' + a.id + '">'
+    + '<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">'
+    + '<div style="display:flex">'
+    + '<div style="width:44px;height:44px;border-radius:10px;overflow:hidden;border:2px solid white;flex-shrink:0"><img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover"/></div>'
+    + '<div style="width:44px;height:44px;border-radius:10px;overflow:hidden;border:2px solid white;flex-shrink:0;margin-left:-8px"><img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover;filter:brightness(1.08) saturate(1.1)"/></div>'
+    + '</div>'
+    + '<div style="flex:1">'
+    + '<div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:2px">' + animalId + ' ↔ Report ' + m.reportId + '</div>'
+    + '<div style="font-size:11px;font-weight:600;color:var(--gray)">' + a.type + ' · ' + a.sex + ' · ' + a.size + ' · ' + a.color.split(' ')[0] + ' · ' + a.loc.split(',')[0] + '</div>'
+    + '<div style="font-size:11px;font-weight:600;color:var(--gray);margin-top:1px">' + ownerLine + '</div>'
+    + '</div>'
+    + '<div style="font-size:18px;font-weight:900;color:' + simColor + ';flex-shrink:0">' + sim + '%</div>'
+    + '</div>'
+    + '<div style="display:flex;gap:8px">' + actionBtns + '</div>'
+    + '</div>';
+}
+
+function dismissMatchCard(btn, msg, icon) {
+  var card = btn.closest('.match-card');
+  card.style.transition = 'opacity .3s, transform .3s';
+  card.style.opacity = '0';
+  card.style.transform = 'translateX(40px)';
+  setTimeout(function() {
+    card.style.transition = 'max-height .3s, padding .3s, margin .3s';
+    card.style.overflow = 'hidden';
+    card.style.maxHeight = '0';
+    card.style.padding = '0';
+    card.style.marginTop = '0';
+  }, 280);
+  setTimeout(function() {
+    card.remove();
+    showMatchSnackbar(icon, msg);
+  }, 500);
+}
+
+function showMatchSnackbar(icon, msg) {
+  var activeScreen = document.querySelector('.screen.active');
+  if (!activeScreen) return;
+  var el = document.createElement('div');
+  el.className = 'match-snackbar';
+  el.innerHTML = '<span style="font-size:16px">' + icon + '</span><span style="flex:1;font-size:13px;font-weight:700;color:white">' + msg + '</span>';
+  activeScreen.appendChild(el);
+  setTimeout(function() {
+    if (el.parentNode) {
+      el.classList.add('hiding');
+      setTimeout(function() { el.remove(); }, 300);
+    }
+  }, 3000);
 }
 
 /* ══════════════════════════════
@@ -418,7 +531,7 @@ function switchAnimalTab(tab) {
   });
 }
 
-function openAnimalDetail(id) {
+function openAnimalDetail(id, from) {
   const a = animals.find(function(x){ return x.id === id; });
   const d = animalDetails[id];
   const animalId = '#A-' + (2844 + a.id);
@@ -564,6 +677,9 @@ function openAnimalDetail(id) {
 
     document.getElementById('adp-match').innerHTML = matchHTML;
   }
+
+  var backTarget = from || 'shelterAnimals';
+  document.querySelector('#shelterAnimalDetail .back-btn').onclick = function() { goTo(backTarget); };
 
   switchAnimalTab('profile');
   goTo('shelterAnimalDetail');
