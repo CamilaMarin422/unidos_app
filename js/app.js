@@ -119,6 +119,108 @@ const animals = [
 ];
 
 /* ══════════════════════════════
+   ANIMAL DETAIL DATA
+   Health, history and match info per animal id.
+══════════════════════════════ */
+const animalDetails = {
+  1: {
+    ageLabel: 'Adult (2–4 yrs)',
+    health: {
+      vaccinated: 'Pending', dewormed: 'Done', sterilized: 'No', microchipped: 'No',
+      vetCheckup: 'Scheduled Feb 22', status: 'Good',
+      vetNotes: 'Animal appears well-nourished. Slight anxiety on intake. Small scar on right front paw, healed. No signs of abuse or trauma. Recommend rabies vaccine on next visit.',
+    },
+    history: [
+      { icon: '📱', title: 'Registered via WhatsApp', date: 'Feb 19, 2026 · 08:42 am', by: 'Juan M. (Field volunteer)', desc: 'Photo received → AI extracted: dog, small, brown. Agent asked 3 follow-up questions. Full record created in 1m 48s.' },
+      { icon: '🏥', title: 'Initial health check', date: 'Feb 19, 2026 · 02:00 pm', by: 'Dr. Ramírez', desc: 'Good overall condition. Deworming administered. Rabies vaccine scheduled for Feb 22.' },
+    ],
+    match: null,
+  },
+  2: {
+    ageLabel: 'Young (1–2 yrs)',
+    health: {
+      vaccinated: 'Done', dewormed: 'Done', sterilized: 'Yes', microchipped: 'No',
+      vetCheckup: 'Completed Feb 19', status: 'Excellent',
+      vetNotes: 'Very calm cat, healthy weight. No injuries detected. Sterilized prior to intake. Recommend microchipping.',
+    },
+    history: [
+      { icon: '📱', title: 'Registered via App', date: 'Feb 18, 2026 · 11:20 am', by: 'María R. (Field volunteer)', desc: 'Direct app intake. Photos and description submitted. Record created automatically.' },
+      { icon: '🎯', title: 'Automatic match detected', date: 'Feb 18, 2026 · 11:22 am', by: 'System', desc: '91% similarity with Report #R-1918 (filed Feb 15 by Carlos P.). Owner notified via push notification.' },
+      { icon: '🏥', title: 'Full health check', date: 'Feb 18, 2026 · 03:30 pm', by: 'Dr. Ramírez', desc: 'Excellent condition. Sterilization confirmed. All vaccines up to date.' },
+      { icon: '👁️', title: 'Owner reviewing', date: 'Feb 19, 2026 · 09:00 am', by: 'Carlos P. (via app)', desc: 'Owner opened match notification. Reviewing photos. Confirmation pending.' },
+    ],
+    match: {
+      reportId: '#R-1918', reporterName: 'Carlos P.', similarity: 91,
+      matchAttrs: { species: true, sex: true, size: true, color: true, location: true, marks: true },
+      confirmed: false, reunionDate: null,
+    },
+  },
+  3: {
+    ageLabel: 'Adult (4–6 yrs)',
+    health: {
+      vaccinated: 'Done', dewormed: 'Done', sterilized: 'Yes', microchipped: 'Yes',
+      vetCheckup: 'Completed Feb 18', status: 'Good',
+      vetNotes: 'Healthy male dog. Microchip registered. Minor tartar buildup, dental cleaning recommended. No injuries.',
+    },
+    history: [
+      { icon: '📱', title: 'Registered via WhatsApp', date: 'Feb 17, 2026 · 10:15 am', by: 'Juan M. (Field volunteer)', desc: 'Rescue report submitted. AI identified breed as terrier mix. Record created in 2m 10s.' },
+      { icon: '🎯', title: 'Match confirmed', date: 'Feb 17, 2026 · 10:18 am', by: 'System', desc: '79% match with Report #R-1901. Owner notified. Reunion coordinated.' },
+      { icon: '🏥', title: 'Full health check', date: 'Feb 17, 2026 · 04:00 pm', by: 'Dr. Ramírez', desc: 'All vaccines current. Microchip scanned and registered. Good general condition.' },
+      { icon: '🤝', title: 'Adoption process started', date: 'Feb 20, 2026 · 02:00 pm', by: 'Staff', desc: 'Potential adopter Laura G. expressed interest. Home visit scheduled for Feb 25.' },
+    ],
+    match: {
+      reportId: '#R-1901', reporterName: 'Laura G.', similarity: 79,
+      matchAttrs: { species: true, sex: true, size: true, color: true, location: false, marks: true },
+      confirmed: true, reunionDate: 'Feb 25 (adoption)',
+    },
+  },
+  4: {
+    ageLabel: 'Adult (3–5 yrs)',
+    health: {
+      vaccinated: 'Done', dewormed: 'Pending', sterilized: 'No', microchipped: 'No',
+      vetCheckup: 'Scheduled Feb 23', status: 'Fair',
+      vetNotes: 'Slightly underweight. Collar mark visible — likely had an owner. Calm temperament. Deworming and full checkup scheduled.',
+    },
+    history: [
+      { icon: '📱', title: 'Registered via App', date: 'Feb 15, 2026 · 07:55 am', by: 'Carlos V. (Field volunteer)', desc: 'Found near highway. Brought directly to shelter. Photos uploaded on site.' },
+      { icon: '🏥', title: 'Initial assessment', date: 'Feb 15, 2026 · 01:00 pm', by: 'Dr. Ramírez', desc: 'Slightly underweight. No chip detected. Calm and cooperative. Full checkup booked for Feb 23.' },
+    ],
+    match: null,
+  },
+  5: {
+    ageLabel: 'Kitten (~2 mo)',
+    health: {
+      vaccinated: 'Pending', dewormed: 'Done', sterilized: 'No', microchipped: 'No',
+      vetCheckup: 'Scheduled Feb 24', status: 'Good',
+      vetNotes: 'Healthy kitten, good weight for age. Blue eyes, likely mixed. Dewormed on intake. First vaccine due at 8 weeks.',
+    },
+    history: [
+      { icon: '📱', title: 'Registered via App', date: 'Feb 14, 2026 · 06:30 pm', by: 'María R. (Field volunteer)', desc: 'Found alone near park. No signs of mother nearby. Transferred to shelter immediately.' },
+      { icon: '🎯', title: 'Potential match found', date: 'Feb 14, 2026 · 06:33 pm', by: 'System', desc: '83% match with Report #R-1910 (filed Feb 13 by Sofía T.). Owner notified via app.' },
+      { icon: '🏥', title: 'Initial health check', date: 'Feb 14, 2026 · 08:00 pm', by: 'Dr. Ramírez', desc: 'Healthy kitten. Deworming administered. Vaccine schedule started.' },
+    ],
+    match: {
+      reportId: '#R-1910', reporterName: 'Sofía T.', similarity: 83,
+      matchAttrs: { species: true, sex: true, size: true, color: true, location: true, marks: false },
+      confirmed: false, reunionDate: null,
+    },
+  },
+  6: {
+    ageLabel: 'Young (1 yr)',
+    health: {
+      vaccinated: 'Done', dewormed: 'Done', sterilized: 'No', microchipped: 'No',
+      vetCheckup: 'Completed Feb 13', status: 'Excellent',
+      vetNotes: 'Well-cared-for rabbit. Red harness suggests previous owner. Healthy weight, clean fur. No injuries.',
+    },
+    history: [
+      { icon: '📱', title: 'Registered — Direct intake', date: 'Feb 12, 2026 · 03:00 pm', by: 'Staff', desc: 'Brought in by a citizen who found her near a park. Harness still on. Record created by shelter staff.' },
+      { icon: '🏥', title: 'Full health check', date: 'Feb 12, 2026 · 04:30 pm', by: 'Dr. Ramírez', desc: 'Excellent condition. Vaccines up to date based on tag on harness. No chip. Sterilization status unknown.' },
+    ],
+    match: null,
+  },
+};
+
+/* ══════════════════════════════
    REPORT PETS (lost pets shown on map)
 ══════════════════════════════ */
 const reportPets = [
@@ -202,7 +304,7 @@ function renderShelterAnimals(filter = 'all') {
     const animalId = `#A-${2844 + a.id}`;
     const street = a.locStreet ? `${a.loc.split(',')[0]}, ${a.locStreet}` : a.loc.split(',')[0];
     return `
-    <div class="animal-card" data-status="${a.status}">
+    <div class="animal-card" data-status="${a.status}" onclick="openAnimalDetail(${a.id})">
       <div class="ac-thumb"><img src="${a.imgThumb}" alt="${a.type}"/></div>
       <div style="flex:1;min-width:0">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:3px">
@@ -283,6 +385,188 @@ function switchRole(r) {
     const e = document.getElementById(id);
     if (e) e.className = 'role-pill' + (r === 'shelter' ? ' as' : '');
   });
+}
+
+/* ══════════════════════════════
+   SHELTER – ANIMAL DETAIL
+══════════════════════════════ */
+function adHealthColor(val) {
+  if (val === 'Done' || val === 'Yes' || val === 'Excellent') return 'var(--green)';
+  if (val === 'No' || val === 'Pending') return 'var(--red)';
+  return 'var(--gray-mid)';
+}
+function setHealthField(id, val) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = val;
+  el.style.color = adHealthColor(val);
+}
+
+function switchAnimalTab(tab) {
+  ['profile','health','history','match'].forEach(function(t) {
+    var btn   = document.getElementById('adtab-' + t);
+    var panel = document.getElementById('adp-'   + t);
+    if (!btn || !panel) return;
+    if (t === tab) {
+      btn.classList.add('active');
+      panel.style.display = 'block';
+      panel.style.background = '#F4F1EE';
+    } else {
+      btn.classList.remove('active');
+      panel.style.display = 'none';
+    }
+  });
+}
+
+function openAnimalDetail(id) {
+  const a = animals.find(function(x){ return x.id === id; });
+  const d = animalDetails[id];
+  const animalId = '#A-' + (2844 + a.id);
+  const p = statusPill[a.status];
+
+  // ── Header ─────────────────────────────────
+  document.getElementById('sad-img').src = a.img;
+  document.getElementById('sad-id').textContent = animalId;
+  document.getElementById('sad-type').textContent = a.type + ' · ' + a.sex + ' · ' + a.size;
+  document.getElementById('sad-subtitle').textContent = a.color + ' · ' + a.loc.split(',')[0] + ' · Rescued ' + a.date;
+
+  var pillEl = document.getElementById('sad-pill');
+  if (d.match) {
+    pillEl.textContent = '🎯 ' + d.match.similarity + '% Match';
+  } else {
+    pillEl.textContent = p.label;
+  }
+  pillEl.style.cssText = 'flex-shrink:0;font-size:11px;background:rgba(255,255,255,.25);color:white;border:1px solid rgba(255,255,255,.4)';
+
+  // ── Profile tab (updates pre-built static HTML) ──────────
+  var street = a.locStreet ? a.loc + ' · ' + a.locStreet : a.loc;
+  document.getElementById('dp-species').textContent = a.type;
+  document.getElementById('dp-sex').textContent     = a.sex;
+  document.getElementById('dp-size').textContent    = a.size;
+  document.getElementById('dp-color').textContent   = a.color;
+  document.getElementById('dp-age').textContent     = d.ageLabel || a.age;
+  document.getElementById('dp-regby').textContent   = a.vol + ' via ' + a.channel;
+  document.getElementById('dp-loc').textContent     = street;
+  document.getElementById('dp-date').textContent    = a.date;
+  var marksWrap = document.getElementById('dp-marks-wrap');
+  if (a.marks) {
+    document.getElementById('dp-marks').textContent = a.marks;
+    marksWrap.style.display = 'block';
+  } else {
+    marksWrap.style.display = 'none';
+  }
+
+  // ── Health tab (updates pre-built static HTML) ───────────
+  var h = d.health;
+  setHealthField('dh-vaccinated',  h.vaccinated);
+  setHealthField('dh-dewormed',    h.dewormed);
+  setHealthField('dh-sterilized',  h.sterilized);
+  setHealthField('dh-microchipped',h.microchipped);
+  document.getElementById('dh-vet').textContent    = h.vetCheckup;
+  document.getElementById('dh-status').textContent = h.status;
+  var notesWrap = document.getElementById('dh-notes-wrap');
+  if (h.vetNotes) {
+    document.getElementById('dh-notes').textContent = h.vetNotes;
+    notesWrap.style.display = 'block';
+  } else {
+    notesWrap.style.display = 'none';
+  }
+
+  // ── History tab ─────────────────────────────
+  var histHTML = '';
+  for (var i = 0; i < d.history.length; i++) {
+    var ev = d.history[i];
+    var connector = (i < d.history.length - 1)
+      ? '<div style="width:2px;flex:1;min-height:20px;background:var(--shelter-border);margin:4px 0"></div>'
+      : '';
+    histHTML += '<div style="display:flex;gap:12px">';
+    histHTML += '<div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">';
+    histHTML += '<div style="width:36px;height:36px;border-radius:50%;background:var(--shelter-pale);display:flex;align-items:center;justify-content:center;font-size:16px">' + ev.icon + '</div>';
+    histHTML += connector + '</div>';
+    histHTML += '<div style="flex:1;padding-bottom:16px">';
+    histHTML += '<div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px">' + ev.title + '</div>';
+    histHTML += '<div style="font-size:11px;font-weight:600;color:var(--shelter);margin-bottom:6px">' + ev.date + ' · ' + ev.by + '</div>';
+    histHTML += '<div style="font-size:12px;font-weight:600;color:var(--gray-mid);line-height:1.5">' + ev.desc + '</div>';
+    histHTML += '</div></div>';
+  }
+  document.getElementById('adp-history').innerHTML = histHTML;
+
+  // ── Match tab ─────────────────────────────
+  if (!d.match) {
+    document.getElementById('adp-match').innerHTML =
+      '<div style="text-align:center;padding:48px 20px 20px">'
+      + '<div style="font-size:44px;margin-bottom:12px">🔍</div>'
+      + '<div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">No match found yet</div>'
+      + '<div style="font-size:13px;font-weight:600;color:var(--gray-mid);line-height:1.5">The system is actively scanning owner reports for a potential match.</div>'
+      + '</div>';
+  } else {
+    var m = d.match;
+    var attrs = m.matchAttrs;
+    var matchCount = Object.values(attrs).filter(Boolean).length;
+    var totalCount = Object.keys(attrs).length;
+
+    function matchAttrRow(label, val, ok) {
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #F0F0F0">'
+        + '<span style="font-size:12px;font-weight:600;color:var(--gray-mid)">' + label + '</span>'
+        + '<span style="font-size:12px;font-weight:800;color:' + (ok ? 'var(--green)' : 'var(--text)') + '">'
+        + val + (ok ? ' ✓' : '') + '</span></div>';
+    }
+
+    var matchHTML = '<div style="display:flex;gap:8px;margin-bottom:14px;align-items:stretch">';
+
+    // Left card — In Custody
+    matchHTML += '<div style="flex:1;background:white;border-radius:14px;overflow:hidden;box-shadow:var(--sh)">';
+    matchHTML += '<div style="height:110px;overflow:hidden"><img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover"/></div>';
+    matchHTML += '<div style="padding:10px 12px">';
+    matchHTML += '<div style="font-size:9px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">In custody</div>';
+    matchHTML += '<div style="font-size:12px;font-weight:900;color:var(--text);margin-bottom:8px">' + animalId + ' · Shelter</div>';
+    matchHTML += matchAttrRow('Species', a.type, false);
+    matchHTML += matchAttrRow('Sex', a.sex, false);
+    matchHTML += matchAttrRow('Size', a.size, false);
+    matchHTML += matchAttrRow('Color', a.color.split(' ')[0], false);
+    matchHTML += matchAttrRow('Location', a.loc.split(',')[0], false);
+    matchHTML += '</div></div>';
+
+    // Center column
+    matchHTML += '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex-shrink:0;width:52px;padding:8px 0">';
+    matchHTML += '<div style="font-size:22px;font-weight:900;color:var(--shelter);line-height:1">' + m.similarity + '%</div>';
+    matchHTML += '<div style="font-size:9px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.3px;text-align:center">Similarity</div>';
+    matchHTML += '<div style="width:32px;height:3px;background:var(--shelter-border);border-radius:2px;margin:2px 0"><div style="height:100%;width:' + m.similarity + '%;background:var(--shelter);border-radius:2px"></div></div>';
+    matchHTML += '<div style="font-size:9px;font-weight:700;color:var(--gray-mid);text-align:center;line-height:1.3">' + matchCount + ' of ' + totalCount + ' attributes match</div>';
+    matchHTML += '</div>';
+
+    // Right card — Owner Report
+    matchHTML += '<div style="flex:1;background:white;border-radius:14px;overflow:hidden;box-shadow:var(--sh)">';
+    matchHTML += '<div style="height:110px;overflow:hidden"><img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover"/></div>';
+    matchHTML += '<div style="padding:10px 12px">';
+    matchHTML += '<div style="font-size:9px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Owner report</div>';
+    matchHTML += '<div style="font-size:12px;font-weight:900;color:var(--text);margin-bottom:8px">' + m.reportId + ' · ' + m.reporterName + '</div>';
+    matchHTML += matchAttrRow('Species', a.type, attrs.species);
+    matchHTML += matchAttrRow('Sex', a.sex, attrs.sex);
+    matchHTML += matchAttrRow('Size', a.size, attrs.size);
+    matchHTML += matchAttrRow('Color', a.color.split(' ')[0], attrs.color);
+    matchHTML += matchAttrRow('Location', a.loc.split(',')[0], attrs.location);
+    matchHTML += '</div></div>';
+
+    matchHTML += '</div>';
+
+    // Bottom banner
+    if (m.confirmed) {
+      matchHTML += '<div style="background:var(--shelter);border-radius:14px;padding:14px 18px;text-align:center">'
+        + '<div style="font-size:13px;font-weight:900;color:white">✓ Owner confirmed · Reunion ' + m.reunionDate + '</div>'
+        + '</div>';
+    } else {
+      matchHTML += '<div style="background:var(--shelter-pale);border:1.5px solid var(--shelter-border);border-radius:14px;padding:14px 18px;text-align:center">'
+        + '<div style="font-size:13px;font-weight:800;color:var(--shelter)">⏳ Awaiting owner confirmation</div>'
+        + '<div style="font-size:11px;font-weight:600;color:var(--gray-mid);margin-top:3px">Owner notified · Match pending review</div>'
+        + '</div>';
+    }
+
+    document.getElementById('adp-match').innerHTML = matchHTML;
+  }
+
+  switchAnimalTab('profile');
+  goTo('shelterAnimalDetail');
 }
 
 /* ══════════════════════════════
